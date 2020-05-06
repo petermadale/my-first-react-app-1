@@ -1,16 +1,21 @@
 import React from "react";
 import { connect } from "react-redux";
+import { requestCreateUnit } from "../store/mutations";
+import { Link } from "react-router-dom";
 
-export const UnitType = ({ unit_types, description }) => (
+export const UnitType = ({ unit_types, description, id, createNewUnit }) => (
   <>
     {unit_types.map((unit) => (
-      <div key={unit.id}>
-        <p>
-          <strong>Unit Type: </strong>
-          {unit.description}
-        </p>
-      </div>
+      <Link to={`/unit/${unit.id}`} key={unit.id}>
+        <div>
+          <p>
+            <strong>Unit Type: </strong>
+            {unit.name}
+          </p>
+        </div>
+      </Link>
     ))}
+    <button>Add New Unit</button>
   </>
 );
 
@@ -26,4 +31,16 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export const ConnectedUnitType = connect(mapStateToProps)(UnitType);
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    createNewUnit(id) {
+      console.log("create new unit", id);
+      dispatch(requestCreateUnit(id));
+    },
+  };
+};
+
+export const ConnectedUnitType = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UnitType);

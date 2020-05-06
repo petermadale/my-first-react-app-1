@@ -27,6 +27,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     id: homeownerID,
     home_owner: ownProps.name,
+    home_ownder_id: ownProps.home_owner,
     block: ownProps.block,
     lot: ownProps.lot,
     units: state.units.filter((unit) => unit.home_owner === homeownerID),
