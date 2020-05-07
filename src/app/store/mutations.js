@@ -15,6 +15,7 @@ export const USERNAME_RESERVED = `USERNAME_RESERVED`;
 export const REQUEST_USER_ACCOUNT_CREATION = `REQUEST_USER_ACCOUNT_CREATION`;
 
 export const SET_CLIENT_NAME = `SET_CLIENT_NAME`;
+export const DUPLICATE_CLIENT_NAME = `DUPLICATE_CLIENT_NAME`;
 export const CREATE_NEW_CLIENT = `CREATE_NEW_CLIENT`;
 export const DELETE_CLIENT = `DELETE_CLIENT`;
 export const REQUEST_CREATE_CLIENT = `REQUEST_CREATE_CLIENT`;
@@ -33,6 +34,11 @@ export const deleteClient = (id) => ({
 export const setClientName = (id, name) => ({
   type: SET_CLIENT_NAME,
   id,
+  name,
+});
+
+export const duplicateClientName = (name) => ({
+  type: DUPLICATE_CLIENT_NAME,
   name,
 });
 

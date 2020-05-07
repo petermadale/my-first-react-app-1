@@ -4,102 +4,137 @@ import { Link } from "react-router-dom";
 import uuid from "uuid";
 import { createNewClient } from "../store/mutations";
 
-export const ClientsNew = ({ id, createNewClient }) => (
-  <div className="container-fluid mt-5">
-    <div className="row justify-content-center">
-      <div className="col-4">
-        <div className="card border-primary mb-3">
-          <div className="card-header">Add New</div>
-          <div className="card-body text-secondary">
-            <form onSubmit={createNewClient}>
-              <div className="form-group">
-                <input type="hidden" name="owner" value={id} />
-                <input
-                  type="text"
-                  placeholder="Name"
-                  name="name"
-                  className="form-control"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  className="form-control"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="address"
-                  placeholder="Address"
-                  className="form-control"
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="phone"
-                  placeholder="Phone"
-                  className="form-control"
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="ext"
-                  placeholder="Ext"
-                  className="form-control"
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="cell"
-                  placeholder="Cell Phone"
-                  className="form-control"
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="fax"
-                  placeholder="Fax"
-                  className="form-control"
-                />
-              </div>
-              <button
-                type="submit"
-                className="btn btn-success btn-sm btn-block mb-2"
-              >
-                Save
-              </button>
-            </form>
-
-            <Link
-              to="/dashboard"
-              className="btn btn-primary btn-sm btn-block mb-2"
-            >
-              Back to Dashboard
-            </Link>
+export const ClientsNew = ({
+  id,
+  createNewClient,
+  verifyClientDuplicate,
+  isDuplicate,
+}) => (
+  <>
+    <section className="content-header">
+      <div className="container-fluid">
+        <div className="row mb-2">
+          <div className="col-sm-12">
+            <h1>Create New Client</h1>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <section className="content">
+      <div className="row">
+        <div className="col-md-12">
+          <div className="card card-warning">
+            <div className="card-header">
+              <h3 className="card-title">Client Details</h3>
+            </div>
+            <div className="card-body">
+              <form onSubmit={createNewClient}>
+                <input type="hidden" name="owner" value={id} />
+                <div className="form-group">
+                  <label htmlFor="name">Client Name</label>
+                  <input
+                    type="text"
+                    placeholder="Client Name"
+                    name="name"
+                    id="name"
+                    className="form-control"
+                    onChange={verifyClientDuplicate}
+                    required
+                  />
+                  {isDuplicate ? <p>Duplicate</p> : null}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    name="email"
+                    id="email"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="address">Address</label>
+                  <input
+                    type="text"
+                    placeholder="Address"
+                    name="address"
+                    id="address"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="phone">Phone</label>
+                  <input
+                    type="text"
+                    placeholder="Phone"
+                    name="phone"
+                    id="phone"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="ext">Ext</label>
+                  <input
+                    type="text"
+                    placeholder="Ext"
+                    name="ext"
+                    id="ext"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="cell">Cell Phone</label>
+                  <input
+                    type="text"
+                    placeholder="Cell Phone"
+                    name="cell"
+                    id="cell"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="fax">Fax</label>
+                  <input
+                    type="text"
+                    placeholder="Fax"
+                    name="fax"
+                    id="fax"
+                    className="form-control"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <button type="submit" className="btn btn-success mr-2">
+            Save
+          </button>
+          <Link to="/clients" className="btn btn-secondary">
+            Cancel
+          </Link>
+        </div>
+      </div>
+    </section>
+  </>
 );
 
-const mapStatetoProps = (state) => {
+var clients = {};
+
+const mapStatetoProps = (state, ownProps) => {
   let id = state.session.id;
+  clients = state.clients;
   return {
     id,
   };
 };
 
 const mapDispatchtoProps = (dispatch, ownProps) => {
+  let isDuplicate = false;
   return {
     createNewClient(e) {
       e.preventDefault();
@@ -119,6 +154,11 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
 
       console.log(data);
       dispatch(createNewClient(data));
+    },
+    verifyClientDuplicate(e) {
+      const name = e.target.value;
+      var duplicate = clients.findIndex((client) => client.name === name);
+      isDuplicate = duplicate !== -1 ? true : false;
     },
   };
 };

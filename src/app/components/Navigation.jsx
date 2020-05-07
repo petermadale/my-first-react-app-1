@@ -4,26 +4,38 @@ import React from "react";
 
 const Navigation = ({ isADmin }) => (
   <>
-    <Link to="/clients" className="btn btn-primary btn-sm btn-block mb-2">
-      Clients
-    </Link>
-    <Link to="" className="btn btn-success btn-sm btn-block mb-2 disabled">
-      My Meetings
-    </Link>
-    {isADmin ? (
-      <Link
-        to="/add-contact"
-        className="btn btn-secondary btn-sm btn-block mb-2"
-      >
-        Add Contact
+    <li className="nav-item">
+      <Link to="/clients" className="nav-link">
+        <i className="nav-icon fas fa-th"></i>
+        <p>Clients</p>
       </Link>
+    </li>
+    <li className="nav-item">
+      <Link to="" className="nav-link">
+        <i className="nav-icon fas fa-calendar-alt"></i>
+        <p>My Meetings</p>
+      </Link>
+    </li>
+    {isADmin ? (
+      <li className="nav-item">
+        <Link to="/add-contact" className="nav-link">
+          <i className="nav-icon fas fa-file-alt"></i>
+          <p>Create New Client</p>
+        </Link>
+      </li>
     ) : null}
-    <Link to="/my-details" className="btn btn-info btn-sm btn-block mb-2">
-      My Details
-    </Link>
-    <Link to="/" className="btn btn-danger btn-sm btn-block">
-      Logout
-    </Link>
+    <li className="nav-item">
+      <Link to="/my-details" className="nav-link">
+        <i className="nav-icon fas fa-edit"></i>
+        <p>My Details</p>
+      </Link>
+    </li>
+    <li className="nav-item">
+      <Link to="/" className="nav-link">
+        <i className="nav-icon fas fa-sign-out-alt"></i>
+        <p>Logout</p>
+      </Link>
+    </li>
   </>
 );
 

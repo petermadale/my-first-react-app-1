@@ -1,34 +1,23 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { setClientName, deleteClient } from "../store/mutations";
+import { setClientName } from "../store/mutations";
 import { history } from "../store/history";
+import { ConnectedClientsEdit } from "./ClientsEdit";
 
-const ClientsDetail = ({ id, client, setClientName, deleteClient }) => (
+const ClientsDetail = ({ isAdmin, isEdit, client, setClientName }) => (
   <div className="container-fluid mt-5">
     <div className="row justify-content-center">
       <div className="col-4">
         <div className="card border-primary mb-3">
           <div className="card-header">
-            <form onSubmit={setClientName}>
-              <input
-                className="form-control"
-                type="text"
-                name="clientname"
-                defaultValue={client.name}
-              />
-              <button type="submit" className="btn btn-primary">
-                Save
-              </button>
-            </form>
+            {isAdmin && isEdit ? (
+              <ConnectedClientsEdit client={client} />
+            ) : (
+              <p>{client.name}</p>
+            )}
           </div>
           <div className="card-body text-secondary">
-            <button
-              className="btn btn-danger btn-sm btn-block mb-2"
-              onClick={deleteClient}
-            >
-              Delete
-            </button>
             <Link
               to="/clients"
               className="btn btn-primary btn-sm btn-block mb-2"
@@ -44,10 +33,13 @@ const ClientsDetail = ({ id, client, setClientName, deleteClient }) => (
 
 const mapStateToProps = (state, ownProps) => {
   let id = ownProps.match.params.id;
+  let isEdit = ownProps.match.params.isEdit === "true" ? true : false;
+  let isAdmin = state.session.isAdmin;
   let client = state.clients.find((client) => client.id === id);
   return {
-    id,
     client,
+    isAdmin,
+    isEdit,
   };
 };
 

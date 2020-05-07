@@ -1,39 +1,127 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { history } from "../store/history";
+import { deleteClient } from "../store/mutations";
 
-export const Clients = ({ clients }) => (
-  <div className="container-fluid mt-5">
-    <div className="row justify-content-center">
-      <div className="col-4">
-        <div className="card border-primary mb-3">
-          <div className="card-header">Clients</div>
-          <div className="card-body text-secondary">
-            {clients.map((client) => (
-              <div key={client.id}>
-                <p>{client.name}</p>
-                <Link
-                  to={`/client/${client.id}`}
-                  id={client.id}
-                  className="btn btn-success btn-sm btn-block mb-2"
-                >
-                  view
-                </Link>
-              </div>
-            ))}
-            <Link
-              to="/dashboard"
-              className="btn btn-primary btn-sm btn-block mb-2"
-            >
-              Back to Dashboard
-            </Link>
+export const Clients = ({ clients, isAdmin, deleteClient }) => (
+  <>
+    <section className="content-header">
+      <div className="container-fluid">
+        <div className="row mb-2">
+          <div className="col-sm-6">
+            <h1>Clients</h1>
+            {isAdmin ? (
+              <Link to="/add-contact" className="btn btn-success">
+                <i className="fas fa-file-alt"></i>
+                Create New Client
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <section className="content">
+      <div className="card card-solid">
+        <div className="card-body pb-0">
+          <div className="row d-flex align-items-stretch">
+            {clients.map((client) => (
+              <div
+                className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch"
+                key={client.id}
+              >
+                <div className="card bg-light card-client">
+                  <div className="card-header text-muted border-bottom-0">
+                    {client.name}
+                  </div>
+                  <div className="card-body pt-0">
+                    <div className="row">
+                      <div className="col-12">
+                        <ul className="ml-4 mb-0 fa-ul text-muted">
+                          <li className="small">
+                            <span className="fa-li">
+                              <i className="fas fa-lg fa-envelope"></i>
+                            </span>{" "}
+                            Email: {client.email}
+                          </li>
+                          <li className="small">
+                            <span className="fa-li">
+                              <i className="fas fa-lg fa-building"></i>
+                            </span>{" "}
+                            Address: {client.address}
+                          </li>
+                          <li className="small">
+                            <span className="fa-li">
+                              <i className="fas fa-lg fa-phone"></i>
+                            </span>{" "}
+                            Phone #: {client.phone}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-footer">
+                    <div className="text-right">
+                      <Link
+                        to={`/client/${client.id}`}
+                        id={client.id}
+                        className="btn btn-primary btn-sm mr-1"
+                      >
+                        <i className="fas fa-folder"></i>
+                        View
+                      </Link>
+                      {isAdmin ? (
+                        <>
+                          <Link
+                            to={`/client/${client.id}/true`}
+                            id={client.id}
+                            className="btn btn-info btn-sm mr-1"
+                          >
+                            <i className="fas fa-pencil-alt"></i>
+                            Edit
+                          </Link>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => deleteClient(client.id)}
+                          >
+                            <i className="fas fa-trash"></i>
+                            Delete
+                          </button>
+                        </>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  </>
 );
 
-const mapStateToProps = ({ clients }) => ({ clients });
+const mapStateToProps = (state, ownProps) => {
+  let isAdmin = state.session.isAdmin;
+  let clients = state.clients;
+  return {
+    clients,
+    isAdmin,
+  };
+};
 
-export const ConnectedClients = connect(mapStateToProps)(Clients);
+const mapDispatchStateToProps = (dispatch, ownProps) => {
+  return {
+    deleteClient(id) {
+      console.log(id);
+      dispatch(deleteClient(id));
+      history.push("/clients");
+    },
+  };
+};
+
+export const ConnectedClients = connect(
+  mapStateToProps,
+  mapDispatchStateToProps
+)(Clients);

@@ -4,48 +4,71 @@ import * as mutations from "../store/mutations";
 import "../styles/style.css";
 
 export const Login = ({ authenticateUser, authenticated }) => (
-  <div className="container-fluid mt-5">
-    <div className="row justify-content-center">
-      <div className="col-4">
-        <div className="text-center">
-          <form onSubmit={authenticateUser} className="form-signin">
-            <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
-            <label htmlFor="username" className="sr-only">
-              Username
-            </label>
-            <input
-              className="form-control mb-2"
-              type="text"
-              name="username"
-              id="username"
-              placeholder="username"
-              defaultValue="Admin"
-              required
-            />
-            <label htmlFor="password" className="sr-only">
-              Password
-            </label>
-            <input
-              className="form-control mb-2"
-              type="password"
-              name="password"
-              id="password"
-              placeholder="password"
-              defaultValue=""
-              required
-            />
+  <div className="sign-in">
+    <div className="login-box">
+      <div className="login-logo">
+        <a href="#">
+          <img src="src/app/images/crm_app_logo.png" alt="CRM App" />
+        </a>
+      </div>
+      <div className="card">
+        <div className="card-body login-card-body">
+          <p className="login-box-msg">Sign in to start your session</p>
 
-            {authenticated === mutations.NOT_AUTHENTICATED ? (
-              <div className="alert alert-warning" role="alert">
-                Login Incorrect
+          <form onSubmit={authenticateUser}>
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="username"
+                defaultValue="Admin"
+                required
+                className="form-control"
+              />
+              <div className="input-group-append">
+                <div className="input-group-text">
+                  <span className="fas fa-envelope"></span>
+                </div>
               </div>
-            ) : null}
-
-            <button className="btn btn-lg btn-primary btn-block" type="submit">
-              Sign in
-            </button>
-            <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
+            </div>
+            <div className="input-group mb-3">
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="password"
+                defaultValue=""
+                required
+                className="form-control"
+              />
+              <div className="input-group-append">
+                <div className="input-group-text">
+                  <span className="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                {authenticated === mutations.NOT_AUTHENTICATED ? (
+                  <span
+                    id="exampleInputEmail1-error"
+                    class="error invalid-feedback"
+                  >
+                    Please enter a email address
+                  </span>
+                ) : null}
+                <button type="submit" className="btn btn-primary btn-block">
+                  Sign In
+                </button>
+              </div>
+            </div>
           </form>
+          <p className="mb-0">
+            <a href="register.html" className="text-center">
+              Register a new membership
+            </a>
+          </p>
         </div>
       </div>
     </div>

@@ -1,26 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
-import { ConnectedUnitList } from "./Units";
-import { ConnectedNavigation } from "./Navigation";
 
 export const Dashboard = ({ id, name }) => (
-  <div className="container-fluid mt-5">
-    <div className="row justify-content-center">
-      <div className="col-4">
-        <div className="card border-primary mb-3">
-          <div className="card-header">Welcome {name}</div>
-          <div className="card-body text-secondary">
-            <form>
-              <input
-                type="text"
-                name=""
-                id=""
-                className="form-control"
-                placeholder="Search"
-              />
-            </form>
-            <ConnectedNavigation id={id} />
-          </div>
+  <div className="content-header">
+    <div className="container-fluid">
+      <div className="row mb-2">
+        <div className="col-sm-6">
+          <h1 className="m-0 text-dark">Dashboard</h1>
+        </div>
+      </div>
+    </div>
+
+    <div className="content">
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-lg-12">Content here</div>
         </div>
       </div>
     </div>
