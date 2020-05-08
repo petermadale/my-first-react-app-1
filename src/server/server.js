@@ -7,7 +7,7 @@ import { authenticationRoute } from "./authenticate";
 import { connect } from "mongodb";
 import path from "path";
 
-let port = process.env.port || 7777;
+//let port = process.env.PORT || 7777;
 let app = express();
 
 app.listen(port, console.log("Server listening on port", port));
@@ -20,12 +20,19 @@ app.use(cors(), bodyParser.urlencoded({ extended: true }), bodyParser.json());
 
 authenticationRoute(app);
 
-if (process.env.NODE_ENV == `production`) {
-  app.use(express.static(path.resolve(__dirname, "../../dist")));
-  app.get("/*", (req, res) => {
-    res.sendFile(path.resolve("index.html"));
-  });
-}
+// if (process.env.NODE_ENV == `production`) {
+//   app.use(express.static(path.resolve(__dirname, "../../dist")));
+//   app.get("/*", (req, res) => {
+//     res.sendFile(path.resolve("index.html"));
+//   });
+// }
+// http://expressjs.com/en/starter/static-files.html
+app.use(express.static("public"));
+
+// http://expressjs.com/en/starter/basic-routing.html
+app.get("/", function (request, response) {
+  response.sendFile(__dirname + "/views/index.html");
+});
 
 export const addNewUnitTypes = async (unit_types) => {
   let db = await connectDB();
