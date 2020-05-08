@@ -5,8 +5,9 @@ import { connectDB } from "./connect-db";
 import "./initialize-db";
 import { authenticationRoute } from "./authenticate";
 import { connect } from "mongodb";
+import path from "path";
 
-let port = 7777;
+let port = process.env.port || 7777;
 let app = express();
 
 app.listen(port, console.log("Server listening on port", port));
