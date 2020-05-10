@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { connectDB } from "./connect-db";
+//import { connectDB } from "./connect-db";
+import { connectDB } from "./connect";
 import "./initialize-db";
 import { authenticationRoute } from "./authenticate";
 import { connect } from "mongodb";
