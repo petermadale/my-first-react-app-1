@@ -9,7 +9,7 @@ import { connect } from "mongodb";
 import path from "path";
 
 //let port = process.env.port || 7777;
-let port = process.env.port;
+let port = process.env.PORT;
 let app = express();
 
 app.listen(port, console.log("Server listening on port", port));
