@@ -1,13 +1,12 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { connectDB } from "./connect-db";
+import { connectDB } from "./connect";
 import "./initialize-db";
 import { authenticationRoute } from "./authenticate";
-import { connect } from "mongodb";
 import path from "path";
 
-//let port = process.env.PORT || 7777;
+let port = process.env.PORT || 7777;
 let app = express();
 
 app.listen(port, console.log("Server listening on port", port));
@@ -20,19 +19,12 @@ app.use(cors(), bodyParser.urlencoded({ extended: true }), bodyParser.json());
 
 authenticationRoute(app);
 
-// if (process.env.NODE_ENV == `production`) {
-//   app.use(express.static(path.resolve(__dirname, "../../dist")));
-//   app.get("/*", (req, res) => {
-//     res.sendFile(path.resolve("index.html"));
-//   });
-// }
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"));
-
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + "/views/index.html");
-});
+if (process.env.NODE_ENV == `production`) {
+  app.use(express.static(path.resolve(__dirname, "../../dist")));
+  app.get("/*", (req, res) => {
+    res.sendFile(path.resolve("index.html"));
+  });
+}
 
 export const addNewUnitTypes = async (unit_types) => {
   let db = await connectDB();
@@ -51,11 +43,14 @@ export const updateUnitTypes = async (unit_type) => {
 };
 
 export const updateClient = async (client) => {
-  let { id, name } = client;
+  let { id, owner, name, email, address, phone, ext, cell, fax } = client;
   let db = await connectDB();
   let collection = db.collection(`clients`);
-  if (name) {
-    await collection.updateOne({ id }, { $set: { name } });
+  if (id) {
+    await collection.updateOne(
+      { id },
+      { $set: { name, email, address, phone, ext, cell, fax } }
+    );
   }
 };
 
@@ -64,12 +59,12 @@ export const deleteClient = async (id) => {
   let db = await connectDB();
   let collection = db.collection(`clients`);
   await collection.deleteOne({ id: id }, (err, clients) => {
-    if (err) {
-      res.send("error removing");
-    } else {
-      console.log(clients);
-      res.status(204);
-    }
+    // if (err) {
+    //   res.send("error removing");
+    // } else {
+    //   console.log(clients);
+    //   res.status(204);
+    // }
   });
 };
 
@@ -104,8 +99,7 @@ app.post("/client/new", async (req, res) => {
 app.delete("/clients/:id", async (req, res) => {
   let id = req.params.id;
   deleteClient(id);
-
-  res.status(200).send();
+  res.sendStatus(200);
 });
 
 app.post("/unit_types/new", async (req, res) => {

@@ -1,6 +1,7 @@
 import uuid from "uuid";
 import md5 from "md5";
-import { connectDB } from "./connect-db";
+// import { connectDB } from "./connect-db";
+import { connectDB } from "./connect";
 
 const authenticationTokens = [];
 

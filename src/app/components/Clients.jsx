@@ -3,7 +3,15 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { history } from "../store/history";
 import { deleteClient } from "../store/mutations";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+});
 export const Clients = ({ clients, isAdmin, deleteClient }) => (
   <>
     <section className="content-header">
@@ -12,10 +20,20 @@ export const Clients = ({ clients, isAdmin, deleteClient }) => (
           <div className="col-sm-6">
             <h1>Clients</h1>
             {isAdmin ? (
-              <Link to="/add-contact" className="btn btn-success">
+              //   <Link to="/add-contact" className="btn btn-success">
+              //     <i className="fas fa-file-alt"></i>
+              //     Create New Client
+              //   </Link>
+              <a
+                className="btn btn-success"
+                data-widget="control-sidebar"
+                data-slide="true"
+                href="#"
+                role="button"
+              >
                 <i className="fas fa-file-alt"></i>
                 Create New Client
-              </Link>
+              </a>
             ) : null}
           </div>
         </div>
@@ -115,8 +133,23 @@ const mapDispatchStateToProps = (dispatch, ownProps) => {
   return {
     deleteClient(id) {
       console.log(id);
-      dispatch(deleteClient(id));
-      history.push("/clients");
+      Swal.fire({
+        title: "Are you sure?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.value) {
+          dispatch(deleteClient(id));
+          history.push("/clients");
+          Toast.fire({
+            icon: "success",
+            title: "Client deleted.",
+          });
+        }
+      });
     },
   };
 };

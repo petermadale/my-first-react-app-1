@@ -11,115 +11,95 @@ export const ClientsNew = ({
   isDuplicate,
 }) => (
   <>
-    <section className="content-header">
-      <div className="container-fluid">
-        <div className="row mb-2">
-          <div className="col-sm-12">
-            <h1>Create New Client</h1>
-          </div>
-        </div>
+    <form onSubmit={createNewClient}>
+      <input type="hidden" name="owner" value={id} />
+      <div className="form-group">
+        <label htmlFor="name">Client Name</label>
+        <input
+          type="text"
+          placeholder="Client Name"
+          name="name"
+          id="name"
+          className="form-control"
+          onChange={verifyClientDuplicate}
+          required
+        />
+        {isDuplicate ? <p>Duplicate</p> : null}
       </div>
-    </section>
-
-    <section className="content">
-      <div className="row">
-        <div className="col-md-12">
-          <div className="card card-warning">
-            <div className="card-header">
-              <h3 className="card-title">Client Details</h3>
-            </div>
-            <div className="card-body">
-              <form onSubmit={createNewClient}>
-                <input type="hidden" name="owner" value={id} />
-                <div className="form-group">
-                  <label htmlFor="name">Client Name</label>
-                  <input
-                    type="text"
-                    placeholder="Client Name"
-                    name="name"
-                    id="name"
-                    className="form-control"
-                    onChange={verifyClientDuplicate}
-                    required
-                  />
-                  {isDuplicate ? <p>Duplicate</p> : null}
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    name="email"
-                    id="email"
-                    className="form-control"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="address">Address</label>
-                  <input
-                    type="text"
-                    placeholder="Address"
-                    name="address"
-                    id="address"
-                    className="form-control"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="phone">Phone</label>
-                  <input
-                    type="text"
-                    placeholder="Phone"
-                    name="phone"
-                    id="phone"
-                    className="form-control"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="ext">Ext</label>
-                  <input
-                    type="text"
-                    placeholder="Ext"
-                    name="ext"
-                    id="ext"
-                    className="form-control"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="cell">Cell Phone</label>
-                  <input
-                    type="text"
-                    placeholder="Cell Phone"
-                    name="cell"
-                    id="cell"
-                    className="form-control"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="fax">Fax</label>
-                  <input
-                    type="text"
-                    placeholder="Fax"
-                    name="fax"
-                    id="fax"
-                    className="form-control"
-                  />
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          placeholder="Email"
+          name="email"
+          id="email"
+          className="form-control"
+          required
+        />
       </div>
-      <div className="row">
-        <div className="col-12">
-          <button type="submit" className="btn btn-success mr-2">
-            Save
-          </button>
-          <Link to="/clients" className="btn btn-secondary">
-            Cancel
-          </Link>
-        </div>
+      <div className="form-group">
+        <label htmlFor="address">Address</label>
+        <input
+          type="text"
+          placeholder="Address"
+          name="address"
+          id="address"
+          className="form-control"
+        />
       </div>
-    </section>
+      <div className="form-group">
+        <label htmlFor="phone">Phone</label>
+        <input
+          type="text"
+          placeholder="Phone"
+          name="phone"
+          id="phone"
+          className="form-control"
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="ext">Ext</label>
+        <input
+          type="text"
+          placeholder="Ext"
+          name="ext"
+          id="ext"
+          className="form-control"
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="cell">Cell Phone</label>
+        <input
+          type="text"
+          placeholder="Cell Phone"
+          name="cell"
+          id="cell"
+          className="form-control"
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="fax">Fax</label>
+        <input
+          type="text"
+          placeholder="Fax"
+          name="fax"
+          id="fax"
+          className="form-control"
+        />
+      </div>
+      <button type="submit" className="btn btn-success mr-2">
+        Save
+      </button>
+      <button
+        className="btn btn-danger"
+        data-widget="control-sidebar"
+        data-slide="true"
+        href="#"
+        role="button"
+      >
+        Cancel
+      </button>
+    </form>
   </>
 );
 

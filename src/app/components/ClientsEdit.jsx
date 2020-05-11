@@ -1,91 +1,110 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { createNewClient } from "../store/mutations";
+import { updateClient } from "../store/mutations";
 
-export const ClientsEdit = ({ client, createNewClient }) => (
+export const ClientsEdit = ({ client, updateClient }) => (
   <>
-    <form>
-      <input type="hidden" name="owner" value={client.id} />
-      <div class="form-group">
-        <label htmlFor="name">Client Name</label>
-        <input
-          type="text"
-          placeholder="Client Name"
-          name="name"
-          id="name"
-          className="form-control"
-          value={client.name}
-          required
-        />
+    <div className="row">
+      <div className="col-md-12">
+        <div className="card card-primary">
+          <div className="card-header">
+            <h3 className="card-title">Edit {client.name}</h3>
+          </div>
+          <div className="card-body">
+            <form onSubmit={updateClient}>
+              <input type="hidden" name="id" value={client.id} disabled />
+              <input type="hidden" name="owner" value={client.owner} disabled />
+              <div className="form-group">
+                <label htmlFor="name">Client Name</label>
+                <input
+                  type="text"
+                  placeholder="Client Name"
+                  name="name"
+                  id="name"
+                  className="form-control"
+                  defaultValue={client.name}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  name="email"
+                  id="email"
+                  className="form-control"
+                  defaultValue={client.email}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="address">Address</label>
+                <input
+                  type="text"
+                  placeholder="Address"
+                  name="address"
+                  id="address"
+                  className="form-control"
+                  defaultValue={client.address}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phone">Phone</label>
+                <input
+                  type="text"
+                  placeholder="Phone"
+                  name="phone"
+                  id="phone"
+                  className="form-control"
+                  defaultValue={client.phone}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="ext">Ext</label>
+                <input
+                  type="text"
+                  placeholder="Ext"
+                  name="ext"
+                  id="ext"
+                  className="form-control"
+                  defaultValue={client.ext}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="cell">Cell Phone</label>
+                <input
+                  type="text"
+                  placeholder="Cell Phone"
+                  name="cell"
+                  id="cell"
+                  className="form-control"
+                  defaultValue={client.cell}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="fax">Fax</label>
+                <input
+                  type="text"
+                  placeholder="Fax"
+                  name="fax"
+                  id="fax"
+                  className="form-control"
+                  defaultValue={client.fax}
+                />
+              </div>
+              <button type="submit" className="btn btn-success mr-2">
+                Save
+              </button>
+              <Link to="/clients" className="btn btn-danger">
+                Cancel
+              </Link>
+            </form>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          placeholder="Email"
-          name="email"
-          id="email"
-          className="form-control"
-          value={client.email}
-        />
-      </div>
-      <div class="form-group">
-        <label htmlFor="address">Address</label>
-        <input
-          type="text"
-          placeholder="Address"
-          name="address"
-          id="address"
-          className="form-control"
-          value={client.address}
-        />
-      </div>
-      <div class="form-group">
-        <label htmlFor="phone">Phone</label>
-        <input
-          type="text"
-          placeholder="Phone"
-          name="phone"
-          id="phone"
-          className="form-control"
-          value={client.phone}
-        />
-      </div>
-      <div class="form-group">
-        <label htmlFor="ext">Ext</label>
-        <input
-          type="text"
-          placeholder="Ext"
-          name="ext"
-          id="ext"
-          className="form-control"
-          value={client.ext}
-        />
-      </div>
-      <div class="form-group">
-        <label htmlFor="cell">Cell Phone</label>
-        <input
-          type="text"
-          placeholder="Cell Phone"
-          name="cell"
-          id="cell"
-          className="form-control"
-          value={client.cell}
-        />
-      </div>
-      <div class="form-group">
-        <label htmlFor="fax">Fax</label>
-        <input
-          type="text"
-          placeholder="Fax"
-          name="fax"
-          id="fax"
-          className="form-control"
-          value={client.fax}
-        />
-      </div>
-    </form>
+    </div>
   </>
 );
 
@@ -98,13 +117,12 @@ const mapStatetoProps = (state, ownProps) => {
 
 const mapDispatchtoProps = (dispatch, ownProps) => {
   return {
-    createNewClient(e) {
+    updateClient(e) {
       e.preventDefault();
-      const clientID = uuid();
       const form = e.target;
+      const clientID = form[`id`].value;
+      const owner = form[`owner`].value;
       const data = {
-        id: clientID,
-        owner: form[`owner`].value,
         name: form[`name`].value,
         email: form[`email`].value,
         address: form[`address`].value,
@@ -115,7 +133,7 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
       };
 
       console.log(data);
-      dispatch(createNewClient(data));
+      dispatch(updateClient(clientID, owner, data));
     },
   };
 };

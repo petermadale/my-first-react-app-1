@@ -53,11 +53,30 @@ export const store = createStore(
               ? { ...client, name: action.name }
               : client;
           });
+        case mutations.UPDATE_CLIENT:
+          return clients.map((client) => {
+            return client.id === action.id
+              ? {
+                  ...client,
+                  name: action.client.name,
+                  email: action.client.email,
+                  address: action.client.address,
+                  phone: action.client.phone,
+                  ext: action.client.ext,
+                  cell: action.client.cell,
+                  fax: action.client.fax,
+                }
+              : client;
+          });
         case mutations.CREATE_NEW_CLIENT:
           return [...clients, action.client];
         case mutations.DELETE_CLIENT:
           return (clients = clients.filter((client) => {
             return client.id !== action.id;
+          }));
+        case mutations.SEARCH_CLIENT:
+          return (clients = clients.filter((client) => {
+            return client.name !== action.name;
           }));
       }
       return clients;

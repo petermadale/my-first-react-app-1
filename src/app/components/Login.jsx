@@ -53,7 +53,7 @@ export const Login = ({ authenticateUser, authenticated }) => (
                 {authenticated === mutations.NOT_AUTHENTICATED ? (
                   <span
                     id="exampleInputEmail1-error"
-                    class="error invalid-feedback"
+                    className="error invalid-feedback"
                   >
                     Please enter a email address
                   </span>

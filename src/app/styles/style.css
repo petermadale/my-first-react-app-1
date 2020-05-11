@@ -11,6 +11,10 @@
     justify-content: center;
 }
 
+.control-sidebar {
+    width: 500px;
+}
+
 .sidebar a {
     color: white;
 }

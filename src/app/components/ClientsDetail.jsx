@@ -6,29 +6,67 @@ import { history } from "../store/history";
 import { ConnectedClientsEdit } from "./ClientsEdit";
 
 const ClientsDetail = ({ isAdmin, isEdit, client, setClientName }) => (
-  <div className="container-fluid mt-5">
-    <div className="row justify-content-center">
-      <div className="col-4">
-        <div className="card border-primary mb-3">
-          <div className="card-header">
-            {isAdmin && isEdit ? (
-              <ConnectedClientsEdit client={client} />
-            ) : (
-              <p>{client.name}</p>
-            )}
-          </div>
-          <div className="card-body text-secondary">
-            <Link
-              to="/clients"
-              className="btn btn-primary btn-sm btn-block mb-2"
-            >
-              Back to Clients
-            </Link>
+  <>
+    <section className="content-header">
+      <div className="container-fluid">
+        <div className="row mb-2">
+          <div className="col-sm-6">
+            <h1>Client Detail</h1>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <section className="content">
+      {isAdmin && isEdit ? (
+        <ConnectedClientsEdit client={client} />
+      ) : (
+        <div className="card">
+          <div className="card-body">
+            <div className="row">
+              <div className="col-12 order-1 order-md-2">
+                <h3 className="text-primary">
+                  <i className="fas fa-user"></i> {client.name}
+                </h3>
+                <br />
+                <div className="text-muted">
+                  <p className="text-sm">
+                    Email:
+                    <b className="d-block">{client.email}</b>
+                  </p>
+                  <p className="text-sm">
+                    Address:
+                    <b className="d-block">{client.address}</b>
+                  </p>
+                  <p className="text-sm">
+                    Phone #:
+                    <b className="d-block">{client.phone}</b>
+                  </p>
+                  <p className="text-sm">
+                    Ext:
+                    <b className="d-block">{client.ext}</b>
+                  </p>
+                  <p className="text-sm">
+                    Cell Phone:
+                    <b className="d-block">{client.cell}</b>
+                  </p>
+                  <p className="text-sm">
+                    Fax:
+                    <b className="d-block">{client.fax}</b>
+                  </p>
+                </div>
+                <div className="text-center mt-5 mb-3">
+                  <Link to="/clients" className="btn btn-success btn-sm">
+                    Back to Clients
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  </>
 );
 
 const mapStateToProps = (state, ownProps) => {

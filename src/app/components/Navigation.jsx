@@ -5,12 +5,18 @@ import React from "react";
 const Navigation = ({ isADmin }) => (
   <>
     <li className="nav-item">
+      <Link to="/dashboard" className="nav-link">
+        <i className="nav-icon fas fa-tachometer-alt"></i>
+        <p>Dashboard</p>
+      </Link>
+    </li>
+    <li className="nav-item">
       <Link to="/clients" className="nav-link">
         <i className="nav-icon fas fa-th"></i>
         <p>Clients</p>
       </Link>
     </li>
-    <li className="nav-item">
+    {/* <li className="nav-item">
       <Link to="" className="nav-link">
         <i className="nav-icon fas fa-calendar-alt"></i>
         <p>My Meetings</p>
@@ -23,7 +29,7 @@ const Navigation = ({ isADmin }) => (
           <p>Create New Client</p>
         </Link>
       </li>
-    ) : null}
+    ) : null} */}
     <li className="nav-item">
       <Link to="/my-details" className="nav-link">
         <i className="nav-icon fas fa-edit"></i>

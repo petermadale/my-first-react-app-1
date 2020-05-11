@@ -18,11 +18,21 @@ export const SET_CLIENT_NAME = `SET_CLIENT_NAME`;
 export const DUPLICATE_CLIENT_NAME = `DUPLICATE_CLIENT_NAME`;
 export const CREATE_NEW_CLIENT = `CREATE_NEW_CLIENT`;
 export const DELETE_CLIENT = `DELETE_CLIENT`;
+export const UPDATE_CLIENT = `UPDATE_CLIENT`;
 export const REQUEST_CREATE_CLIENT = `REQUEST_CREATE_CLIENT`;
 export const GET_CLIENTS = `GET_CLIENTS`;
 
+export const SEARCH_CLIENT = `SEARCH_CLIENT`;
+
 export const createNewClient = (client = {}) => ({
   type: CREATE_NEW_CLIENT,
+  client,
+});
+
+export const updateClient = (id, owner, client = {}) => ({
+  type: UPDATE_CLIENT,
+  id,
+  owner,
   client,
 });
 
@@ -34,6 +44,11 @@ export const deleteClient = (id) => ({
 export const setClientName = (id, name) => ({
   type: SET_CLIENT_NAME,
   id,
+  name,
+});
+
+export const searchClient = (name) => ({
+  type: SEARCH_CLIENT,
   name,
 });
 
