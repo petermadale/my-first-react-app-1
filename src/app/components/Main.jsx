@@ -12,6 +12,7 @@ import { ConnectedClientsNew } from "./ClientsNew";
 import { ConnectedMainHeader } from "./MainHeader";
 import { ConnectedMainSidebar } from "./MainSiderbar";
 import { ConnectedMainFooter } from "./MainFooter";
+import { ConnectedMyDetails } from "./MyDetails";
 
 const RouteGuard = (Component) => ({ match }) =>
   !store.getState().session.authenticated ? (
@@ -44,6 +45,11 @@ export const Main = () => (
             render={RouteGuard(ConnectedDashboard)}
           />
           <Route exact path="/clients" render={RouteGuard(ConnectedClients)} />
+          <Route
+            exact
+            path="/my-details"
+            render={RouteGuard(ConnectedMyDetails)}
+          />
           <Route
             exact
             path="/client/:id/:isEdit?"

@@ -1,18 +1,13 @@
-export const CREATE_HOME_OWNERS = `CREATE_HOME_OWNERS`;
-export const REQUEST_CREATE_HOME_OWNERS = `REQUEST_CREATE_HOME_OWNERS`;
-export const SET_UNIT_TYPE_NAME = `SET_UNIT_TYPE_NAME`;
-export const CREATE_UNIT_TYPE = `CREATE_UNIT_TYPE`;
-export const REQUEST_CREATE_UNIT_TYPE = `REQUEST_CREATE_UNIT_TYPE`;
-export const CREATE_UNIT = `CREATE_UNIT`;
-export const REQUEST_CREATE_UNIT = `REQUEST_CREATE_UNIT`;
 export const REQUEST_AUTHENTICATE_USER = `REQUEST_AUTHENTICATE_USER`;
 export const PROCESSING_AUTHENTICATE_USER = `PROCESSING_AUTHENTICATE_USER`;
 export const AUTHENTICATING = `AUTHENTICATING`;
 export const AUTHENTICATED = `AUTHENTICATED`;
 export const NOT_AUTHENTICATED = `NOT_AUTHENTICATED`;
+export const LOGOUT_USER = `LOGOUT_USER`;
 export const SET_STATE = `SET_STATE`;
 export const USERNAME_RESERVED = `USERNAME_RESERVED`;
 export const REQUEST_USER_ACCOUNT_CREATION = `REQUEST_USER_ACCOUNT_CREATION`;
+export const UPDATE_USER_DETAILS = `UPDATE_USER_DETAILS`;
 
 export const SET_CLIENT_NAME = `SET_CLIENT_NAME`;
 export const DUPLICATE_CLIENT_NAME = `DUPLICATE_CLIENT_NAME`;
@@ -21,8 +16,6 @@ export const DELETE_CLIENT = `DELETE_CLIENT`;
 export const UPDATE_CLIENT = `UPDATE_CLIENT`;
 export const REQUEST_CREATE_CLIENT = `REQUEST_CREATE_CLIENT`;
 export const GET_CLIENTS = `GET_CLIENTS`;
-
-export const SEARCH_CLIENT = `SEARCH_CLIENT`;
 
 export const createNewClient = (client = {}) => ({
   type: CREATE_NEW_CLIENT,
@@ -47,11 +40,6 @@ export const setClientName = (id, name) => ({
   name,
 });
 
-export const searchClient = (name) => ({
-  type: SEARCH_CLIENT,
-  name,
-});
-
 export const duplicateClientName = (name) => ({
   type: DUPLICATE_CLIENT_NAME,
   name,
@@ -59,35 +47,6 @@ export const duplicateClientName = (name) => ({
 
 export const getClients = () => ({
   type: GET_CLIENTS,
-});
-
-export const createUnitType = (unitTypeID) => ({
-  type: CREATE_UNIT_TYPE,
-  unitTypeID,
-});
-
-export const requestCreateUnitType = (unitTypeID) => ({
-  type: REQUEST_CREATE_UNIT_TYPE,
-  unitTypeID,
-});
-
-export const createUnit = (unitID, homeownerID, unittypeID) => ({
-  type: CREATE_UNIT,
-  unitID,
-  homeownerID,
-  unittypeID,
-});
-
-export const requestCreateUnit = (unittypeID, homeownerID) => ({
-  type: REQUEST_CREATE_UNIT,
-  unittypeID,
-  homeownerID,
-});
-
-export const setUnitName = (id, name) => ({
-  type: SET_UNIT_TYPE_NAME,
-  id,
-  name,
 });
 
 export const requestAuthenticateUser = (username, password) => ({
@@ -105,6 +64,12 @@ export const processAuthenticateUser = (
   authenticated: status,
 });
 
+export const logoutUser = (status = NOT_AUTHENTICATED, session = null) => ({
+  type: LOGOUT_USER,
+  session,
+  authenticated: status,
+});
+
 export const setState = (state = {}) => ({
   type: SET_STATE,
   state,
@@ -112,6 +77,13 @@ export const setState = (state = {}) => ({
 
 export const requestCreateUserAccount = (username, password) => ({
   type: REQUEST_USER_ACCOUNT_CREATION,
+  username,
+  password,
+});
+
+export const updateUserDetails = (id, username, password) => ({
+  type: UPDATE_USER_DETAILS,
+  id,
   username,
   password,
 });

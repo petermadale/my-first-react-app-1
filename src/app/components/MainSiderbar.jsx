@@ -24,9 +24,9 @@ export const MainSidebar = ({ id, name }) => (
           />
         </div>
         <div className="info">
-          <a href="#" className="d-block">
+          <Link to="/my-details" className="d-block">
             Welcome {name}
-          </a>
+          </Link>
         </div>
       </div>
 

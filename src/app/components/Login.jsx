@@ -2,13 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import * as mutations from "../store/mutations";
 import "../styles/style.css";
+import logo from "../images/crm_app_logo.png";
 
 export const Login = ({ authenticateUser, authenticated }) => (
   <div className="sign-in">
     <div className="login-box">
       <div className="login-logo">
         <a href="#">
-          <img src="src/app/images/crm_app_logo.png" alt="CRM App" />
+          <img src={logo} alt="CRM App" />
         </a>
       </div>
       <div className="card">
@@ -64,11 +65,11 @@ export const Login = ({ authenticateUser, authenticated }) => (
               </div>
             </div>
           </form>
-          <p className="mb-0">
+          {/* <p className="mb-0">
             <a href="register.html" className="text-center">
               Register a new membership
             </a>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

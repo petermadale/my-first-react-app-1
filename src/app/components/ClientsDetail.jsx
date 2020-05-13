@@ -31,29 +31,39 @@ const ClientsDetail = ({ isAdmin, isEdit, client, setClientName }) => (
                 <br />
                 <div className="text-muted">
                   <p className="text-sm">
-                    Email:
+                    <i className="fas fa-envelope"></i> Email:
                     <b className="d-block">{client.email}</b>
                   </p>
-                  <p className="text-sm">
-                    Address:
-                    <b className="d-block">{client.address}</b>
-                  </p>
-                  <p className="text-sm">
-                    Phone #:
-                    <b className="d-block">{client.phone}</b>
-                  </p>
-                  <p className="text-sm">
-                    Ext:
-                    <b className="d-block">{client.ext}</b>
-                  </p>
-                  <p className="text-sm">
-                    Cell Phone:
-                    <b className="d-block">{client.cell}</b>
-                  </p>
-                  <p className="text-sm">
-                    Fax:
-                    <b className="d-block">{client.fax}</b>
-                  </p>
+                  {client.address ? (
+                    <p className="text-sm">
+                      <i className="fas fa-building"></i> Address:
+                      <b className="d-block">{client.address}</b>
+                    </p>
+                  ) : null}
+                  {client.phone ? (
+                    <p className="text-sm">
+                      <i className="fas fa-phone"></i> Phone #:
+                      <b className="d-block">{client.phone}</b>
+                    </p>
+                  ) : null}
+                  {client.ext ? (
+                    <p className="text-sm">
+                      <i className="fas fa-phone"></i> Ext:
+                      <b className="d-block">{client.ext}</b>
+                    </p>
+                  ) : null}
+                  {client.cell ? (
+                    <p className="text-sm">
+                      <i className="fas fa-mobile"></i> Cell Phone:
+                      <b className="d-block">{client.cell}</b>
+                    </p>
+                  ) : null}
+                  {client.fax ? (
+                    <p className="text-sm">
+                      <i className="fas fa-fax"></i> Fax:
+                      <b className="d-block">{client.fax}</b>
+                    </p>
+                  ) : null}
                 </div>
                 <div className="text-center mt-5 mb-3">
                   <Link to="/clients" className="btn btn-success btn-sm">

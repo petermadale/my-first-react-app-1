@@ -20,11 +20,11 @@
         "node": "9.2.0"
     },
     "dependencies": {
-        "adminlte-2-react": "^0.1.27",
         "axios": "^0.18.0",
         "body-parser": "^1.18.3",
         "bootstrap": "^4.4.1",
         "cors": "^2.8.4",
+        "css-loader": "^3.5.3",
         "express": "^4.16.3",
         "history": "^4.7.2",
         "jquery": "^3.5.0",
@@ -43,6 +43,7 @@
         "sweetalert2": "^9.10.12",
         "sweetalert2-react": "^0.8.3",
         "sweetalert2-react-content": "^3.0.1",
+        "style-loader": "^0.23.1",
         "url-loader": "^4.1.0",
         "uuid": "^3.3.2",
         "webpack": "^4.17.2"
@@ -50,6 +51,7 @@
     "devDependencies": {
         "@babel/core": "^7.0.0",
         "@babel/node": "^7.0.0",
+        "@babel/plugin-proposal-class-properties": "^7.8.3",
         "@babel/preset-env": "^7.0.0",
         "@babel/preset-react": "^7.0.0",
         "@babel/register": "^7.0.0",
@@ -62,13 +64,11 @@
         "babel-plugin-transform-class-properties": "^6.24.1",
         "concurrently": "^4.0.1",
         "cross-env": "^5.2.0",
-        "css-loader": "^3.5.3",
         "file-loader": "^6.0.0",
         "highground": "^1.0.3-beta",
         "jest": "^23.6.0",
         "mongodb": "^3.1.10",
         "nodemon": "^1.18.4",
-        "style-loader": "^0.23.1",
         "webpack-cli": "^3.1.2",
         "webpack-dev-server": "^3.1.7"
     }

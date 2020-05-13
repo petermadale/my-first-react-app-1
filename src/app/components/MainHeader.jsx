@@ -11,8 +11,9 @@ export const MainHeader = () => (
         </a>
       </li>
     </ul>
-
-    <ConnectedSearchInput />
+    <div className="search-client">
+      <ConnectedSearchInput />
+    </div>
   </nav>
 );
 

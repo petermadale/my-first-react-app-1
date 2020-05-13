@@ -1,8 +1,9 @@
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import React from "react";
+import { logoutUser } from "../store/mutations";
 
-const Navigation = ({ isADmin }) => (
+const Navigation = ({ isADmin, logoutUser }) => (
   <>
     <li className="nav-item">
       <Link to="/dashboard" className="nav-link">
@@ -37,10 +38,14 @@ const Navigation = ({ isADmin }) => (
       </Link>
     </li>
     <li className="nav-item">
-      <Link to="/" className="nav-link">
+      <a href="javascript:void(0)" onClick={logoutUser} className="nav-link">
         <i className="nav-icon fas fa-sign-out-alt"></i>
         <p>Logout</p>
-      </Link>
+      </a>
+      {/* <Link to="/" className="nav-link">
+        <i className="nav-icon fas fa-sign-out-alt"></i>
+        <p>Logout</p>
+      </Link> */}
     </li>
   </>
 );
@@ -52,4 +57,16 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export const ConnectedNavigation = connect(mapStateToProps)(Navigation);
+const mapDispatchStateToProps = (dispatch, ownProps) => {
+  return {
+    logoutUser() {
+      console.log(ownProps);
+      dispatch(logoutUser());
+    },
+  };
+};
+
+export const ConnectedNavigation = connect(
+  mapStateToProps,
+  mapDispatchStateToProps
+)(Navigation);

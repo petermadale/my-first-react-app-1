@@ -11,10 +11,7 @@ import * as mutations from "./mutations";
 let defaultState = {
   session: {},
   clients: [],
-  comments: [],
   users: [],
-  groups: [],
-  tasks: [],
 };
 
 const sagaMiddleware = createSagaMiddleware();
@@ -38,6 +35,15 @@ export const store = createStore(
           return { ...userSession, authenticated: mutations.AUTHENTICATING };
         case mutations.PROCESSING_AUTHENTICATE_USER:
           return { ...userSession, authenticated };
+        case mutations.UPDATE_USER_DETAILS:
+          return userSession;
+        case mutations.LOGOUT_USER:
+          return {
+            authenticated: action.authenticated,
+            id: null,
+            name: null,
+            isAdmin: false,
+          };
         default:
           return userSession;
       }
@@ -74,46 +80,18 @@ export const store = createStore(
           return (clients = clients.filter((client) => {
             return client.id !== action.id;
           }));
-        case mutations.SEARCH_CLIENT:
-          return (clients = clients.filter((client) => {
-            return client.name !== action.name;
-          }));
+        case mutations.LOGOUT_USER:
+          return [];
+        // case mutations.DUPLICATE_CLIENT_NAME:
+        //   let isDuplicate = clients.some((client) => {
+        //     return client.name.toLowerCase() === action.name.toLowerCase()
+        //       ? true
+        //       : false;
+        //   });
+        //   return isDuplicate;
+        // //   return clients;
       }
       return clients;
-    },
-    units(units = [], action) {
-      switch (action.type) {
-        case mutations.CREATE_UNIT:
-          //   console.log(action);
-          return [
-            ...units,
-            {
-              id: action.unitID,
-              area: "200",
-              block: "20",
-              description:
-                "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
-              lot: "12",
-              home_owner: "H3", //action.homeownerID,
-              unit_type: "UT2", //action.unittypeID,
-            },
-          ];
-      }
-      return units;
-    },
-    home_owners(home_owners = []) {
-      return home_owners;
-    },
-    unit_types(unit_types = [], action) {
-      switch (action.type) {
-        case mutations.SET_UNIT_TYPE_NAME:
-          return unit_types.map((unit) => {
-            return unit.id === action.unitID
-              ? { ...unit, name: action.name }
-              : unit;
-          });
-      }
-      return unit_types;
     },
   }),
   applyMiddleware(createLogger(), sagaMiddleware)

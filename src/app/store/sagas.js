@@ -3,39 +3,11 @@ import * as mutations from "./mutations";
 import { history } from "./history";
 import uuid from "uuid";
 import axios from "axios";
+import { Toast } from "./sweetalert";
+import md5 from "md5";
 import $ from "jquery";
-import Swal from "sweetalert2";
-import { compose } from "redux";
-const Toast = Swal.mixin({
-  toast: true,
-  position: "top-end",
-  showConfirmButton: false,
-  timer: 3000,
-});
 
 const url = process.env.NODE_ENV == `production` ? `` : "http://localhost:7777";
-
-// export function* taskCreationSaga() {
-//   while (true) {
-//     const { homeownerID, unittypeID } = yield take(
-//       mutations.REQUEST_CREATE_UNIT
-//     );
-//     const unitID = uuid();
-//     yield put(mutations.createUnit(unitID, homeownerID, unittypeID));
-//     // console.log("Got unit ID", unitID);
-//     const { res } = yield axios.post(url + `/unit_types/new`, {
-//       unit_types: {
-//         id: unitID,
-//         name: "New Unit",
-//         name: "Magnolia",
-//         features:
-//           "2 Storey 3 Bedrooms 2 Toilets & Bath Carport Lot Area: 64 sq. m (689 sq. ft.)",
-//         lot_area: "64 sq. m(689 sq. ft.)",
-//         floor_area: "84.56 sq. m(910 sq. ft.)",
-//       },
-//     });
-//   }
-// }
 
 export function* clientModificationSage() {
   while (true) {
@@ -83,13 +55,6 @@ export function* clientDeletionSage() {
   }
 }
 
-export function* searchClientSaga() {
-  while (true) {
-    const { name } = yield take(mutations.SEARCH_CLIENT);
-    console.log("name: ", name);
-  }
-}
-
 export function* getDataSaga() {
   while (true) {
     const clients = yield take(mutations.GET_CLIENTS);
@@ -99,18 +64,26 @@ export function* getDataSaga() {
   }
 }
 
-// export function* taskModificationSaga() {
-//   while (true) {
-//     const unit_type = yield take(mutations.SET_UNIT_TYPE_NAME);
-//     console.log("unit_type: ", unit_type);
-//     axios.post(url + `/unit_types/update`, {
-//       unit_type: {
-//         id: unit_type.id,
-//         name: unit_type.name,
-//       },
-//     });
-//   }
-// }
+export function* updateUserSage() {
+  while (true) {
+    const { id, username, password } = yield take(
+      mutations.UPDATE_USER_DETAILS
+    );
+    const passwordHash = md5(password);
+    const user = { id, username, passwordHash };
+    console.log(user);
+    try {
+      axios.post(url + `/users/update`, { user });
+      Toast.fire({
+        icon: "success",
+        title: "User details updated.",
+      });
+      history.push("/dashboard");
+    } catch (e) {
+      console.log("error:", e);
+    }
+  }
+}
 
 export function* userAuthenticationSaga() {
   while (true) {
@@ -124,7 +97,7 @@ export function* userAuthenticationSaga() {
       });
       yield put(mutations.setState(data.state));
       yield put(mutations.processAuthenticateUser(mutations.AUTHENTICATED));
-      history.push("/dashboard");
+
       if (!data) {
         throw new Error();
       }
@@ -134,6 +107,7 @@ export function* userAuthenticationSaga() {
         icon: "success",
         title: "Logged in successfully.",
       });
+      history.push("/dashboard");
     } catch (e) {
       /* catch block handles failed login */
       console.log("can't authenticate");
@@ -143,5 +117,18 @@ export function* userAuthenticationSaga() {
         title: "Logged in failed.",
       });
     }
+  }
+}
+
+export function* logoutUser() {
+  while (true) {
+    const { session, authenticated } = yield take(mutations.LOGOUT_USER);
+    console.log("session:", session);
+    console.log("authenticated:", authenticated);
+    history.push("/");
+    Toast.fire({
+      icon: "success",
+      title: "Logged out successfully.",
+    });
   }
 }
