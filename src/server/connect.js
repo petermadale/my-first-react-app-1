@@ -1,10 +1,10 @@
-// const { MongoClient } = require("mongodb");
-import { MongoClient } from "mongodb";
+const { MongoClient } = require("mongodb");
 
 // Replace the following with your Atlas connection string
-// const url = "mongodb+srv://petermadale84:3QkV4B61KOqHV9t2@crmappcluster0-p4wge.gcp.mongodb.net/test?retryWrites=true&w=majority";
+const url =
+  "mongodb+srv://petermadale84:3QkV4B61KOqHV9t2@crmappcluster0-p4wge.gcp.mongodb.net/test?retryWrites=true&w=majority";
 //const client = new MongoClient(url, { useNewUrlParser: true });
-const url = process.env.MONGODB_URI || `mongodb://localhost:27017/mydb`;
+//const url = process.env.MONGODB_URI || `mongodb://localhost:27017/mydb`;
 
 let db = null;
 export async function connectDB() {
