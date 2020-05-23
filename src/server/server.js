@@ -17,7 +17,7 @@ import {
   deletePersonalNote,
 } from "./communicate-db";
 
-let port = process.env.PORT || 7777;
+let port = process.env.PORT || 3000;
 let app = express();
 
 app.listen(port, console.log("Server listening on port", port));
