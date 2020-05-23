@@ -9,7 +9,7 @@ export const MainSidebar = ({ id, name }) => (
   <aside className="main-sidebar sidebar-dark-primary elevation-4">
     <Link to="/dashboard" className="brand-link">
       <img
-        src="{logo}"
+        src={logo}
         alt="CRM App"
         className="brand-image img-circle elevation-3"
       />
@@ -19,7 +19,11 @@ export const MainSidebar = ({ id, name }) => (
     <div className="sidebar">
       <div className="user-panel mt-3 pb-3 mb-3 d-flex">
         <div className="image">
-          <img src="" className="img-circle elevation-2" alt="User Image" />
+          <img
+            src={avatar}
+            className="img-circle elevation-2"
+            alt="User Image"
+          />
         </div>
         <div className="info">
           <Link to="/my-details" className="d-block">
