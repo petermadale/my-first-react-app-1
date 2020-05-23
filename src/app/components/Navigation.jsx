@@ -32,6 +32,12 @@ const Navigation = ({ isADmin, logoutUser }) => (
       </li>
     ) : null} */}
     <li className="nav-item">
+      <Link to="/my-favorites" className="nav-link">
+        <i className="nav-icon fas fa-heart"></i>
+        <p>My Favorites</p>
+      </Link>
+    </li>
+    <li className="nav-item">
       <Link to="/my-details" className="nav-link">
         <i className="nav-icon fas fa-edit"></i>
         <p>My Details</p>

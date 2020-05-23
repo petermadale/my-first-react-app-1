@@ -26,6 +26,7 @@ export const defaultState = {
       email: "me@mydomain.com",
       fax: "569-5464-999",
       owner: "User1",
+      isFavorite: false,
     },
 
     {
@@ -38,6 +39,7 @@ export const defaultState = {
       email: "me@mydomain.com",
       fax: "987-5464-999",
       owner: "User1",
+      isFavorite: false,
     },
 
     {
@@ -50,6 +52,19 @@ export const defaultState = {
       email: "me@mydomain.com",
       fax: "796-5464-999",
       owner: "User1",
+      isFavorite: false,
+    },
+  ],
+  myfavorites: [
+    {
+      id: "F1",
+      client: "C3",
+      owner: "User1",
+    },
+    {
+      id: "F2",
+      client: "C2",
+      owner: "User2",
     },
   ],
 };

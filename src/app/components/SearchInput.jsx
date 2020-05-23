@@ -10,7 +10,8 @@ const getSuggestions = (value, clients) => {
   return inputLength === 0
     ? []
     : clients.filter(
-        (lang) => lang.name.toLowerCase().slice(0, inputLength) === inputValue
+        (client) =>
+          client.name.toLowerCase().slice(0, inputLength) === inputValue
       );
 };
 
@@ -19,6 +20,10 @@ const getSuggestionValue = (suggestion) => suggestion.name;
 const renderSuggestion = (suggestion) => (
   <Link to={`/client/${suggestion.id}`} key={suggestion.id} id={suggestion.id}>
     {suggestion.name}
+    <br />
+    <small>
+      <i>{suggestion.address}</i>
+    </small>
   </Link>
 );
 

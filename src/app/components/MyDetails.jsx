@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { updateUserDetails } from "../store/mutations";
 import { Link } from "react-router-dom";
 
-export const MyDetails = ({ id, name, updateUserDetails }) => (
+export const MyDetails = ({ id, name, username, updateUserDetails }) => (
   <>
     <section className="content-header">
       <div className="container-fluid">
@@ -26,6 +26,21 @@ export const MyDetails = ({ id, name, updateUserDetails }) => (
               <form className="form-horizontal" onSubmit={updateUserDetails}>
                 <div className="card-body">
                   <div className="form-group row">
+                    <label htmlFor="name" className="col-sm-2 col-form-label">
+                      Name
+                    </label>
+                    <div className="col-sm-10">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="name"
+                        name="name"
+                        placeholder="Name"
+                        defaultValue={name}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group row">
                     <label
                       htmlFor="username"
                       className="col-sm-2 col-form-label"
@@ -40,7 +55,7 @@ export const MyDetails = ({ id, name, updateUserDetails }) => (
                         id="username"
                         name="username"
                         placeholder="Username"
-                        defaultValue={name}
+                        defaultValue={username}
                       />
                     </div>
                   </div>
@@ -80,10 +95,11 @@ export const MyDetails = ({ id, name, updateUserDetails }) => (
 );
 
 const mapStateToProps = (state, ownProps) => {
-  const { id, name } = state.session;
+  const { id, name, username } = state.session;
   return {
     id,
     name,
+    username,
   };
 };
 
@@ -92,10 +108,11 @@ const mapDispatchToprops = (dispatch, ownProps) => {
     updateUserDetails(e) {
       const form = e.target;
       const id = form[`id`].value;
+      const name = form[`name`].value;
       const username = form[`username`].value;
       const password = form[`password`].value;
 
-      dispatch(updateUserDetails(id, username, password));
+      dispatch(updateUserDetails(id, name, username, password));
     },
   };
 };

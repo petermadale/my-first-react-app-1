@@ -12,13 +12,13 @@ export const addClient = async (client) => {
 
 export const updateClient = async (client) => {
   try {
-    let { id, owner, name, email, address, phone, ext, cell, fax } = client;
+    let { id, name, email, address, phone, ext, cell, fax, owner } = client;
     let db = await connectDB();
     let collection = db.collection(`clients`);
     if (id) {
       await collection.updateOne(
         { id },
-        { $set: { name, email, address, phone, ext, cell, fax } }
+        { $set: { name, email, address, phone, ext, cell, fax, owner } }
       );
     }
   } catch (err) {
@@ -50,12 +50,71 @@ export const getClients = async () => {
 
 export const updateUser = async (user) => {
   try {
-    let { id, username, passwordHash } = user;
+    let { id, name, username, passwordHash } = user;
     let db = await connectDB();
     let collection = db.collection(`users`);
     if (id) {
-      await collection.updateOne({ id }, { $set: { username, passwordHash } });
+      await collection.updateOne(
+        { id },
+        { $set: { name, username, passwordHash } }
+      );
     }
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const addMyFavorites = async (myfavorite) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`myfavorites`);
+    await collection.insertOne(myfavorite);
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const removeMyFavorites = async (id) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`myfavorites`);
+    await collection.deleteOne({ id: id });
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const addPersonalNotes = async (personalnote) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`personalnotes`);
+    await collection.insertOne(personalnote);
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const updatePersonalNotes = async (personalnote) => {
+  try {
+    let { id, note, datetimeupdated, isVerified } = personalnote;
+    let db = await connectDB();
+    let collection = db.collection(`personalnotes`);
+    if (id) {
+      await collection.updateOne(
+        { id },
+        { $set: { note, datetimeupdated, isVerified } }
+      );
+    }
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const deletePersonalNote = async (id) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`personalnotes`);
+    await collection.deleteOne({ id: id }, (err, personalnotes) => {});
   } catch (err) {
     console.log("error:".err.stack);
   }

@@ -3,15 +3,9 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { history } from "../store/history";
 import { deleteClient } from "../store/mutations";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import { Toast, Swal_alert } from "../store/sweetalert";
+import { ConnectedButtonFavorite } from "./ButtonFavorite";
 
-const Toast = Swal.mixin({
-  toast: true,
-  position: "top-end",
-  showConfirmButton: false,
-  timer: 3000,
-});
 export const Clients = ({ clients, isAdmin, deleteClient }) => (
   <>
     <section className="content-header">
@@ -44,75 +38,93 @@ export const Clients = ({ clients, isAdmin, deleteClient }) => (
       <div className="card card-solid">
         <div className="card-body pb-0">
           <div className="row d-flex align-items-stretch">
-            {clients.map((client) => (
-              <div
-                className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch"
-                key={client.id}
-              >
-                <div className="card bg-light card-client">
-                  <div className="card-header text-muted border-bottom-0">
-                    {client.name}
-                  </div>
-                  <div className="card-body pt-0">
-                    <div className="row">
-                      <div className="col-12">
-                        <ul className="ml-4 mb-0 fa-ul text-muted">
-                          <li className="small">
-                            <span className="fa-li">
-                              <i className="fas fa-lg fa-envelope"></i>
-                            </span>{" "}
-                            Email: {client.email}
-                          </li>
-                          <li className="small">
-                            <span className="fa-li">
-                              <i className="fas fa-lg fa-building"></i>
-                            </span>{" "}
-                            Address: {client.address}
-                          </li>
-                          <li className="small">
-                            <span className="fa-li">
-                              <i className="fas fa-lg fa-phone"></i>
-                            </span>{" "}
-                            Phone #: {client.phone}
-                          </li>
-                        </ul>
+            {clients.length > 0 ? (
+              <>
+                {clients.map((client) => (
+                  <div
+                    className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch"
+                    key={client.id}
+                  >
+                    <div className="card card-outline card-info card-client">
+                      <div className="card-header text-muted border-bottom-0">
+                        {client.name}
+                        <span className="float-right">
+                          <ConnectedButtonFavorite client={client} />
+                        </span>
+                      </div>
+                      <div className="card-body pt-0">
+                        <div className="row">
+                          <div className="col-12">
+                            <ul className="ml-4 mb-0 fa-ul text-muted">
+                              <li className="small">
+                                <span className="fa-li">
+                                  <i className="fas fa-lg fa-envelope"></i>
+                                </span>
+                                <a href={`mailto:${client.email}`}>
+                                  {client.email}
+                                </a>
+                              </li>
+                              <li className="small">
+                                <span className="fa-li">
+                                  <i className="fas fa-lg fa-map-marker"></i>
+                                </span>{" "}
+                                {client.address}
+                              </li>
+                              <li className="small">
+                                <span className="fa-li">
+                                  <i className="fas fa-lg fa-phone"></i>
+                                </span>
+                                <a href={`tel:+${client.phone}`}>
+                                  {client.phone}
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="card-footer">
+                        <div className="text-right">
+                          {isAdmin ? (
+                            <>
+                              <Link
+                                to={`/client/${client.id}/true`}
+                                id={client.id}
+                                className="btn btn-info btn-sm mr-1"
+                              >
+                                <i className="fas fa-pencil-alt"></i>
+                                Edit
+                              </Link>
+                              <button
+                                className="btn btn-danger btn-sm mr-1"
+                                onClick={() => deleteClient(client.id)}
+                              >
+                                <i className="fas fa-trash"></i>
+                                Delete
+                              </button>
+                            </>
+                          ) : null}
+                          <Link
+                            to={`/client/${client.id}`}
+                            id={client.id}
+                            className="btn btn-primary btn-sm"
+                          >
+                            <i className="fas fa-user"></i>
+                            View
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="card-footer">
-                    <div className="text-right">
-                      <Link
-                        to={`/client/${client.id}`}
-                        id={client.id}
-                        className="btn btn-primary btn-sm mr-1"
-                      >
-                        <i className="fas fa-folder"></i>
-                        View
-                      </Link>
-                      {isAdmin ? (
-                        <>
-                          <Link
-                            to={`/client/${client.id}/true`}
-                            id={client.id}
-                            className="btn btn-info btn-sm mr-1"
-                          >
-                            <i className="fas fa-pencil-alt"></i>
-                            Edit
-                          </Link>
-                          <button
-                            className="btn btn-danger btn-sm"
-                            onClick={() => deleteClient(client.id)}
-                          >
-                            <i className="fas fa-trash"></i>
-                            Delete
-                          </button>
-                        </>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
+                ))}
+              </>
+            ) : (
+              <div className="alert alert-warning">
+                <h5>
+                  <i className="icon fas fa-exclamation-triangle"></i>
+                  No clients found.
+                </h5>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
@@ -121,8 +133,25 @@ export const Clients = ({ clients, isAdmin, deleteClient }) => (
 );
 
 const mapStateToProps = (state, ownProps) => {
-  let isAdmin = state.session.isAdmin;
-  let clients = state.clients;
+  const isAdmin = state.session.isAdmin;
+  state.clients = state.clients.map((client) => {
+    //add personalnotes object to client
+    return {
+      ...client,
+      personalnotes: state.personalnotes.filter((note) => {
+        return note.client === client.id;
+      }),
+    };
+  });
+  const { clients, myfavorites } = state;
+  myfavorites.map((myfave) => {
+    clients.find((client) => {
+      if (!client.myfave) {
+        client.isFavorite = myfave.client === client.id ? true : false;
+        client.myfave = myfave.client === client.id ? myfave.id : null;
+      }
+    });
+  });
   return {
     clients,
     isAdmin,
@@ -133,7 +162,7 @@ const mapDispatchStateToProps = (dispatch, ownProps) => {
   return {
     deleteClient(id) {
       console.log(id);
-      Swal.fire({
+      Swal_alert.fire({
         title: "Are you sure?",
         icon: "warning",
         showCancelButton: true,
@@ -143,7 +172,6 @@ const mapDispatchStateToProps = (dispatch, ownProps) => {
       }).then((result) => {
         if (result.value) {
           dispatch(deleteClient(id));
-          history.push("/clients");
           Toast.fire({
             icon: "success",
             title: "Client deleted.",

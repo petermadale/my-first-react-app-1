@@ -55,3 +55,8 @@
 .main-header .search-client #react-autowhatever-1 ul li a:hover:not(.header) {
     background-color: #eee;
 }
+
+.user-block .username,
+.user-block .description {
+    margin-left: 0px;
+}

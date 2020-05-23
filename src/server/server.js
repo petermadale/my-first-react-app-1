@@ -10,6 +10,11 @@ import {
   deleteClient,
   addClient,
   updateUser,
+  addMyFavorites,
+  removeMyFavorites,
+  addPersonalNotes,
+  updatePersonalNotes,
+  deletePersonalNote,
 } from "./communicate-db";
 
 let port = process.env.PORT || 7777;
@@ -58,5 +63,35 @@ app.delete("/clients/:id", async (req, res) => {
 app.post("/users/update", async (req, res) => {
   let user = req.body.user;
   await updateUser(user);
+  res.sendStatus(200);
+});
+
+app.post("/myfavorites/new", async (req, res) => {
+  let myfavorite = req.body.myfavorite;
+  await addMyFavorites(myfavorite);
+  res.status(200).send();
+});
+
+app.delete("/myfavorites/:id", async (req, res) => {
+  let id = req.params.id;
+  await removeMyFavorites(id);
+  res.sendStatus(200);
+});
+
+app.post("/personalnotes/new", async (req, res) => {
+  let personalnote = req.body.personalnote;
+  await addPersonalNotes(personalnote);
+  res.status(200).send();
+});
+
+app.post("/personalnotes/update", async (req, res) => {
+  let personalnote = req.body.personalnote;
+  await updatePersonalNotes(personalnote);
+  res.status(200).send();
+});
+
+app.delete("/personalnotes/:id", async (req, res) => {
+  let id = req.params.id;
+  await deletePersonalNote(id);
   res.sendStatus(200);
 });

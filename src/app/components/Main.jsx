@@ -13,6 +13,8 @@ import { ConnectedMainHeader } from "./MainHeader";
 import { ConnectedMainSidebar } from "./MainSiderbar";
 import { ConnectedMainFooter } from "./MainFooter";
 import { ConnectedMyDetails } from "./MyDetails";
+import { ConnectedMyFavorites } from "./MyFavorites";
+import { ConnectedRegisterUser } from "./RegisterUser";
 
 const RouteGuard = (Component) => ({ match }) =>
   !store.getState().session.authenticated ? (
@@ -39,6 +41,7 @@ export const Main = () => (
       <div>
         <Switch>
           <Route exact path="/" component={ConnectedLogin} />
+          <Route exact path="/register" component={ConnectedRegisterUser} />
           <Route
             exact
             path="/dashboard"
@@ -52,6 +55,11 @@ export const Main = () => (
           />
           <Route
             exact
+            path="/my-favorites"
+            render={RouteGuard(ConnectedMyFavorites)}
+          />
+          <Route
+            exact
             path="/client/:id/:isEdit?"
             render={RouteGuard(ConnectedClientsDetail)}
           />
@@ -59,6 +67,11 @@ export const Main = () => (
             exact
             path="/add-contact"
             render={RouteGuard(ConnectedClientsNew)}
+          />
+          <Route
+            exact
+            path="/personal-notes/:id"
+            render={RouteGuard(ConnectedClients)}
           />
         </Switch>
       </div>

@@ -2,8 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { updateClient } from "../store/mutations";
+import { ConnectedClientNameInput } from "./ClientNameInput";
+import { Toast } from "../store/sweetalert";
 
-export const ClientsEdit = ({ client, updateClient }) => (
+export const ClientsEdit = ({ client, users, updateClient, isEdit }) => (
   <>
     <div className="row">
       <div className="col-md-12">
@@ -13,9 +15,12 @@ export const ClientsEdit = ({ client, updateClient }) => (
           </div>
           <div className="card-body">
             <form onSubmit={updateClient}>
-              <input type="hidden" name="id" value={client.id} disabled />
-              <input type="hidden" name="owner" value={client.owner} disabled />
-              <div className="form-group">
+              <ConnectedClientNameInput
+                name={client.name}
+                id={client.id}
+                isEdit={isEdit}
+              />
+              {/* <div className="form-group">
                 <label htmlFor="name">Client Name</label>
                 <input
                   type="text"
@@ -26,12 +31,12 @@ export const ClientsEdit = ({ client, updateClient }) => (
                   defaultValue={client.name}
                   required
                 />
-              </div>
+              </div> */}
               <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input
                   type="email"
-                  placeholder="Email"
+                  placeholder="email@gmail.com"
                   name="email"
                   id="email"
                   className="form-control"
@@ -54,7 +59,7 @@ export const ClientsEdit = ({ client, updateClient }) => (
                 <label htmlFor="phone">Phone</label>
                 <input
                   type="text"
-                  placeholder="Phone"
+                  placeholder="555-555-5555"
                   name="phone"
                   id="phone"
                   className="form-control"
@@ -94,6 +99,21 @@ export const ClientsEdit = ({ client, updateClient }) => (
                   defaultValue={client.fax}
                 />
               </div>
+              <div className="form-group">
+                <label htmlFor="owner">Owner</label>
+                <select
+                  name="owner"
+                  id="owner"
+                  className="form-control"
+                  defaultValue={client.owner}
+                >
+                  {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <button type="submit" className="btn btn-success mr-2">
                 Save
               </button>
@@ -109,9 +129,13 @@ export const ClientsEdit = ({ client, updateClient }) => (
 );
 
 const mapStatetoProps = (state, ownProps) => {
-  let client = ownProps.client;
+  const client = ownProps.client;
+  const users = state.users;
+  const isEdit = true;
   return {
     client,
+    users,
+    isEdit,
   };
 };
 
@@ -120,20 +144,28 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
     updateClient(e) {
       e.preventDefault();
       const form = e.target;
-      const clientID = form[`id`].value;
-      const owner = form[`owner`].value;
-      const data = {
-        name: form[`name`].value,
-        email: form[`email`].value,
-        address: form[`address`].value,
-        phone: form[`phone`].value,
-        ext: form[`ext`].value,
-        cell: form[`cell`].value,
-        fax: form[`fax`].value,
-      };
-
-      console.log(data);
-      dispatch(updateClient(clientID, owner, data));
+      const { id } = ownProps.client;
+      const isduplicate = form[`name`].dataset.isduplicate;
+      if (isduplicate === "true") {
+        Toast.fire({
+          icon: "warning",
+          title: "Name is already taken. Please choose another one.",
+        });
+      } else {
+        const data = {
+          id: id,
+          owner: form[`owner`].value,
+          name: form[`name`].value,
+          email: form[`email`].value,
+          address: form[`address`].value,
+          phone: form[`phone`].value,
+          ext: form[`ext`].value,
+          cell: form[`cell`].value,
+          fax: form[`fax`].value,
+          // isFavorite: isFavorite,
+        };
+        dispatch(updateClient(id, data));
+      }
     },
   };
 };

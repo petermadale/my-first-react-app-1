@@ -12,7 +12,7 @@ export const authenticationRoute = (app) => {
     try {
       let db = await connectDB();
       let collection = db.collection(`users`);
-      let user = await collection.findOne({ name: username });
+      let user = await collection.findOne({ username });
 
       if (!user) {
         return res.status(500).send("User not found");
@@ -38,5 +38,42 @@ export const authenticationRoute = (app) => {
     } catch (err) {
       console.log(err.stack);
     }
+  });
+
+  app.post("/user/create", async (req, res) => {
+    let { name, username, password } = req.body;
+    let db = await connectDB();
+    let collection = db.collection(`users`);
+    let users_name = await collection.findOne({ name: name });
+    let users_username = await collection.findOne({ username: username });
+    if (users_name) {
+      res
+        .status(500)
+        .send({ message: "A user with that account name already exists." });
+      return;
+    }
+    if (users_username) {
+      res
+        .status(500)
+        .send({ message: "A user with that username already exists." });
+      return;
+    }
+
+    let userID = uuid();
+    await collection.insertOne({
+      id: userID,
+      name,
+      username,
+      passwordHash: md5(password),
+      isApproved: false,
+    });
+
+    // let state = await assembleUserState({
+    //   id: userID,
+    //   name: name,
+    //   username: username,
+    // });
+
+    res.status(200).send({ userID });
   });
 };

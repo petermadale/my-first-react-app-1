@@ -3,14 +3,13 @@ import { connect } from "react-redux";
 import * as mutations from "../store/mutations";
 import "../styles/style.css";
 import logo from "../images/crm_app_logo.png";
+import { Link } from "react-router-dom";
 
 export const Login = ({ authenticateUser, authenticated }) => (
   <div className="sign-in">
     <div className="login-box">
       <div className="login-logo">
-        <a href="#">
-          <img src={logo} alt="CRM App" />
-        </a>
+        <img src={logo} alt="CRM App" />
       </div>
       <div className="card">
         <div className="card-body login-card-body">
@@ -25,7 +24,11 @@ export const Login = ({ authenticateUser, authenticated }) => (
                 placeholder="username"
                 defaultValue="Admin"
                 required
-                className="form-control"
+                className={`form-control ${
+                  authenticated === mutations.NOT_AUTHENTICATED
+                    ? "is-invalid"
+                    : null
+                }`}
               />
               <div className="input-group-append">
                 <div className="input-group-text">
@@ -41,43 +44,50 @@ export const Login = ({ authenticateUser, authenticated }) => (
                 placeholder="password"
                 defaultValue=""
                 required
-                className="form-control"
+                className={`form-control ${
+                  authenticated === mutations.NOT_AUTHENTICATED
+                    ? "is-invalid"
+                    : null
+                }`}
               />
               <div className="input-group-append">
                 <div className="input-group-text">
                   <span className="fas fa-lock"></span>
                 </div>
               </div>
+              {authenticated === mutations.NOT_AUTHENTICATED ? (
+                <span
+                  id="exampleInputEmail1-error"
+                  className="error invalid-feedback"
+                >
+                  Invalid login details. Please try again.
+                </span>
+              ) : null}
             </div>
             <div className="row">
               <div className="col-12">
-                {authenticated === mutations.NOT_AUTHENTICATED ? (
-                  <span
-                    id="exampleInputEmail1-error"
-                    className="error invalid-feedback"
-                  >
-                    Please enter a email address
-                  </span>
-                ) : null}
                 <button type="submit" className="btn btn-primary btn-block">
                   Sign In
                 </button>
               </div>
             </div>
           </form>
-          {/* <p className="mb-0">
-            <a href="register.html" className="text-center">
-              Register a new membership
-            </a>
-          </p> */}
+          <p className="mt-2">
+            <Link to="/register" className="text-center">
+              Click here to register.
+            </Link>
+          </p>
         </div>
       </div>
     </div>
   </div>
 );
-const mapStateToProps = ({ session }) => ({
-  authenticated: session.authenticated,
-});
+const mapStateToProps = ({ session }) => {
+  const authenticated = session.authenticated;
+  return {
+    authenticated,
+  };
+};
 
 const mapDispatchStateToProps = (dispatch) => ({
   authenticateUser(e) {
