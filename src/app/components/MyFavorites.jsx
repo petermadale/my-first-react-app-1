@@ -90,20 +90,11 @@ export const MyFavorites = ({ client }) => (
     </section>
   </>
 );
-function mapStateToProps(state) {
-  const { myfavorites, clients } = state;
+function mapStateToProps(state, ownProps) {
+  const { clients } = state;
 
-  var myfaveclients = [];
-  myfavorites.map((myfave) => {
-    clients.map((client) => {
-      return myfave.client === client.id
-        ? myfaveclients.push({
-            ...client,
-            isFavorite: true,
-            myfave: myfave.id,
-          })
-        : null; //refactor
-    });
+  var myfaveclients = clients.filter((client) => {
+    return client.myfave ? client : null;
   });
   return {
     client: myfaveclients,

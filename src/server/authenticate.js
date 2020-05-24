@@ -15,14 +15,23 @@ export const authenticationRoute = (app) => {
       let user = await collection.findOne({ username });
 
       if (!user) {
-        return res.status(500).send("User not found");
+        return res.status(500).send({ message: "User not found." });
+      }
+      if (user && !user.isApproved) {
+        return res.status(500).send({
+          message:
+            "Account not yet approved by Admin.  Please try again later.",
+          isApproved: false,
+        });
       }
 
       let hash = md5(password);
       let passwordCorrect = hash === user.passwordHash;
 
-      if (!passwordCorrect) {
-        return res.status(500).send("Password incorrect");
+      if (user && !passwordCorrect) {
+        return res
+          .status(500)
+          .send({ message: "Password incorrect", passwordCorrect: false });
       }
 
       let token = uuid();
@@ -60,12 +69,16 @@ export const authenticationRoute = (app) => {
     }
 
     let userID = uuid();
+    let dateToday = new Date();
+    let dateCreated = dateToday.toLocaleString();
     await collection.insertOne({
       id: userID,
       name,
       username,
       passwordHash: md5(password),
       isApproved: false,
+      dateCreated,
+      dateAprroved: null,
     });
 
     // let state = await assembleUserState({

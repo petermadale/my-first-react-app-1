@@ -134,24 +134,8 @@ export const Clients = ({ clients, isAdmin, deleteClient }) => (
 
 const mapStateToProps = (state, ownProps) => {
   const isAdmin = state.session.isAdmin;
-  state.clients = state.clients.map((client) => {
-    //add personalnotes object to client
-    return {
-      ...client,
-      personalnotes: state.personalnotes.filter((note) => {
-        return note.client === client.id;
-      }),
-    };
-  });
-  const { clients, myfavorites } = state;
-  myfavorites.map((myfave) => {
-    clients.find((client) => {
-      if (!client.myfave) {
-        client.isFavorite = myfave.client === client.id ? true : false;
-        client.myfave = myfave.client === client.id ? myfave.id : null;
-      }
-    });
-  });
+  const clients = state.clients;
+
   return {
     clients,
     isAdmin,

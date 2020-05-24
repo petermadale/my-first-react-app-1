@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { toggleEditClick, editPersonalNote } from "../store/mutations";
+import { ConnectedUsernameDisplay } from "./UsernameDisplay";
 
 const PersonalNotesEdit = ({
   note,
@@ -12,11 +13,18 @@ const PersonalNotesEdit = ({
     <div className="post" key={note.id}>
       <div className="user-block">
         <span className="username">
-          <a href="#">{note.owner}</a>
+          <a href="#">
+            <ConnectedUsernameDisplay id={note.owner} />
+          </a>
         </span>
         <span className="description">
           Date/Time Posted - {note.datetimecreated}
         </span>
+        {note.datetimeupdated ? (
+          <span className="description">
+            Date/Time Updated - {note.datetimeupdated}
+          </span>
+        ) : null}
       </div>
       <form onSubmit={editPersonalNote}>
         <div className="form-group row">
@@ -34,7 +42,7 @@ const PersonalNotesEdit = ({
             ></textarea>
           </div>
         </div>
-        <div className="form-group row">
+        {/* <div className="form-group row">
           <div className="offset-sm-2 col-sm-10">
             <div className="custom-control custom-switch mb-2">
               <input
@@ -55,7 +63,7 @@ const PersonalNotesEdit = ({
               </label>
             </div>
           </div>
-        </div>
+        </div> */}
         <p>
           <button
             className="btn btn-link link-black text-sm mr-2"
@@ -96,14 +104,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const { id, client, owner } = ownProps.note;
       const form = e.target;
       const datetimeupdated = new Date();
-      const isVerified = form[`isVerified`].checked;
+      //   const isVerified = form[`isVerified`].checked;
       const data = {
         id,
         client,
         note: form[`note`].value,
         datetimeupdated: datetimeupdated.toLocaleString(),
         owner,
-        isVerified,
+        // isVerified,
       };
       console.log(data);
       dispatch(editPersonalNote(data));

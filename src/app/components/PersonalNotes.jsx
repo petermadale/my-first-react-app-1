@@ -34,7 +34,7 @@ const PersonalNotes = ({
                   Date/Time Updated - {note.datetimeupdated}
                 </span>
               ) : null}
-              <span className="description">
+              {/* <span className="description">
                 {note.isVerified ? (
                   <strong className="text-success">
                     <i>Verified</i>
@@ -44,7 +44,7 @@ const PersonalNotes = ({
                     <i>Unverified</i>
                   </strong>
                 )}
-              </span>
+              </span> */}
             </div>
             <p>{note.note}</p>
 

@@ -40,15 +40,21 @@ export const reducer = combineReducers({
   clients(clients = defaultState.clients, action) {
     switch (action.type) {
       case mutations.SET_STATE:
-        return action.state.clients;
-      // .map((client) => {
-      //   return {
-      //     ...client,
-      //     personalnotes: action.state.personalnotes.filter((note) => {
-      //       return note.client === client.id;
-      //     }),
-      //   };
-      // });
+        return action.state.clients.map((client) => {
+          //add personalnotes, isFavorite, myfave object to each client
+          return {
+            ...client,
+            personalnotes: action.state.personalnotes.filter((note) => {
+              return note.client === client.id;
+            }),
+            isFavorite: action.state.myfavorites.some((myfave) => {
+              return myfave.client === client.id ? true : false;
+            }),
+            myfave: action.state.myfavorites.find((myfave) => {
+              return myfave.client === client.id ? myfave : null;
+            }),
+          };
+        });
       case mutations.SET_CLIENT_NAME:
         return clients.map((client) => {
           return client.id === action.id
@@ -88,6 +94,35 @@ export const reducer = combineReducers({
         return (clients = clients.filter((client) => {
           return client.id !== action.id;
         }));
+      case mutations.ADD_TO_MY_FAVORITES:
+        //add isFavorite, myfave object to each client
+        return clients.map(function (client) {
+          return action.clientID === client.id
+            ? {
+                ...client,
+                isFavorite: true,
+                myfave: {
+                  client: action.clientID,
+                  id: action.id,
+                  owner: action.owner,
+                },
+              }
+            : client;
+        });
+      case mutations.REMOVE_FROM_MY_FAVORITES:
+        //add isFavorite, myfave object to each client
+        return clients.map(function (client) {
+          if (client.myfave) {
+            return action.id === client.myfave.id
+              ? {
+                  ...client,
+                  isFavorite: false,
+                  myfave: null,
+                }
+              : client;
+          }
+          return client;
+        });
       case mutations.LOGOUT_USER:
         return [];
     }
@@ -148,16 +183,16 @@ export const reducer = combineReducers({
             note: action.note,
             datetime: action.datetime,
             owner: action.owner,
-            isVerified: action.isVerified,
+            // isVerified: action.isVerified,
           },
         ];
       case mutations.EDIT_PERSONAL_NOTE:
-        let { id, isVerified, note, datetimeupdated } = action.personalnote;
+        let { id, note, datetimeupdated } = action.personalnote;
         return personalnotes.map((pnote) => {
           return pnote.id === id
             ? {
                 ...pnote,
-                isVerified,
+                // isVerified,
                 note,
                 datetimeupdated,
                 toggleEdit: false,

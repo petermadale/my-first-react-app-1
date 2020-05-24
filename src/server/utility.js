@@ -38,6 +38,9 @@ export async function assembleUserState(user) {
       id: user.id,
       name: user.name,
       username: user.username,
+      isApproved: user.isApproved,
+      dateCreated: user.dateCreated,
+      dateApproved: user.dateApproved,
     },
   };
 }

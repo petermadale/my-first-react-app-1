@@ -11,10 +11,6 @@ const url = process.env.NODE_ENV == `production` ? `` : "http://localhost:7777";
 
 export function* clientModificationSaga() {
   while (true) {
-    // const data = yield take([
-    //   mutations.UPDATE_CLIENT,
-    //   mutations.ADD_TO_FAVORITES,
-    // ]);
     const { client } = yield take(mutations.UPDATE_CLIENT);
 
     console.log("client data: ", client);
@@ -200,37 +196,59 @@ export function* updateUserSage() {
   }
 }
 
+function authenticateUser(username, password) {
+  return axios
+    .post(url + `/authenticate`, {
+      username,
+      password,
+    })
+    .then((response) => ({ response }))
+    .catch((error) => ({ error }));
+}
 export function* userAuthenticationSaga() {
   while (true) {
     const { username, password } = yield take(
       mutations.REQUEST_AUTHENTICATE_USER
     );
     try {
-      const { data } = yield axios.post(url + `/authenticate`, {
+      const { response, error } = yield call(
+        authenticateUser,
         username,
-        password,
-      });
-      yield put(mutations.setState(data.state));
-      yield put(mutations.processAuthenticateUser(mutations.AUTHENTICATED));
+        password
+      );
+      if (response) {
+        var data = response.data;
+        yield put(mutations.setState(data.state));
+        yield put(mutations.processAuthenticateUser(mutations.AUTHENTICATED));
 
-      if (!data) {
-        throw new Error();
+        if (!data) {
+          throw new Error();
+        }
+        console.log("Authenticated!", data);
+
+        Toast.fire({
+          icon: "success",
+          title: "Logged in successfully.",
+        });
+        history.push("/dashboard");
+      } else {
+        var err_res = error.response.data;
+        if (!err_res.isApproved)
+          yield put(
+            mutations.processAuthenticateUser(mutations.ACCOUNT_NOT_APPROVED)
+          );
+        if (err_res.passwordCorrect && !err_res.passwordCorrect)
+          yield put(
+            mutations.processAuthenticateUser(mutations.PASSWORD_INCORRECT)
+          );
+        Toast.fire({
+          icon: "error",
+          title: err_res.message,
+        });
       }
-      console.log("Authenticated!", data);
-
-      Toast.fire({
-        icon: "success",
-        title: "Logged in successfully.",
-      });
-      history.push("/dashboard");
     } catch (err) {
       /* catch block handles failed login */
-      console.log("can't authenticate", err);
-      yield put(mutations.processAuthenticateUser(mutations.NOT_AUTHENTICATED));
-      Toast.fire({
-        icon: "error",
-        title: "Logged in failed.",
-      });
+      console.log(err);
     }
   }
 }
@@ -249,13 +267,13 @@ export function* userAccountCreationSaga() {
     const { name, username, password, confirmPassword } = yield take(
       mutations.REQUEST_USER_ACCOUNT_CREATION
     );
-    const passwordIsMatch =
+    const { authenticated } =
       password === confirmPassword
         ? yield put(mutations.processAuthenticateUser(mutations.PASSWORD_MATCH))
         : yield put(
             mutations.processAuthenticateUser(mutations.PASSWORD_MISMATCH)
           );
-    if (passwordIsMatch) {
+    if (authenticated === mutations.PASSWORD_MATCH) {
       try {
         const { response, error } = yield call(
           createUser,
@@ -274,9 +292,15 @@ export function* userAccountCreationSaga() {
           });
           history.push("/");
         } else {
-          yield put(
-            mutations.processAuthenticateUser(mutations.NOT_AUTHENTICATED)
-          );
+          var err_message = error.response.data.message;
+          if (err_message === "A user with that account name already exists.")
+            yield put(
+              mutations.processAuthenticateUser(mutations.NAME_RESERVED)
+            );
+          else
+            yield put(
+              mutations.processAuthenticateUser(mutations.USERNAME_RESERVED)
+            );
           Toast.fire({
             icon: "error",
             title: error.response.data.message,
@@ -284,6 +308,8 @@ export function* userAccountCreationSaga() {
         }
       } catch (err) {
         console.log(err);
+      } finally {
+        // yield put(mutations.processAuthenticateUser(null));
       }
       //   try {
       //     const { data } = yield axios.post(url + `/user/create`, {

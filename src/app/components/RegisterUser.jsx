@@ -20,9 +20,14 @@ export const RegisterUser = ({ requestCreateUserAccount, authenticated }) => (
             <div className="input-group mb-3">
               <input
                 type="text"
-                className="form-control"
+                className={`form-control ${
+                  authenticated === mutations.NAME_RESERVED
+                    ? "is-invalid"
+                    : null
+                }`}
                 placeholder="Full name"
                 name="name"
+                defaultValue=""
                 required
               />
               <div className="input-group-append">
@@ -34,9 +39,14 @@ export const RegisterUser = ({ requestCreateUserAccount, authenticated }) => (
             <div className="input-group mb-3">
               <input
                 type="text"
-                className="form-control"
+                className={`form-control ${
+                  authenticated === mutations.USERNAME_RESERVED
+                    ? "is-invalid"
+                    : null
+                }`}
                 placeholder="Username"
                 name="username"
+                defaultValue=""
                 required
               />
               <div className="input-group-append">
@@ -55,6 +65,7 @@ export const RegisterUser = ({ requestCreateUserAccount, authenticated }) => (
                 }`}
                 placeholder="Password"
                 name="password"
+                defaultValue=""
                 required
               />
               <div className="input-group-append">
@@ -73,6 +84,7 @@ export const RegisterUser = ({ requestCreateUserAccount, authenticated }) => (
                 }`}
                 placeholder="Retype password"
                 name="confirmPasword"
+                defaultValue=""
                 required
               />
               <div className="input-group-append">
@@ -114,7 +126,7 @@ const mapStateToProps = ({ session }) => {
   };
 };
 
-const mapDispatchStateToProps = (dispatch) => ({
+const mapDispatchStateToProps = (dispatch, ownProps) => ({
   requestCreateUserAccount(e) {
     e.preventDefault();
     let form = e.target;

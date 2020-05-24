@@ -114,6 +114,9 @@ export const ClientsEdit = ({ client, users, updateClient, isEdit }) => (
                   ))}
                 </select>
               </div>
+              <button type="submit" className="btn btn-info mr-2">
+                Add Another Location
+              </button>
               <button type="submit" className="btn btn-success mr-2">
                 Save
               </button>

@@ -38,9 +38,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addRemoveToMyFavorites(clientID, myfave, ownerID, isFavorite) {
-      const id = isFavorite ? uuid() : null;
-      if (myfave) dispatch(removeFromMyFavorites(myfave));
-      else dispatch(addToMyFavorites(id, clientID, ownerID, isFavorite));
+      const myfaveID = isFavorite ? uuid() : null; //move myfaveid uuid to server
+      const id = myfave ? myfave.id : null;
+      if (id) dispatch(removeFromMyFavorites(id));
+      else dispatch(addToMyFavorites(myfaveID, clientID, ownerID, isFavorite));
     },
   };
 };
