@@ -72,11 +72,11 @@ export const Login = ({ authenticateUser, authenticated }) => (
               </div>
             </div>
           </form>
-          <p className="mt-2">
+          {/* <p className="mt-2">
             <Link to="/register" className="text-center">
               Click here to register.
             </Link>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

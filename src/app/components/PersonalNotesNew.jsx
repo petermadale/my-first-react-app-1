@@ -39,7 +39,7 @@ const PersonalNotesNew = ({ client, owner, isAdmin, savePersonalNote }) => (
         </div>
       </div>
 
-      <div className="form-group row">
+      {/* <div className="form-group row">
         <div className="offset-sm-2 col-sm-10">
           <div className="custom-control custom-switch mb-2">
             <input
@@ -59,7 +59,7 @@ const PersonalNotesNew = ({ client, owner, isAdmin, savePersonalNote }) => (
             </label>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="form-group row">
         <div className="offset-sm-2 col-sm-10">
           <button type="submit" className="btn btn-success">
@@ -89,14 +89,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const form = e.target;
       const id = uuid();
       const datetimecreated = new Date();
-      const isVerified = form[`isVerified`].checked;
+      //const isVerified = form[`isVerified`].checked;
       const personalnote = {
         id,
         client: form[`clientID`].value,
         note: form[`note`].value,
         datetimecreated: datetimecreated.toLocaleString(),
         owner: form[`owner`].value,
-        isVerified,
+        //isVerified,
       };
       console.log(personalnote);
       dispatch(savePersonalNote(personalnote));

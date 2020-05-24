@@ -148,7 +148,7 @@ export const reducer = combineReducers({
             note: action.note,
             datetime: action.datetime,
             owner: action.owner,
-            isVerified: action.isVerified,
+            //isVerified: action.isVerified,
           },
         ];
       case mutations.EDIT_PERSONAL_NOTE:

@@ -96,14 +96,11 @@ export const addPersonalNotes = async (personalnote) => {
 
 export const updatePersonalNotes = async (personalnote) => {
   try {
-    let { id, note, datetimeupdated, isVerified } = personalnote;
+    let { id, note, datetimeupdated } = personalnote;
     let db = await connectDB();
     let collection = db.collection(`personalnotes`);
     if (id) {
-      await collection.updateOne(
-        { id },
-        { $set: { note, datetimeupdated, isVerified } }
-      );
+      await collection.updateOne({ id }, { $set: { note, datetimeupdated } });
     }
   } catch (err) {
     console.log("error:".err.stack);
