@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { toggleEditClick, editPersonalNote } from "../store/mutations";
+import { ConnectedUsernameDisplay } from "./UsernameDisplay";
 
 const PersonalNotesEdit = ({
   note,
@@ -12,7 +13,9 @@ const PersonalNotesEdit = ({
     <div className="post" key={note.id}>
       <div className="user-block">
         <span className="username">
-          <a href="#">{note.owner}</a>
+          <a href="#">
+            <ConnectedUsernameDisplay id={note.owner} />
+          </a>
         </span>
         <span className="description">
           Date/Time Posted - {note.datetimecreated}
