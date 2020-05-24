@@ -6,12 +6,16 @@ export const defaultState = {
   users: [
     {
       id: "User1",
-      name: "Admin",
+      name: "Peter Madale",
+      username: "Admin",
+      isApproved: true,
       passwordHash: md5("ADMIN"),
     },
     {
       id: "User2",
-      name: "User",
+      name: "Juan Who",
+      username: "User",
+      isApproved: true,
       passwordHash: md5("PASSWORD"),
     },
   ],
@@ -26,7 +30,6 @@ export const defaultState = {
       email: "me@mydomain.com",
       fax: "569-5464-999",
       owner: "User1",
-      isFavorite: false,
     },
 
     {
@@ -39,7 +42,6 @@ export const defaultState = {
       email: "me@mydomain.com",
       fax: "987-5464-999",
       owner: "User1",
-      isFavorite: false,
     },
 
     {
@@ -52,7 +54,6 @@ export const defaultState = {
       email: "me@mydomain.com",
       fax: "796-5464-999",
       owner: "User1",
-      isFavorite: false,
     },
   ],
   myfavorites: [
@@ -65,6 +66,17 @@ export const defaultState = {
       id: "F2",
       client: "C2",
       owner: "User2",
+    },
+  ],
+  personalnotes: [
+    {
+      id: "PN1",
+      client: "C1",
+      note: "This is my personal note.",
+      datetimecreated: "5/20/2020, 8:38:30 PM",
+      owner: "User1",
+      isVerified: true,
+      datetimeupdated: "5/21/2020, 9:35:03 PM",
     },
   ],
 };

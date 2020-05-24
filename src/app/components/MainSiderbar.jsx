@@ -2,12 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { ConnectedNavigation } from "./Navigation";
+import logo from "../images/crm_app_logo.png";
+import avatar from "../admin-lte/dist/img/avatar04.png";
 
 export const MainSidebar = ({ id, name }) => (
   <aside className="main-sidebar sidebar-dark-primary elevation-4">
     <Link to="/dashboard" className="brand-link">
       <img
-        src="src/app/images/crm_app_logo.png"
+        src={logo}
         alt="CRM App"
         className="brand-image img-circle elevation-3"
       />
@@ -18,7 +20,7 @@ export const MainSidebar = ({ id, name }) => (
       <div className="user-panel mt-3 pb-3 mb-3 d-flex">
         <div className="image">
           <img
-            src="/src/app/admin-lte/dist/img/avatar04.png"
+            src={avatar}
             className="img-circle elevation-2"
             alt="User Image"
           />
