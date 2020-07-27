@@ -1,14 +1,5 @@
-.sign-in {
-    -ms-flex-align: center;
-    align-items: center;
+body {
     background: #e9ecef;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    height: 100vh;
-    -ms-flex-pack: center;
-    justify-content: center;
 }
 
 .control-sidebar {
@@ -19,19 +10,23 @@
     color: white;
 }
 
+/* .content-header {
+    padding: 5rem .5rem .5rem .5rem;
+} */
+
 .fa,
 .fas {
     margin-right: 5px;
 }
 
-.card.card-client {
-    width: 100%;
+.card {
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 3px 3px 3px rgba(0, 0, 0, .2);
 }
 
 .main-header .search-client #react-autowhatever-1 {
     position: absolute;
     top: 55px;
-    width: 200px;
+    width: 250px;
 }
 
 .main-header .search-client #react-autowhatever-1 ul {
@@ -59,4 +54,144 @@
 .user-block .username,
 .user-block .description {
     margin-left: 0px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+    font-family: "Font Awesome 5 Free" !important;
+    color: #000 !important;
+    font-size: 12px !important;
+}
+
+.slick-next:before {
+    content: '\f054' !important;
+}
+
+.slick-prev:before {
+    content: '\f053' !important;
+}
+
+.card.card-outline-tabs {
+    border-top: 0 !important;
+}
+
+.table-hover tbody tr {
+    cursor: default;
+}
+
+/* client colors */
+.sidebar-dark-client-primary .nav-sidebar>.nav-item>.nav-link.active,
+.sidebar-light-client-primary .nav-sidebar>.nav-item>.nav-link.active {
+    background-color: #188EC9 !important;
+    color: #fff;
+}
+
+.bg-client-primary {
+    background-color: #188EC9 !important;
+}
+
+.bg-client-primary,
+.bg-client-primary>a {
+    color: #fff !important;
+}
+
+.card-client-primary.card-outline {
+    border-top: 3px solid #188EC9;
+}
+
+.card-client-primary:not(.card-outline)>.card-header {
+    background-color: #188EC9;
+}
+
+.card-client-primary:not(.card-outline)>.card-header,
+.card-client-primary:not(.card-outline)>.card-header a {
+    color: #fff;
+}
+
+.bg-gradient-client-primary .btn-tool,
+.bg-client-primary .btn-tool,
+.card-client-primary:not(.card-outline) .btn-tool {
+    color: rgba(255, 255, 255, .8);
+}
+
+.card-client-primary.card-outline-tabs>.card-header a.active {
+    border-top: 3px solid #188EC9;
+}
+
+.badge-client-primary {
+    color: #fff;
+    background-color: #188EC9;
+}
+
+.bg-client-primary {
+    background-color: #188EC9 !important;
+}
+
+@media (max-width: 900px) {
+    .login-logo img {
+        width: 100px;
+    }
+
+    .action-btn {
+        width: 120px !important;
+    }
+
+    .main-header,
+    .main-footer {
+        margin-left: 4.6rem !important;
+    }
+
+    .main-sidebar {
+        margin-left: 0 !important;
+        width: 4.6rem;
+    }
+
+    .nav-sidebar .nav-link p {
+        width: 0;
+        display: none;
+    }
+
+    .brand-text,
+    .user-panel>.info {
+        margin-left: -10px;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .content-wrapper {
+        margin-left: 75px !important;
+    }
+
+    .search-client {
+        width: 100%;
+    }
+}
+
+@media (max-width: 375px) {
+    .content-header .btn {
+        float: none !important;
+        width: 100%;
+    }
+
+    .action-btn {
+        width: 120px !important;
+    }
+
+    .card-title {
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    .card-footer-client-address .btn {
+        width: 100%;
+        margin-bottom: 10px;
+        float: none;
+    }
+
+    .card-footer .btn,
+    .client-new-btn .btn,
+    .client-edit-btn .btn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
 }

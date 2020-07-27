@@ -1,10 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 
-export const UsernameDisplay = ({ name }) => <span>{name}</span>;
+export const UsernameDisplay = ({ name }) => (
+  <span className="user-name">{name}</span>
+);
 
 const mapStateToProps = (state, ownProps) => {
-  const { name } = state.users.find((user) => user.id === ownProps.id);
+  const { firstName, lastName } = state.users.find(
+    (user) => user.id === ownProps.id
+  );
+  const name = firstName + " " + lastName;
   return {
     name,
   };

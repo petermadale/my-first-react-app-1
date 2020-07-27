@@ -1,20 +1,24 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { store } from "../store";
-import { ConnectedDashboard } from "./Dashboard";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "../store";
 import { Router, Route } from "react-router-dom";
 import { history } from "../store/history";
 import { Redirect, Switch } from "react-router";
-import { ConnectedLogin } from "./Login";
-import { ConnectedClients } from "./Clients";
-import { ConnectedClientsDetail } from "./ClientsDetail";
-import { ConnectedClientsNew } from "./ClientsNew";
-import { ConnectedMainHeader } from "./MainHeader";
-import { ConnectedMainSidebar } from "./MainSiderbar";
-import { ConnectedMainFooter } from "./MainFooter";
-import { ConnectedMyDetails } from "./MyDetails";
-import { ConnectedMyFavorites } from "./MyFavorites";
-import { ConnectedRegisterUser } from "./RegisterUser";
+
+import { ConnectedMainHeader } from "./template/MainHeader/MainHeader";
+import { ConnectedMainSidebar } from "./template/MainSidebar/MainSidebar";
+import { ConnectedMainFooter } from "./template/MainFooter/MainFooter";
+
+import { ConnectedLogin } from "./pages/Login/Login";
+import { ConnectedDashboard } from "./pages/Dashboard/Dashboard";
+import { ConnectedClientsList } from "./pages/Clients/ClientsList/ClientsList";
+import { ConnectedClientsDetail } from "./pages/Clients/ClientsDetail/ClientsDetail";
+import { ConnectedClientsNew } from "./pages/Clients/ClientsNew/ClientsNew";
+import { ConnectedMyDetails } from "./pages/MyDetails/MyDetails";
+import { ConnectedUsers } from "./pages/Users/Users/Users";
+import { ConnectedUsersNew } from "./pages/Users/UsersNew/UsersNew";
+import { ConnectedUserEdit } from "./pages/Users/UsersEdit/UsersEdit";
 
 const RouteGuard = (Component) => ({ match }) =>
   !store.getState().session.authenticated ? (
@@ -36,43 +40,62 @@ const RouteGuard = (Component) => ({ match }) =>
 //   <Component match={match} />
 
 export const Main = () => (
-  <Router history={history}>
+  <Router history={history} forceRefresh={true}>
     <Provider store={store}>
       <div>
         <Switch>
-          <Route exact path="/" component={ConnectedLogin} />
-          <Route exact path="/register" component={ConnectedRegisterUser} />
-          <Route
-            exact
-            path="/dashboard"
-            render={RouteGuard(ConnectedDashboard)}
-          />
-          <Route exact path="/clients" render={RouteGuard(ConnectedClients)} />
-          <Route
-            exact
-            path="/my-details"
-            render={RouteGuard(ConnectedMyDetails)}
-          />
-          <Route
-            exact
-            path="/my-favorites"
-            render={RouteGuard(ConnectedMyFavorites)}
-          />
-          <Route
-            exact
-            path="/client/:id/:isEdit?"
-            render={RouteGuard(ConnectedClientsDetail)}
-          />
-          <Route
-            exact
-            path="/add-contact"
-            render={RouteGuard(ConnectedClientsNew)}
-          />
-          <Route
-            exact
-            path="/personal-notes/:id"
-            render={RouteGuard(ConnectedClients)}
-          />
+          <PersistGate persistor={persistor}>
+            <Route exact path="/" component={ConnectedLogin} />
+
+            <Route
+              exact
+              path="/dashboard"
+              render={RouteGuard(ConnectedDashboard)}
+            />
+            <Route
+              exact
+              path="/clients"
+              render={RouteGuard(ConnectedClientsList)}
+            />
+            <Route exact path="/users" render={RouteGuard(ConnectedUsers)} />
+            <Route
+              exact
+              path="/user-new"
+              render={RouteGuard(ConnectedUsersNew)}
+            />
+            <Route
+              exact
+              path="/user/:id/:isEdit?"
+              render={RouteGuard(ConnectedUserEdit)}
+            />
+            <Route
+              exact
+              path="/my-details"
+              render={RouteGuard(ConnectedMyDetails)}
+            />
+            {/* <Route
+              exact
+              path="/my-favorites"
+              render={RouteGuard(ConnectedMyFavorites)}
+            /> */}
+            <Route
+              exact
+              path="/client/:id/:isEdit?"
+              render={RouteGuard(ConnectedClientsDetail)}
+            />
+
+            <Route
+              exact
+              path="/client-new"
+              render={RouteGuard(ConnectedClientsNew)}
+            />
+
+            {/* <Route
+              exact
+              path="/personal-notes/:id"
+              render={RouteGuard(ConnectedClients)}
+            /> */}
+          </PersistGate>
         </Switch>
       </div>
     </Provider>

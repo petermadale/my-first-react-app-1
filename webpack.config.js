@@ -25,10 +25,18 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              modules: { auto: true },
+            },
+          },
+        ],
       },
       {
-        test: /\.(png|woff|woff2|eot|ttf|svg|otf)$/,
+        test: /\.(png|gif|woff|woff2|eot|ttf|svg|otf)$/,
         loader: "url-loader?limit=100000",
       },
     ],

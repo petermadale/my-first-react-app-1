@@ -6,6 +6,23 @@ export const NOT_AUTHENTICATED = `NOT_AUTHENTICATED`;
 export const LOGOUT_USER = `LOGOUT_USER`;
 export const SET_STATE = `SET_STATE`;
 
+export const PROCESSING_UPDATE_USER = `PROCESSING_UPDATE_USER`;
+export const PROCESSING_CREATE_USER = `PROCESSING_CREATE_USER`;
+export const CREATE_USER_ACCOUNT = `CREATE_USER_ACCOUNT`;
+export const PASSWORD_MISMATCH = `PASSWORD_MISMATCH`;
+export const PASSWORD_MATCH = `PASSWORD_MATCH`;
+export const PASSWORD_INCORRECT = `PASSWORD_INCORRECT`;
+export const USERNAME_RESERVED = `USERNAME_RESERVED`;
+export const NAME_RESERVED = `NAME_RESERVED`;
+export const USER_ACCOUNT_CREATED = `USER_ACCOUNT_CREATED`;
+export const USER_ACCOUNT_ERROR = `USER_ACCOUNT_ERROR`;
+export const UPDATE_USER_ACCOUNT = `UPDATE_USER_ACCOUNT`;
+export const DELETE_USER_ACCOUNT = `DELETE_USER_ACCOUNT`;
+export const ACCOUNT_NOT_APPROVED = `ACCOUNT_NOT_APPROVED`;
+
+export const PROCESSING_UPDATE_MY_DETAILS = `PROCESSING_UPDATE_MY_DETAILS`;
+export const UPDATE_MY_DETAILS = `UPDATE_MY_DETAILS`;
+
 export const SET_CLIENT_NAME = `SET_CLIENT_NAME`;
 export const DUPLICATE_CLIENT_NAME = `DUPLICATE_CLIENT_NAME`;
 export const CREATE_NEW_CLIENT = `CREATE_NEW_CLIENT`;
@@ -13,31 +30,59 @@ export const DELETE_CLIENT = `DELETE_CLIENT`;
 export const UPDATE_CLIENT = `UPDATE_CLIENT`;
 export const REQUEST_CREATE_CLIENT = `REQUEST_CREATE_CLIENT`;
 export const GET_CLIENTS = `GET_CLIENTS`;
+
 export const ADD_TO_MY_FAVORITES = `ADD_TO_MY_FAVORITES`;
 export const REMOVE_FROM_MY_FAVORITES = `REMOVE_FROM_MY_FAVORITES`;
+
 export const SAVE_PERSONAL_NOTE = `SAVE_PERSONAL_NOTE`;
 export const EDIT_PERSONAL_NOTE = `EDIT_PERSONAL_NOTE`;
 export const DELETE_PERSONAL_NOTE = `DELETE_PERSONAL_NOTE`;
 export const TOGGLE_EDIT = `TOGGLE_EDIT`;
-export const REQUEST_USER_ACCOUNT_CREATION = `REQUEST_USER_ACCOUNT_CREATION`;
-export const PASSWORD_MISMATCH = `PASSWORD_MISMATCH`;
-export const PASSWORD_MATCH = `PASSWORD_MATCH`;
-export const PASSWORD_INCORRECT = `PASSWORD_INCORRECT`;
-export const USERNAME_RESERVED = `USERNAME_RESERVED`;
-export const NAME_RESERVED = `NAME_RESERVED`;
-export const USER_ACCOUNT_CREATED = `USER_ACCOUNT_CREATED`;
-export const UPDATE_USER_DETAILS = `UPDATE_USER_DETAILS`;
-export const ACCOUNT_NOT_APPROVED = `ACCOUNT_NOT_APPROVED`;
 
-export const createNewClient = (client = {}) => ({
+export const CREATE_CLIENT_CONTACT_DETAILS = `CREATE_CLIENT_CONTACT_DETAILS`;
+export const UPDATE_CLIENT_CONTACT_DETAILS = `UPDATE_CLIENT_CONTACT_DETAILS`;
+export const DELETE_CLIENT_CONTACT_DETAILS = `DELETE_CLIENT_CONTACT_DETAILS`;
+export const CLIENT_CONTACT_TOGGLE_EDIT = `CLIENT_CONTACT_TOGGLE_EDIT`;
+
+export const SUGGEST_EDITS_TO_CLIENT_CONTACT_DETAILS = `SUGGEST_EDITS_TO_CLIENT_CONTACT_DETAILS`;
+export const APPROVE_ADDRESS_SUGGESTION = `APPROVE_ADDRESS_SUGGESTION`;
+export const ADDRESS_SUGGESTION_SUCCESS = `ADDRESS_SUGGESTION_SUCCESS`;
+export const ADDRESS_SUGGESTION_FAILED = `ADDRESS_SUGGESTION_FAILED`;
+export const REJECT_ADDRESS_SUGGESTION = `REJECT_ADDRESS_SUGGESTION`;
+
+export const FETCH_CLIENT_SUGGESTIONS_PENDING = `FETCH_CLIENT_SUGGESTIONS_PENDING`;
+export const FETCH_CLIENT_SUGGESTIONS_ERROR = `FETCH_CLIENT_SUGGESTIONS_ERROR`;
+export const FETCH_CLIENT_SUGGESTIONS_SUCCESS = `FETCH_CLIENT_SUGGESTIONS_SUCCESS`;
+
+export const createNewClient = (client = {}, clientContact = {}) => ({
   type: CREATE_NEW_CLIENT,
+  client,
+  clientContact,
+});
+
+export const updateClient = (client = {}) => ({
+  type: UPDATE_CLIENT,
   client,
 });
 
-export const updateClient = (id, client = {}) => ({
-  type: UPDATE_CLIENT,
+export const suggestEditsToClientContactDetails = (
+  clientContactDetailsSuggestions = {}
+) => ({
+  type: SUGGEST_EDITS_TO_CLIENT_CONTACT_DETAILS,
+  clientContactDetailsSuggestions,
+});
+
+export const approveAddressSuggestion = (
+  clientContactDetailsSuggestions = {}
+) => ({
+  type: APPROVE_ADDRESS_SUGGESTION,
+  clientContactDetailsSuggestions,
+});
+
+export const rejectAddressSuggestion = (id, clientID) => ({
+  type: REJECT_ADDRESS_SUGGESTION,
   id,
-  client,
+  clientID,
 });
 
 export const addToMyFavorites = (id, clientID, owner, isFavorite) => ({
@@ -94,6 +139,33 @@ export const toggleEditClick = (id, toggleEdit) => ({
   toggleEdit,
 });
 
+export const clientContactToggleEditClick = (
+  clientID,
+  clientContactDetails,
+  toggleEdit
+) => ({
+  type: CLIENT_CONTACT_TOGGLE_EDIT,
+  clientID,
+  clientContactDetails,
+  toggleEdit,
+});
+
+export const createClientContactDetails = (clientContact = {}) => ({
+  type: CREATE_CLIENT_CONTACT_DETAILS,
+  clientContact,
+});
+
+export const updateClientContactDetails = (clientContact = {}) => ({
+  type: UPDATE_CLIENT_CONTACT_DETAILS,
+  clientContact,
+});
+
+export const deleteClientContactDetails = (id, client) => ({
+  type: DELETE_CLIENT_CONTACT_DETAILS,
+  id,
+  client,
+});
+
 export const requestAuthenticateUser = (username, password) => ({
   type: REQUEST_AUTHENTICATE_USER,
   username,
@@ -120,23 +192,50 @@ export const setState = (state = {}) => ({
   state,
 });
 
-export const updateUserDetails = (id, name, username, password) => ({
-  type: UPDATE_USER_DETAILS,
-  id,
-  name,
-  username,
-  password,
+export const createUserAccount = (userdata) => ({
+  type: CREATE_USER_ACCOUNT,
+  userdata,
 });
 
-export const requestCreateUserAccount = (
-  name,
-  username,
-  password,
-  confirmPassword
-) => ({
-  type: REQUEST_USER_ACCOUNT_CREATION,
-  name,
-  username,
-  password,
-  confirmPassword,
+export const processCreateUser = (userdata) => ({
+  type: PROCESSING_CREATE_USER,
+  userdata,
+});
+
+export const updateUserAccount = (userdata) => ({
+  type: UPDATE_USER_ACCOUNT,
+  userdata,
+});
+
+export const processUpdateUser = (userdata) => ({
+  type: PROCESSING_UPDATE_USER,
+  userdata,
+});
+
+export const deleteUserAccount = (id) => ({
+  type: DELETE_USER_ACCOUNT,
+  id,
+});
+
+export const processUpdateMyDetails = (userdata) => ({
+  type: PROCESSING_UPDATE_MY_DETAILS,
+  userdata,
+});
+
+export const updateMyDetails = (userdata) => ({
+  type: UPDATE_MY_DETAILS,
+  userdata,
+});
+
+//TODO for dashboard client suggestions
+export const fetchClientSuggestionsPending = () => ({
+  type: FETCH_CLIENT_SUGGESTIONS_PENDING,
+});
+export const fetchClientSuggestionsSuccess = (clientSuggestions) => ({
+  type: FETCH_CLIENT_SUGGESTIONS_SUCCESS,
+  clientSuggestions,
+});
+export const fetchClientSuggestionsError = (error) => ({
+  type: FETCH_CLIENT_SUGGESTIONS_ERROR,
+  error,
 });

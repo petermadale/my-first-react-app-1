@@ -1,4 +1,6 @@
 import { connectDB } from "./connect";
+import md5 from "md5";
+import uuid from "uuid";
 
 export const addClient = async (client) => {
   try {
@@ -12,13 +14,54 @@ export const addClient = async (client) => {
 
 export const updateClient = async (client) => {
   try {
-    let { id, name, email, address, phone, ext, cell, fax, owner } = client;
+    let {
+      id,
+      name,
+      email,
+      website,
+      postNominalLetters,
+      nameOfOrg,
+      titleWithOrg,
+      licenseNumber,
+      licenseExpiryDate,
+      licenseLastVerifiedDate,
+      typeOfOrg,
+      populationsServed,
+      typesOfServices,
+      specialties,
+      groupsOffered,
+      insuranceAccepted,
+      assignedLocations,
+      users,
+      notes,
+    } = client;
     let db = await connectDB();
     let collection = db.collection(`clients`);
     if (id) {
       await collection.updateOne(
         { id },
-        { $set: { name, email, address, phone, ext, cell, fax, owner } }
+        {
+          $set: {
+            name,
+            email,
+            website,
+            postNominalLetters,
+            nameOfOrg,
+            titleWithOrg,
+            licenseNumber,
+            licenseExpiryDate,
+            licenseLastVerifiedDate,
+            typeOfOrg,
+            populationsServed,
+            typesOfServices,
+            specialties,
+            groupsOffered,
+            insuranceAccepted,
+            assignedLocations,
+            users,
+            notes,
+          },
+        }
       );
     }
   } catch (err) {
@@ -31,6 +74,12 @@ export const deleteClient = async (id) => {
     let db = await connectDB();
     let collection = db.collection(`clients`);
     await collection.deleteOne({ id: id }, (err, clients) => {});
+
+    let clientContactCollection = db.collection(`clientContactDetails`);
+    await clientContactCollection.deleteOne(
+      { client: id },
+      (err, clients) => {}
+    );
   } catch (err) {
     console.log("error:".err.stack);
   }
@@ -48,17 +97,189 @@ export const getClients = async () => {
   }
 };
 
-export const updateUser = async (user) => {
+export const suggestEditsClientContactDetails = async (clientContact) => {
   try {
-    let { id, name, username, passwordHash } = user;
     let db = await connectDB();
-    let collection = db.collection(`users`);
+    let collection = db.collection(`clientContactDetailsSuggestions`);
+    await collection.insertOne(clientContact);
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const approveClientContactDetailsSuggestion = async (
+  clientContactDetailsSuggestions
+) => {
+  try {
+    let db = await connectDB();
+    let collection_contact_details = db.collection(`clientContactDetails`);
+    let collection_contact_suggestion = db.collection(
+      `clientContactDetailsSuggestions`
+    );
+    //let newID = uuid();
+    let new_clientContactDetailsSuggestions = {
+      ...clientContactDetailsSuggestions,
+      id: clientContactDetailsSuggestions.newID,
+    };
+    await collection_contact_details.insertOne(
+      new_clientContactDetailsSuggestions
+    );
+    await collection_contact_suggestion.deleteOne({
+      id: clientContactDetailsSuggestions.id,
+    });
+  } catch (err) {
+    console.error("error:", err.stack);
+  }
+};
+
+export const rejectClientContactDetailSuggestion = async (id) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`clientContactDetailsSuggestions`);
+    await collection.deleteOne({ id: id }, (err, clients) => {});
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const addClientContactDetails = async (clientContact) => {
+  try {
+    let db = await connectDB();
+    let clientCollection = db.collection(`clients`);
+    let client = await clientCollection.findOne({
+      id: clientContact.client,
+    });
+    if (client) {
+      let collection = db.collection(`clientContactDetails`);
+      await collection.insertOne(clientContact);
+    }
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const upateClientContactDetails = async (clientContact) => {
+  try {
+    let {
+      id,
+      client,
+      address1,
+      address2,
+      workEmail,
+      alternateEmail,
+      city,
+      state,
+      zip,
+      officePhoneNumber,
+      officePhoneNumberExt,
+      cellPhoneNumber,
+      alternativePhoneNumber,
+      faxNumber,
+    } = clientContact;
+    let db = await connectDB();
+    let collection = db.collection(`clientContactDetails`);
     if (id) {
       await collection.updateOne(
         { id },
-        { $set: { name, username, passwordHash } }
+        {
+          $set: {
+            address1,
+            address2,
+            workEmail,
+            alternateEmail,
+            city,
+            state,
+            zip,
+            officePhoneNumber,
+            officePhoneNumberExt,
+            cellPhoneNumber,
+            alternativePhoneNumber,
+            faxNumber,
+          },
+        }
       );
     }
+  } catch (err) {
+    console.log("error:", err.stack);
+  }
+};
+
+export const deleteClientContactDetails = async (id) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`clientContactDetails`);
+    await collection.deleteOne({ id: id }, (err, clients) => {});
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const updateUser = async (user) => {
+  let {
+    id,
+    firstName,
+    lastName,
+    location,
+    officePhoneNumber,
+    cellPhoneNumber,
+    email,
+    username,
+    // password,
+  } = user;
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`users`).find({ id: { $ne: id } });
+    let users_fullname = await collection.findOne({
+      firstName,
+      lastName,
+    });
+    let users_username = await collection.findOne({ username });
+    if (users_fullname) {
+      res.status(500).send({
+        message:
+          "A user with that account first name and last name already exists.",
+        nameReserved: true,
+      });
+      return;
+    }
+    if (users_username) {
+      res.status(500).send({
+        message: "A user with that username already exists.",
+        usernameReserved: true,
+      });
+      return;
+    }
+    if (id) {
+      //   const passwordHash = md5(password);
+      let dateToday = new Date();
+      let lastDateUpdated = dateToday.toLocaleString();
+      await collection.updateOne(
+        { id },
+        {
+          $set: {
+            firstName,
+            lastName,
+            location,
+            officePhoneNumber,
+            cellPhoneNumber,
+            email,
+            username,
+            lastDateUpdated,
+            // passwordHash,
+          },
+        }
+      );
+    }
+  } catch (err) {
+    console.log("error:".err);
+  }
+};
+
+export const deleteUser = async (id) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`users`);
+    await collection.deleteOne({ id: id }, (err, users) => {});
   } catch (err) {
     console.log("error:".err.stack);
   }

@@ -50,36 +50,58 @@ export const authenticationRoute = (app) => {
   });
 
   app.post("/user/create", async (req, res) => {
-    let { name, username, password } = req.body;
+    let {
+      id,
+      firstName,
+      lastName,
+      location,
+      officePhoneNumber,
+      cellPhoneNumber,
+      email,
+      username,
+      password,
+    } = req.body.user;
     let db = await connectDB();
     let collection = db.collection(`users`);
-    let users_name = await collection.findOne({ name: name });
-    let users_username = await collection.findOne({ username: username });
-    if (users_name) {
-      res
-        .status(500)
-        .send({ message: "A user with that account name already exists." });
+    let users_fullname = await collection.findOne({
+      firstName,
+      lastName,
+    });
+    let users_username = await collection.findOne({ username });
+    if (users_fullname) {
+      res.status(500).send({
+        message:
+          "A user with that account first name and last name already exists.",
+        nameReserved: true,
+      });
       return;
     }
     if (users_username) {
-      res
-        .status(500)
-        .send({ message: "A user with that username already exists." });
+      res.status(500).send({
+        message: "A user with that username already exists.",
+        usernameReserved: true,
+      });
       return;
     }
 
-    let userID = uuid();
+    // let userID = uuid();
     let dateToday = new Date();
     let dateCreated = dateToday.toLocaleString();
-    await collection.insertOne({
-      id: userID,
-      name,
+    const userdata = {
+      id,
+      firstName,
+      lastName,
+      location,
+      officePhoneNumber,
+      cellPhoneNumber,
+      email,
       username,
       passwordHash: md5(password),
-      isApproved: false,
+      isApproved: true,
       dateCreated,
-      dateAprroved: null,
-    });
+      //dateAprroved: null,
+    };
+    await collection.insertOne(userdata);
 
     // let state = await assembleUserState({
     //   id: userID,
@@ -87,6 +109,6 @@ export const authenticationRoute = (app) => {
     //   username: username,
     // });
 
-    res.status(200).send({ userID });
+    res.status(200).send({ user: userdata });
   });
 };

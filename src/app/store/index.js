@@ -1,20 +1,24 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
-// import { defaultState } from "../../server/defaultState";
 import { createLogger } from "redux-logger";
+import { persistStore } from "redux-persist";
 import createSagaMiddleware from "redux-saga";
-// import * as sagas from "./sagas.mock";
 import * as sagas from "./sagas";
-import * as mutations from "./mutations";
+import rootReducer from "./reducer";
+
+// import * as sagas from "./sagas.mock";
+// import { defaultState } from "../../server/defaultState";
 // import { UnitType } from "../components/UnitType";
 // import { select } from "redux-saga/effects";
-import { reducer } from "./reducer";
+// import * as mutations from "./mutations";
 
 const sagaMiddleware = createSagaMiddleware();
 
 export const store = createStore(
-  reducer,
+  rootReducer,
   applyMiddleware(createLogger(), sagaMiddleware)
 );
+
+export const persistor = persistStore(store);
 
 for (let saga in sagas) {
   sagaMiddleware.run(sagas[saga]);
