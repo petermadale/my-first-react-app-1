@@ -1,9 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-export const ClientNameDisplay = ({ name }) => (
-  <span className="client-name">{name}</span>
-);
+export const ClientNameDisplay = ({ name }) => <>{name}</>;
 
 const mapStateToProps = (state, ownProps) => {
   const { name } = state.clients.find((client) => client.id === ownProps.id);

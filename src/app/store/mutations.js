@@ -27,7 +27,13 @@ export const SET_CLIENT_NAME = `SET_CLIENT_NAME`;
 export const DUPLICATE_CLIENT_NAME = `DUPLICATE_CLIENT_NAME`;
 export const CREATE_NEW_CLIENT = `CREATE_NEW_CLIENT`;
 export const DELETE_CLIENT = `DELETE_CLIENT`;
+export const REQUEST_DELETE_CLIENT = `REQUEST_DELETE_CLIENT`;
+export const REQUEST_REJECT_DELETE_CLIENT_REQUEST = `REQUEST_REJECT_DELETE_CLIENT_REQUEST`;
+export const REJECT_DELETE_CLIENT_REQUEST = `REJECT_DELETE_CLIENT_REQUEST`;
+export const REQUEST_CANCEL_DELETE_CLIENT_REQUEST = `REQUEST_CANCEL_DELETE_CLIENT_REQUEST`;
+export const CANCEL_DELETE_CLIENT_REQUEST = `CANCEL_DELETE_CLIENT_REQUEST`;
 export const UPDATE_CLIENT = `UPDATE_CLIENT`;
+export const VERIFY_CLIENT = `VERIFY_CLIENT`;
 export const REQUEST_CREATE_CLIENT = `REQUEST_CREATE_CLIENT`;
 export const GET_CLIENTS = `GET_CLIENTS`;
 
@@ -37,6 +43,8 @@ export const REMOVE_FROM_MY_FAVORITES = `REMOVE_FROM_MY_FAVORITES`;
 export const SAVE_PERSONAL_NOTE = `SAVE_PERSONAL_NOTE`;
 export const EDIT_PERSONAL_NOTE = `EDIT_PERSONAL_NOTE`;
 export const DELETE_PERSONAL_NOTE = `DELETE_PERSONAL_NOTE`;
+export const CHECK_NOTE_ID = `CHECK_NOTE_ID`;
+export const VERIFY_PERSONAL_NOTE = `VERIFY_PERSONAL_NOTE`;
 export const TOGGLE_EDIT = `TOGGLE_EDIT`;
 
 export const CREATE_CLIENT_CONTACT_DETAILS = `CREATE_CLIENT_CONTACT_DETAILS`;
@@ -50,19 +58,32 @@ export const ADDRESS_SUGGESTION_SUCCESS = `ADDRESS_SUGGESTION_SUCCESS`;
 export const ADDRESS_SUGGESTION_FAILED = `ADDRESS_SUGGESTION_FAILED`;
 export const REJECT_ADDRESS_SUGGESTION = `REJECT_ADDRESS_SUGGESTION`;
 
+export const SAVE_MEETING = `SAVE_MEETING`;
+export const PROCESSING_EDIT_MEETING = `PROCESSING_EDIT_MEETING`;
+export const EDIT_MEETING = `EDIT_MEETING`;
+export const DELETE_MEETING = `DELETE_MEETING`;
+export const PROCESS_VERIFY_MEETING = `PROCESS_VERIFY_MEETING`;
+export const VERIFY_MEETING = `VERIFY_MEETING`;
+
 export const FETCH_CLIENT_SUGGESTIONS_PENDING = `FETCH_CLIENT_SUGGESTIONS_PENDING`;
 export const FETCH_CLIENT_SUGGESTIONS_ERROR = `FETCH_CLIENT_SUGGESTIONS_ERROR`;
 export const FETCH_CLIENT_SUGGESTIONS_SUCCESS = `FETCH_CLIENT_SUGGESTIONS_SUCCESS`;
 
-export const createNewClient = (client = {}, clientContact = {}) => ({
+export const createNewClient = (client = {}, clientContact = {}, isAdmin) => ({
   type: CREATE_NEW_CLIENT,
   client,
   clientContact,
+  isAdmin,
 });
 
 export const updateClient = (client = {}) => ({
   type: UPDATE_CLIENT,
   client,
+});
+
+export const verifyClient = (id) => ({
+  type: VERIFY_CLIENT,
+  id,
 });
 
 export const suggestEditsToClientContactDetails = (
@@ -85,22 +106,65 @@ export const rejectAddressSuggestion = (id, clientID) => ({
   clientID,
 });
 
-export const addToMyFavorites = (id, clientID, owner, isFavorite) => ({
+export const addToMyFavorites = (
+  id,
+  clientID,
+  owner,
+  isFavorite,
+  clientContactDetailsID
+) => ({
   type: ADD_TO_MY_FAVORITES,
   id,
   clientID,
   owner,
   isFavorite,
+  clientContactDetailsID,
 });
 
-export const removeFromMyFavorites = (id) => ({
+export const removeFromMyFavorites = (id, clientContactDetailsID) => ({
   type: REMOVE_FROM_MY_FAVORITES,
   id,
+  clientContactDetailsID,
 });
 
-export const deleteClient = (id) => ({
+export const deleteClient = (
+  client,
+  isAdmin,
+  owner,
+  clientDeleteRequestID
+) => ({
   type: DELETE_CLIENT,
-  id,
+  client,
+  isAdmin,
+  owner,
+  clientDeleteRequestID,
+});
+
+export const requestDeleteClient = (client, isAdmin, owner) => ({
+  type: REQUEST_DELETE_CLIENT,
+  client,
+  isAdmin,
+  owner,
+});
+
+export const requestRejectDeleteClientRequest = (clientsDeleteRequest) => ({
+  type: REQUEST_REJECT_DELETE_CLIENT_REQUEST,
+  clientsDeleteRequest,
+});
+
+export const rejectDeleteClientRequest = (clientsDeleteRequest) => ({
+  type: REJECT_DELETE_CLIENT_REQUEST,
+  clientsDeleteRequest,
+});
+
+export const requestCancelDeleteClientRequest = (clientsDeleteRequest) => ({
+  type: REQUEST_CANCEL_DELETE_CLIENT_REQUEST,
+  clientsDeleteRequest,
+});
+
+export const cancelDeleteClientRequest = (clientsDeleteRequest) => ({
+  type: CANCEL_DELETE_CLIENT_REQUEST,
+  clientsDeleteRequest,
 });
 
 export const setClientName = (id, name) => ({
@@ -114,8 +178,10 @@ export const duplicateClientName = (name) => ({
   name,
 });
 
-export const getClients = () => ({
+export const getClients = (isAdmin, clients) => ({
   type: GET_CLIENTS,
+  isAdmin,
+  clients,
 });
 
 export const savePersonalNote = (personalnote = {}) => ({
@@ -128,9 +194,20 @@ export const editPersonalNote = (personalnote = {}) => ({
   personalnote,
 });
 
-export const deletePersonalNote = (id) => ({
+export const deletePersonalNote = (noteid, client) => ({
   type: DELETE_PERSONAL_NOTE,
+  noteid,
+  client,
+});
+
+export const checkNoteID = (id) => ({
+  type: CHECK_NOTE_ID,
   id,
+});
+
+export const verifyPersonalNote = (notedata) => ({
+  type: VERIFY_PERSONAL_NOTE,
+  notedata,
 });
 
 export const toggleEditClick = (id, toggleEdit) => ({
@@ -225,6 +302,38 @@ export const processUpdateMyDetails = (userdata) => ({
 export const updateMyDetails = (userdata) => ({
   type: UPDATE_MY_DETAILS,
   userdata,
+});
+
+export const saveMeeting = (meetingData) => ({
+  type: SAVE_MEETING,
+  meetingData,
+});
+
+export const processEditMeeting = (meetingdata) => ({
+  type: PROCESSING_EDIT_MEETING,
+  meetingdata,
+});
+
+export const editMeeting = (meetingdata) => ({
+  type: EDIT_MEETING,
+  meetingdata,
+});
+
+export const processVerifyMeeting = (id, dateVerified) => ({
+  type: PROCESS_VERIFY_MEETING,
+  id,
+  dateVerified,
+});
+
+export const verifyMeeting = (id, dateVerified) => ({
+  type: VERIFY_MEETING,
+  id,
+  dateVerified,
+});
+
+export const deleteMeeting = (id) => ({
+  type: DELETE_MEETING,
+  id,
 });
 
 //TODO for dashboard client suggestions

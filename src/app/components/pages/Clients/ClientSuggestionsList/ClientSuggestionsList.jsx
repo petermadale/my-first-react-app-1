@@ -38,24 +38,23 @@ class ClientSuggestionsList extends Component {
       pathname,
       onApproveAddressSuggestion,
       rejectAddressSuggestion,
+      cancelAddressSuggestion,
+      userid
     } = this.props;
     return (
       <div className="card-body table-responsive p-0">
         <table className="table table table-hover text-nowrap">
           <thead>
             <tr>
-              <th style={{ width: "2%" }}>#</th>
+              <th style={{ width: "2%" }}></th>
+              <th>Client</th>
               <th style={{ width: "20%" }}>Address</th>
-              <th>City</th>
-              <th>State</th>
-              <th>Zip</th>
               <th>Office Phone # (ext)</th>
               <th>Cell Phone #</th>
               {pathname === "/dashboard" ? (
                 <>
                   {isAdmin ? <th>Suggested By</th> : <th>Status</th>}
-                  <th>Client</th>
-                  {!isAdmin ? <th>Action</th> : null}
+                  <th>&nbsp;</th>
                 </>
               ) : (
                 <>
@@ -64,7 +63,7 @@ class ClientSuggestionsList extends Component {
                       <th>Suggested By</th>
                     </>
                   ) : (
-                    <th>Action</th>
+                    <th>&nbsp;</th>
                   )}
                 </>
               )}
@@ -74,12 +73,13 @@ class ClientSuggestionsList extends Component {
             {clientContactDetailsSuggestions.map((contact, index) => (
               <tr key={contact.id}>
                 <td>{index + 1}.</td>
-                <td>
-                  {contact.address1} {contact.address2}
+                <td><ConnectedClientNameDisplay id={contact.client} /></td>
+                <td>                
+                    {contact.address1}
+                    {contact.city ? <>, {contact.city}</>  : null}
+                    {contact.state ? <>, {contact.state}</>  : null}
+                    {contact.zip ? <>, {contact.zip}</>  : null}
                 </td>
-                <td>{contact.city}</td>
-                <td>{contact.state}</td>
-                <td>{contact.zip}</td>
                 <td>
                   {contact.officePhoneNumber}{" "}
                   {contact.officePhoneNumberExt ? (
@@ -99,25 +99,14 @@ class ClientSuggestionsList extends Component {
                     </td>
                     <td>
                       <Link
-                        className="btn bg-gradient-primary btn-sm mr-1"
+                        className="btn bg-gradient-cyan btn-sm mr-1"
                         to={`/client/${contact.client}/true`}
                         target="_blank"
                       >
-                        <i className="fas fa-user-nurse  mr-0"></i>{" "}
-                        <ConnectedClientNameDisplay id={contact.client} />
+                        <i className="fas fa-comment-dots mr-0"></i>{" "}
+                        View Suggestion
                       </Link>
                     </td>
-                    {!isAdmin ? (
-                      <td>
-                        <button
-                          type="button"
-                          className="btn btn-sm bg-gradient-danger mr-2"
-                          disabled
-                        >
-                          <i className="fas fa-ban"></i> Cancel Suggestion
-                        </button>
-                      </td>
-                    ) : null}
                   </>
                 ) : (
                   <>
@@ -129,7 +118,7 @@ class ClientSuggestionsList extends Component {
                         <td>
                           <button
                             type="button"
-                            className="btn btn-sm bg-gradient-primary mr-2"
+                            className="btn btn-sm bg-gradient-cyan mr-2"
                             data-toggle="modal"
                             data-target="#modal-view-suggestion"
                             onClick={() => this.onClick(contact)}
@@ -140,15 +129,22 @@ class ClientSuggestionsList extends Component {
                         </td>
                       </>
                     ) : (
-                      <td>
-                        <button
-                          type="button"
-                          className="btn btn-sm bg-gradient-danger mr-2"
-                          disabled
-                        >
-                          <i className="fas fa-ban"></i> Cancel Suggestion
-                        </button>
-                      </td>
+                        <td>
+                        {contact.userid === userid ? 
+                            <button
+                              type="button"
+                              className="btn btn-sm bg-gradient-danger mr-2"
+                              onClick={() =>
+                                cancelAddressSuggestion(
+                                    contact.id,
+                                    contact.client
+                                )
+                              }
+                            >
+                              <i className="fas fa-ban"></i> Cancel Suggestion
+                            </button>
+                           : null}
+                        </td>
                     )}
                   </>
                 )}
@@ -374,13 +370,14 @@ class ClientSuggestionsList extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { isAdmin } = state.session;
-  const clientContactDetailsSuggestions =
-    ownProps.clientContactDetailsSuggestions;
+  const {clientContactDetailsSuggestions, userid} =
+    ownProps;
   const pathname = history.location.pathname;
   return {
     pathname,
     isAdmin,
     clientContactDetailsSuggestions,
+    userid
   };
 };
 
@@ -420,11 +417,26 @@ const mapDispatchStateToProps = (dispatch, ownProps) => {
         confirmButtonText: "Yes!",
       }).then((result) => {
         if (result.value) {
-          dispatch(rejectAddressSuggestion(id, clientID));
           $("#modal-view-suggestion").modal("hide");
+          dispatch(rejectAddressSuggestion(id, clientID));
         }
       });
     },
+    cancelAddressSuggestion(id, clientID) {
+        Swal_alert.fire({
+          title: "Are you sure you want to cancel this suggestion?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes!",
+        }).then((result) => {
+          if (result.value) {
+            $("#modal-view-suggestion").modal("hide");
+            dispatch(rejectAddressSuggestion(id, clientID));            
+          }
+        });
+    }
   };
 };
 

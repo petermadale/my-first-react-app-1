@@ -2,99 +2,99 @@ export const clientDataSets = {
   typeOfOrganization: [
     {
       id: "Org1",
-      name: "Church",
+      name: "Alumni",
     },
     {
       id: "Org2",
-      name: "School",
-    },
-    {
-      id: "Org3",
-      name: "Therapist",
-    },
-    {
-      id: "Org4",
-      name: "Psychiatrist",
-    },
-    {
-      id: "Org5",
-      name: "Primary Care Physician",
-    },
-    {
-      id: "Org6",
-      name: "OB/GYN",
-    },
-    {
-      id: "Org7",
-      name: "Pediatrician",
-    },
-    {
-      id: "Org8",
-      name: "Pain Doctor",
-    },
-    {
-      id: "Org9",
-      name: "Other Physician",
-    },
-    {
-      id: "Org10",
       name: "Chiropractor",
     },
     {
-      id: "Org11",
-      name: "Insurance Company",
+      id: "Org3",
+      name: "Church",
     },
     {
-      id: "Org12",
-      name: "Lawyer",
-    },
-    {
-      id: "Org13",
-      name: "Court/Probation",
-    },
-    {
-      id: "Org14",
-      name: "Police Department/Government Organization",
-    },
-    {
-      id: "Org15",
+      id: "Org4",
       name: "Community Organization/Non-Profit Agency",
     },
     {
-      id: "Org16",
+      id: "Org5",
+      name: "Court/Probation",
+    },
+    {
+      id: "Org6",
       name: "EAP",
     },
     {
-      id: "Org17",
-      name: "Union",
-    },
-    {
-      id: "Org18",
+      id: "Org7",
       name: "Employer",
     },
     {
-      id: "Org19",
-      name: "Medical Hospital",
-    },
-    {
-      id: "Org20",
-      name: "Psychiatric Hospital",
-    },
-    {
-      id: "Org21",
-      name: "Treatment Program",
-    },
-    {
-      id: "Org22",
-      name: "Urgent Care",
-    },
-    {
-      id: "Org23",
+      id: "Org8",
       name: "Free-standing ER",
     },
     {
+      id: "Org9",
+      name: "Insurance Company",
+    },
+    {
+      id: "Org10",
+      name: "Lawyer",
+    },
+    {
+      id: "Org11",
+      name: "Medical Hospital",
+    },
+    {
+      id: "Org12",
+      name: "OB/GYN",
+    },
+    {
+      id: "Org13",
+      name: "Other Physician",
+    },
+    {
+      id: "Org14",
+      name: "Pain Doctor",
+    },
+    {
+      id: "Org15",
+      name: "Pediatrician",
+    },
+    {
+      id: "Org16",
+      name: "Police Department/Government Organization",
+    },
+    {
+      id: "Org17",
+      name: "Primary Care Physician",
+    },
+    {
+      id: "Org18",
+      name: "Psychiatric Hospital",
+    },
+    {
+      id: "Org19",
+      name: "Psychiatrist",
+    },
+    {
+      id: "Org20",
+      name: "School",
+    },
+    {
+      id: "Org21",
+      name: "Therapist",
+    },
+    {
+      id: "Org22",
+      name: "Treatment Program",
+    },
+    {
+      id: "Org23",
+      name: "Union",
+    },
+    {
       id: "Org24",
-      name: "Alumni",
+      name: "Urgent Care",
     },
     {
       id: "Org25",
@@ -144,37 +144,309 @@ export const clientDataSets = {
   specialties: [
     {
       id: "S1",
-      name: "Specialty 1",
+      name: "ADHD/ADD",
     },
     {
       id: "S2",
-      name: "Specialty 2",
+      name: "Anger Management",
     },
     {
       id: "S3",
-      name: "Specialty 3",
+      name: "Antisocial Personality",
     },
     {
       id: "S4",
-      name: "Specialty 4",
+      name: "Anxiety",
     },
     {
       id: "S5",
-      name: "Specialty 5",
+      name: "Asperger’s Syndrome",
+    },
+    {
+      id: "S6",
+      name: "Autism",
+    },
+    {
+      id: "S7",
+      name: "Behavioral Issues",
+    },
+    {
+      id: "S8",
+      name: "Bipolar Disorder",
+    },
+    {
+      id: "S9",
+      name: "Borderline Personality",
+    },
+    {
+      id: "S10",
+      name: "Career Counseling",
+    },
+    {
+      id: "S11",
+      name: "Chronic Illness",
+    },
+    {
+      id: "S12",
+      name: "Chronic Pain",
+    },
+    {
+      id: "S13",
+      name: "Coping Skills",
+    },
+    {
+      id: "S14",
+      name: "Depression",
+    },
+    {
+      id: "S15",
+      name: "Developmental Disorders",
+    },
+    {
+      id: "S16",
+      name: "Domestic Abuse",
+    },
+    {
+      id: "S17",
+      name: "Dual Diagnosis",
+    },
+    {
+      id: "S18",
+      name: "Eating Disorders",
+    },
+    {
+      id: "S58",
+      name: "EMDR",
+    },
+    {
+      id: "S19",
+      name: "Emotional Disturbance",
+    },
+    {
+      id: "S20",
+      name: "Family Conflict",
+    },
+    {
+      id: "S21",
+      name: "Gambling",
+    },
+    {
+      id: "S22",
+      name: "Grief",
+    },
+    {
+      id: "S23",
+      name: "Hoarding",
+    },
+    {
+      id: "S24",
+      name: "Impulse Control Disorders",
+    },
+    {
+      id: "S25",
+      name: "Infertility",
+    },
+    {
+      id: "S26",
+      name: "Intellectual Disability",
+    },
+    {
+      id: "S27",
+      name: "Internet Addiction",
+    },
+    {
+      id: "S28",
+      name: "Learning Disabilities",
+    },
+    {
+      id: "S29",
+      name: "Life Coaching",
+    },
+    {
+      id: "S30",
+      name: "Life Transitions",
+    },
+    {
+      id: "S31",
+      name: "Medication Management",
+    },
+    {
+      id: "S32",
+      name: "Men’s Issues",
+    },
+    {
+      id: "S33",
+      name: "Mood Disorders",
+    },
+    {
+      id: "S34",
+      name: "Narcissistic Personality",
+    },
+    {
+      id: "S35",
+      name: "Obesity",
+    },
+    {
+      id: "S36",
+      name: "OCD",
+    },
+    {
+      id: "S37",
+      name: "Oppositional Defiance",
+    },
+    {
+      id: "S38",
+      name: "Parenting",
+    },
+    {
+      id: "S39",
+      name: "Peer Relationships",
+    },
+    {
+      id: "S40",
+      name: "Pregnancy/Prenatal/Postpartum",
+    },
+    {
+      id: "S41",
+      name: "Racial Identity",
+    },
+    {
+      id: "S42",
+      name: "AuRelationship Issuestism",
+    },
+    {
+      id: "S43",
+      name: "School Issues",
+    },
+    {
+      id: "S44",
+      name: "Self Esteem",
+    },
+    {
+      id: "S45",
+      name: "Spirituality",
+    },
+    {
+      id: "S46",
+      name: "Sports Performance",
+    },
+    {
+      id: "S47",
+      name: "Stress",
+    },
+    {
+      id: "S48",
+      name: "Substance Abuse",
+    },
+    {
+      id: "S49",
+      name: "Suicidal Ideation",
+    },
+    {
+      id: "S50",
+      name: "Teen Violence",
+    },
+    {
+      id: "S51",
+      name: "Testing and Evaluation",
+    },
+    {
+      id: "S52",
+      name: "Transgender",
+    },
+    {
+      id: "S53",
+      name: "Trauma and PTSD",
+    },
+    {
+      id: "S54",
+      name: "Traumatic Brain Injury",
+    },
+    {
+      id: "S55",
+      name: "Video Game Addiction",
+    },
+    {
+      id: "S56",
+      name: "Weight Loss",
+    },
+    {
+      id: "S57",
+      name: "Women's Issues",
     },
   ],
   groupsOffered: [
     {
       id: "G1",
-      name: "Group 1",
+      name: "Addiction Support Group ",
     },
     {
       id: "G2",
-      name: "Group 2",
+      name: "Adolescent Issues Support Group",
     },
     {
       id: "G3",
-      name: "Group 3",
+      name: "Anger Management Group",
+    },
+    {
+      id: "G4",
+      name: "Anxiety Group",
+    },
+    {
+      id: "G5",
+      name: "Cognitive Behavioral Therapy (CBT) for Anxiety Group",
+    },
+    {
+      id: "G6",
+      name: "Chronic Pain Group ",
+    },
+    {
+      id: "G7",
+      name: "Cancer Wellness Group",
+    },
+    {
+      id: "G8",
+      name: "Depression Group",
+    },
+    {
+      id: "G9",
+      name: "Divorce Support Group",
+    },
+    {
+      id: "G10",
+      name: "Domestic Violence or Abuse Support Groups",
+    },
+    {
+      id: "G11",
+      name: "Food and Eating Issues Support Group",
+    },
+    {
+      id: "G12",
+      name: "Grief and Loss of a Loved One Group",
+    },
+    {
+      id: "G13",
+      name: "Marriage/Relationship Issues Support Group",
+    },
+    {
+      id: "G14",
+      name: "Men’s Issues Group",
+    },
+    {
+      id: "G15",
+      name: "Mindfulness for Adults Group",
+    },
+    {
+      id: "G16",
+      name: "Parenting Support Group",
+    },
+    {
+      id: "G17",
+      name: "Substance Abuse Group",
+    },
+    {
+      id: "G18",
+      name: "Women’s Issues Group",
     },
   ],
   insuranceAccepted: [
@@ -185,12 +457,12 @@ export const clientDataSets = {
     },
     {
       id: "IA2",
-      name: "Cigna",
+      name: "American National",
       network: "In Network",
     },
     {
       id: "IA3",
-      name: "United",
+      name: "Beacon Health",
       network: "In Network",
     },
     {
@@ -200,22 +472,22 @@ export const clientDataSets = {
     },
     {
       id: "IA5",
-      name: "Humana",
+      name: "Cigna",
       network: "In Network",
     },
     {
       id: "IA6",
-      name: "Beacon Health",
+      name: "Community Health Choice",
       network: "In Network",
     },
     {
       id: "IA7",
-      name: "PHCS",
+      name: "Fee for Service",
       network: "In Network",
     },
     {
       id: "IA8",
-      name: "American National",
+      name: "Humana",
       network: "In Network",
     },
     {
@@ -225,16 +497,22 @@ export const clientDataSets = {
     },
     {
       id: "IA10",
-      name: "Community Health Choice",
-      network: "In Network",
-    },
-    {
-      id: "IA11",
       name: "Molina, etc.",
       network: "In Network",
     },
     {
+      id: "IA11",
+      name: "PHCS",
+      network: "In Network",
+    },
+
+    {
       id: "IA12",
+      name: "United",
+      network: "In Network",
+    },
+    {
+      id: "IA13",
       name: "Other",
       network: "In Network",
     },
@@ -251,6 +529,24 @@ export const clientDataSets = {
     {
       id: "age3",
       name: "Ages 3",
+    },
+  ],
+  serviceDeliveryMethod: [
+    {
+      id: "sdm1",
+      name: "In Person Sessions",
+    },
+    {
+      id: "sdm2",
+      name: "Phone Sessions",
+    },
+    {
+      id: "sdm3",
+      name: "Telehealth (Video) Sessions",
+    },
+    {
+      id: "sdm4",
+      name: "Hybrid Sessions – In-Person and Telehealth",
     },
   ],
 };

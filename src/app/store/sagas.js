@@ -15,14 +15,31 @@ import {
 import {
   createNewClient,
   updateClient,
+  verifyClient,
   deleteClient,
+  deleteClientRequest,
   createNewClientContactDetails,
   updateClientContactDetails,
   deleteClientContactDetails,
   suggestEditsToClientContactDetails,
   approveClientContactDetailsSuggestions,
   rejectClientContactDetailsSuggestions,
+  requestRejectDeleteClientRequest,
+  requestCancelDeleteClientRequest,
 } from "./sagasclients";
+
+import {
+  getPersonalNote,
+  deletePersonalNote,
+  verifyPersonalNote,
+} from "./sagaspersonalnotes";
+
+import {
+  saveMeeting,
+  editMeeting,
+  deleteMeeting,
+  verifyMeeting,
+} from "./sagasmymeetings";
 
 import { sendFeedback } from "../scripts/emailJS";
 
@@ -34,8 +51,8 @@ export function* clientCreationSaga() {
       call(createNewClient, client),
       call(createNewClientContactDetails, clientContact),
     ]);
-    console.log(newClient);
-    console.log(newClientContactDetails);
+    // console.log(newClient);
+    // console.log(newClientContactDetails);
     if (
       newClient.response.status === 200 &&
       newClientContactDetails.response.status === 200
@@ -107,17 +124,17 @@ export function* clientModificationSaga() {
   }
 }
 
-export function* clientDeletionSaga() {
+export function* clientVerificationSaga() {
   while (true) {
-    const { id } = yield take(mutations.DELETE_CLIENT);
+    const { id } = yield take(mutations.VERIFY_CLIENT);
 
-    const { response, error } = yield call(deleteClient, id);
+    const { response, error } = yield call(verifyClient, id);
     try {
       if (response) {
         if (response.status === 200) {
           Toast.fire({
             icon: "success",
-            title: alert_msg.client_delete_success,
+            title: alert_msg.client_verify_success,
           });
           history.push("/clients");
         } else {
@@ -132,13 +149,103 @@ export function* clientDeletionSaga() {
           title: error.message,
         });
       }
-      //   axios.delete(url + `/clients/${id}`);
-      //   history.push("/clients");
     } catch (err) {
       Toast.fire({
         icon: "error",
         title: alert_msg.server_error,
       });
+    }
+    // const fav_toast_title = data.client.isFavorite
+    //   ? "Client added to your favorites."
+    //   : "Client removed from your favorites.";
+    // const toast_title =
+    //   data.type === "ADD_TO_FAVORITES" ? fav_toast_title : "Client updated.";
+  }
+}
+
+export function* clientDeletionSaga() {
+  while (true) {
+    const { client, isAdmin, owner } = yield take(
+      mutations.REQUEST_DELETE_CLIENT
+    );
+    if (isAdmin) {
+      const { response, error } = yield call(deleteClient, client.id);
+      try {
+        if (response) {
+          if (response.status === 200) {
+            Toast.fire({
+              icon: "success",
+              title: alert_msg.client_delete_success,
+            });
+            history.push("/clients");
+            yield put(mutations.deleteClient(client, isAdmin, owner));
+          } else {
+            Toast.fire({
+              icon: "error",
+              title: alert_msg.server_error,
+            });
+          }
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: error.message,
+          });
+          yield put(mutations.deleteClient(null));
+        }
+        //   axios.delete(url + `/clients/${id}`);
+        //   history.push("/clients");
+      } catch (err) {
+        Toast.fire({
+          icon: "error",
+          title: alert_msg.server_error,
+        });
+      }
+    } else {
+      let newID = uuid();
+      const { response, error } = yield call(
+        deleteClientRequest,
+        newID,
+        client.id,
+        owner
+      );
+      try {
+        if (response) {
+          if (response.status === 200) {
+            const clientDeleteRequestID = newID;
+            Toast.fire({
+              icon: "success",
+              title: alert_msg.client_delete_request_success,
+            });
+            yield put(
+              mutations.deleteClient(
+                client,
+                isAdmin,
+                owner,
+                clientDeleteRequestID
+              )
+            );
+            history.push("/clients");
+          } else {
+            Toast.fire({
+              icon: "error",
+              title: alert_msg.server_error,
+            });
+            yield put(mutations.deleteClient(null));
+          }
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: error.message,
+          });
+        }
+        //   axios.delete(url + `/clients/${id}`);
+        //   history.push("/clients");
+      } catch (err) {
+        Toast.fire({
+          icon: "error",
+          title: alert_msg.server_error,
+        });
+      }
     }
   }
 }
@@ -178,7 +285,7 @@ export function* clientContactDetailCreationSaga() {
         title: alert_msg.server_error,
       });
     }
-    console.log(clientContact);
+    //console.log(clientContact);
   }
 }
 
@@ -387,14 +494,100 @@ export function* rejectClientContactDetailSuggestionsSaga() {
   }
 }
 
+export function* rejectDeleteClientRequestSaga() {
+  while (true) {
+    const { clientsDeleteRequest } = yield take(
+      mutations.REQUEST_REJECT_DELETE_CLIENT_REQUEST
+    );
+
+    const { response, error } = yield call(
+      requestRejectDeleteClientRequest,
+      clientsDeleteRequest.id
+    );
+    try {
+      if (response) {
+        if (response.status === 200) {
+          Toast.fire({
+            icon: "success",
+            title: "Delete client request rejected.",
+          });
+
+          yield put(mutations.rejectDeleteClientRequest(clientsDeleteRequest));
+          history.push("/clients");
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: error.response.data.message,
+        });
+      }
+    } catch (err) {
+      Toast.fire({
+        icon: "error",
+        title: alert_msg.server_error,
+      });
+    }
+  }
+}
+
+export function* cancelDeleteClientRequestSaga() {
+  while (true) {
+    const { clientsDeleteRequest } = yield take(
+      mutations.REQUEST_CANCEL_DELETE_CLIENT_REQUEST
+    );
+
+    const { response, error } = yield call(
+      requestCancelDeleteClientRequest,
+      clientsDeleteRequest.id
+    );
+    try {
+      if (response) {
+        if (response.status === 200) {
+          Toast.fire({
+            icon: "success",
+            title: "Delete client request cancelled.",
+          });
+
+          yield put(mutations.cancelDeleteClientRequest(clientsDeleteRequest));
+          history.push("/clients");
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: error.response.data.message,
+        });
+      }
+    } catch (err) {
+      Toast.fire({
+        icon: "error",
+        title: alert_msg.server_error,
+      });
+    }
+  }
+}
+
 export function* addToMyFavoritesSaga() {
   while (true) {
-    const { id, clientID, owner } = yield take(mutations.ADD_TO_MY_FAVORITES);
+    const { id, clientID, owner, clientContactDetailsID } = yield take(
+      mutations.ADD_TO_MY_FAVORITES
+    );
     axios.post(url + `/myfavorites/new`, {
       myfavorite: {
         id: id,
         client: clientID,
         owner: owner,
+        clientContactDetailsID,
+        clientContactDetailsID,
       },
     });
     Toast.fire({
@@ -415,22 +608,32 @@ export function* removeFromMyFavoritesSaga() {
         title: "Client removed from your favorites.",
       });
       history.push("/my-favorites");
-      if (!data) {
-        throw new Error();
-      }
-      console.log("Delete data: ", data);
+      //   if (!data) {
+      //     throw new Error();
+      //   }
+      //console.log("Delete data: ", data);
     } catch (e) {
       console.log("error:", e);
     }
   }
 }
 
-export function* getDataSaga() {
+export function* getClientsSaga() {
   while (true) {
-    const clients = yield take(mutations.GET_CLIENTS);
-    // const data = axios.get(url + `/clients`);
-    const user_status = yield take(mutations.AUTHENTICATED);
-    console.log("user_status", user_status);
+    const { isAdmin } = yield take(mutations.GET_CLIENTS);
+    const { response, error } = axios
+      .get(url + `/clients`)
+      .then((response) => ({ response }))
+      .catch((error) => ({ error }));
+
+    try {
+      if (response) {
+        //const user_status = yield take(mutations.AUTHENTICATED);
+        console.log(response);
+      }
+    } catch (e) {
+      console.log("error:", e);
+    }
   }
 }
 
@@ -460,23 +663,142 @@ export function* personalNoteUpdateSaga() {
   }
 }
 
+// export function* personalNoteDeletionSaga() {
+//   while (true) {
+//     const { id } = yield take(mutations.DELETE_PERSONAL_NOTE);
+//     try {
+//       console.log(id);
+//       axios.delete(url + `/personalnotes/${id}`);
+//       history.push("/clients");
+//       if (!data) {
+//         throw new Error();
+//       }
+//       console.log("Delete data: ", data);
+//     } catch (e) {
+//       console.log("error:", e);
+//     }
+//   }
+// }
+
 export function* personalNoteDeletionSaga() {
   while (true) {
-    const { id } = yield take(mutations.DELETE_PERSONAL_NOTE);
+    const { id } = yield take(mutations.CHECK_NOTE_ID);
+    const { noteresponse, noteerror } = yield call(getPersonalNote, id);
     try {
-      console.log(id);
-      axios.delete(url + `/personalnotes/${id}`);
-      history.push("/clients");
-      if (!data) {
-        throw new Error();
+      if (noteresponse) {
+        if (noteresponse.status === 200) {
+          const { response, error } = yield call(deletePersonalNote, id);
+
+          if (response) {
+            if (response.status === 200) {
+              yield put(
+                mutations.deletePersonalNote(id, noteresponse.data.note.client)
+              );
+              //   if (deleteRes) {
+              Toast.fire({
+                icon: "success",
+                title: "Personal note deleted.",
+              });
+            } else {
+              Toast.fire({
+                icon: "error",
+                title: alert_msg.server_error,
+              });
+            }
+          } else {
+            Toast.fire({
+              icon: "error",
+              title: error.message,
+            });
+          }
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
+      } else {
+        var data = noteerror.response.data;
+        if (data) {
+          var err_msg = data.message ? data.message : noteerror.message;
+          Toast.fire({
+            icon: "error",
+            title: err_msg,
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
       }
-      console.log("Delete data: ", data);
-    } catch (e) {
-      console.log("error:", e);
+    } catch (err) {
+      console.log(err);
     }
   }
 }
 
+export function* personalNoteVerificationSaga() {
+  while (true) {
+    const { notedata } = yield take(mutations.VERIFY_PERSONAL_NOTE);
+    const { noteresponse, noteerror } = yield call(
+      getPersonalNote,
+      notedata.id
+    );
+    try {
+      if (noteresponse) {
+        if (noteresponse.status === 200) {
+          console.log(noteresponse);
+          const { response, error } = yield call(verifyPersonalNote, notedata);
+
+          if (response) {
+            if (response.status === 200) {
+              yield put(mutations.verifyPersonalNote(notedata));
+              const title = isVerified
+                ? "Personal note verified."
+                : "Personal note unverified.";
+              Toast.fire({
+                icon: "success",
+                title: title,
+              });
+            } else {
+              Toast.fire({
+                icon: "error",
+                title: alert_msg.server_error,
+              });
+            }
+          } else {
+            Toast.fire({
+              icon: "error",
+              title: error.message,
+            });
+          }
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
+      } else {
+        var data = noteerror.response.data;
+        if (data) {
+          var err_msg = data.message ? data.message : noteerror.message;
+          Toast.fire({
+            icon: "error",
+            title: err_msg,
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
 export function* userAuthenticationSaga() {
   while (true) {
     const { username, password } = yield take(
@@ -687,7 +1009,8 @@ export function* userAccountModificationSaga() {
             icon: "success",
             title: alert_msg.user_update_success,
           });
-          //sendFeedback(name, user.id);
+          var fullName = firstName + " " + lastName;
+          sendFeedback(fullName, userdata.id);
           history.push(history.location.pathname);
           yield put(mutations.updateUserAccount(user));
         } else {
@@ -742,8 +1065,8 @@ export function* myDetailsModificationSaga() {
             title: alert_msg.user_update_success,
           });
           console.log(history);
-          const name = user.firstName + " " + user.lastName;
-          //sendFeedback(name, user.id);
+          const fullName = user.firstName + " " + user.lastName;
+          sendFeedback(fullName, userdata.id);
           history.push(history.location.pathname);
           yield put(mutations.updateUserAccount(user));
         } else {
@@ -773,11 +1096,164 @@ export function* myDetailsModificationSaga() {
   }
 }
 
+export function* saveMeetingSaga() {
+  while (true) {
+    const { meetingData } = yield take(mutations.SAVE_MEETING);
+
+    const { response, error } = yield call(saveMeeting, meetingData);
+    try {
+      if (response) {
+        if (response.status === 200) {
+          Toast.fire({
+            icon: "success",
+            title: alert_msg.save_meeting_success,
+          });
+          //sendFeedback(name, user.id);
+          history.push("/my-meetings");
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
+      } else {
+        var data = error.response.data;
+        if (data) {
+          var err_msg = data.message ? data.message : error.message;
+          Toast.fire({
+            icon: "error",
+            title: err_msg,
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+    }
+  }
+}
+
+export function* editMeetingSaga() {
+  while (true) {
+    const { meetingdata } = yield take(mutations.PROCESSING_EDIT_MEETING);
+
+    const { response, error } = yield call(editMeeting, meetingdata);
+    try {
+      if (response) {
+        var data = response.data;
+        if (response.status === 200) {
+          Toast.fire({
+            icon: "success",
+            title: alert_msg.edit_meeting_success,
+          });
+          //history.push(history.location.pathname);
+          history.push("/my-meetings");
+          yield put(mutations.editMeeting(meetingdata));
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+          yield put(mutations.editMeeting(null));
+        }
+      } else {
+        var data = error.response.data;
+        var err_msg = data.message ? data.message : error.message;
+        Toast.fire({
+          icon: "error",
+          title: err_msg,
+        });
+      }
+    } catch (err) {
+      Toast.fire({
+        icon: "error",
+        title: alert_msg.server_error,
+      });
+    }
+  }
+}
+
+export function* deleteMeetingSaga() {
+  while (true) {
+    const { id } = yield take(mutations.DELETE_MEETING);
+
+    const { response, error } = yield call(deleteMeeting, id);
+    try {
+      if (response) {
+        if (response.status === 200) {
+          Toast.fire({
+            icon: "success",
+            title: alert_msg.meeting_delete_success,
+          });
+          history.push("/my-meetings");
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: error.message,
+        });
+      }
+      //   axios.delete(url + `/clients/${id}`);
+      //   history.push("/clients");
+    } catch (err) {
+      Toast.fire({
+        icon: "error",
+        title: alert_msg.server_error,
+      });
+    }
+  }
+}
+
+export function* verifyMeetingSage() {
+  while (true) {
+    const { id, dateVerified } = yield take(mutations.PROCESS_VERIFY_MEETING);
+
+    const { response, error } = yield call(verifyMeeting, id, dateVerified);
+    try {
+      if (response) {
+        if (response.status === 200) {
+          Toast.fire({
+            icon: "success",
+            title: alert_msg.verify_meeting_success,
+          });
+          yield put(mutations.verifyMeeting(id, dateVerified));
+          history.push("/my-meetings");
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+          history.push("/my-meetings");
+        }
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: error.message,
+        });
+      }
+    } catch (err) {
+      Toast.fire({
+        icon: "error",
+        title: alert_msg.server_error,
+      });
+    }
+  }
+}
 export function* logoutUser() {
   while (true) {
     const { session, authenticated } = yield take(mutations.LOGOUT_USER);
-    console.log("session:", session);
-    console.log("authenticated:", authenticated);
+    // console.log("session:", session);
+    // console.log("authenticated:", authenticated);
     history.push("/");
     Toast.fire({
       icon: "success",

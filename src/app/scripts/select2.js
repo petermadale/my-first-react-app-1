@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Select from "react-select";
+import { toastjs } from "../scripts/toastr";
 
 class Select2 extends Component {
   constructor(props) {
@@ -21,22 +22,30 @@ class Select2 extends Component {
       isPristine: true,
       isDisabled: props.isDisabled ? true : false,
       allregions: false,
+      maximumSelectionLength: props.maximumSelectionLength
+        ? props.maximumSelectionLength
+        : 0,
+      onChange: props.onChange ? props.onChange : this.handleChange,
     };
   }
 
   handleChange = (newValue, actionMeta) => {
-    const selectedValues = this.props.isMulti
-      ? newValue
-        ? newValue.map((s) => s.value)
-        : null
-      : newValue.name;
-    this.setState({
-      selected: newValue,
-      selectedValues,
-      isEmpty: selectedValues ? false : true,
-      isPristine: false,
-      allregions: newValue.length < this.props.options.length ? false : true,
-    });
+    if (newValue.length > this.props.maximumSelectionLength) {
+      toastjs.error("Can only select up to 5 " + this.props.label + ".");
+    } else {
+      const selectedValues = this.props.isMulti
+        ? newValue
+          ? newValue.map((s) => s.value)
+          : null
+        : newValue.name || newValue.value;
+      this.setState({
+        selected: newValue,
+        selectedValues,
+        isEmpty: selectedValues ? false : true,
+        isPristine: false,
+        allregions: newValue.length < this.props.options.length ? false : true,
+      });
+    }
   };
   onBlur = (event) => {
     this.state.required
@@ -67,7 +76,7 @@ class Select2 extends Component {
   };
 
   render() {
-    const { options, name, isMulti, label, isDisabled } = this.props;
+    const { options, name, isMulti, label, onChange } = this.props;
     const {
       selected,
       selectedValues,
@@ -75,6 +84,7 @@ class Select2 extends Component {
       isEmpty,
       isPristine,
       allregions,
+      isDisabled,
     } = this.state;
     return (
       <>
@@ -95,6 +105,7 @@ class Select2 extends Component {
           required={required}
           onBlur={this.onBlur}
           isDisabled={isDisabled}
+          maximumSelectionLength
         />
         {label === "Location" ? (
           <small className="font-italic">
@@ -105,6 +116,7 @@ class Select2 extends Component {
                 onChange={this.onAllRegionsChange}
                 value="allregions"
                 checked={allregions}
+                disabled={isDisabled}
               />
               All Regions
             </label>

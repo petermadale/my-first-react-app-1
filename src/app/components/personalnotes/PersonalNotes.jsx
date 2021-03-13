@@ -12,6 +12,7 @@ const PersonalNotes = ({
   isEdit,
   noteEdit,
   deletePersonalNote,
+  isAdmin,
 }) => (
   <>
     {isEdit ? (
@@ -34,7 +35,7 @@ const PersonalNotes = ({
                   Date/Time Updated - {note.datetimeupdated}
                 </span>
               ) : null}
-              {/* <span className="description">
+              <span className="description">
                 {note.isVerified ? (
                   <strong className="text-success">
                     <i>Verified</i>
@@ -44,11 +45,16 @@ const PersonalNotes = ({
                     <i>Unverified</i>
                   </strong>
                 )}
-              </span> */}
+              </span>
             </div>
             <p>{note.note}</p>
 
             <p>
+              {isAdmin ? (
+                <button className="btn btn-link link-black text-sm mr-2">
+                  <i className="fas fa-thumbs-up mr-1"></i> Verify
+                </button>
+              ) : null}
               <button
                 className="btn btn-link link-black text-sm mr-2"
                 onClick={() =>
@@ -60,7 +66,7 @@ const PersonalNotes = ({
 
               <button
                 className="btn btn-link link-black text-sm"
-                onClick={() => deletePersonalNote(note.id)}
+                onClick={() => deletePersonalNote(note.id, note.client)}
               >
                 <i className="fas fa-trash mr-1"></i> Delete
               </button>
@@ -74,6 +80,7 @@ const PersonalNotes = ({
 
 const mapStateToProps = (state, ownProps) => {
   const personalnotes = ownProps.client.personalnotes;
+  const isAdmin = state.session.isAdmin;
   const isEdit = personalnotes.some((note) => {
     return note.toggleEdit ? true : false;
   });
@@ -84,6 +91,7 @@ const mapStateToProps = (state, ownProps) => {
     personalnotes,
     isEdit,
     noteEdit,
+    isAdmin,
   };
 };
 
@@ -92,9 +100,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onToggleEdit(id, toggleEdit) {
       dispatch(toggleEditClick(id, toggleEdit));
     },
-    deletePersonalNote(id) {
+    deletePersonalNote(id, client) {
       Swal_alert.fire({
-        title: "Are you sure?",
+        title: "Are you sure you want to delete this note?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -102,7 +110,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.value) {
-          dispatch(deletePersonalNote(id));
+          dispatch(deletePersonalNote(id, client));
           Toast.fire({
             icon: "success",
             title: "Personal note deleted.",

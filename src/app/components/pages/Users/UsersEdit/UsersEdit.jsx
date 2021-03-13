@@ -45,6 +45,9 @@ export const UserEdit = ({
                             nameid="firstName"
                             defaultValue={userdetails.firstName}
                             required
+                            isDisabled={
+                                userdetails.id === "User1" ? true : false
+                            }
                           />
                         </div>
                         <div className="form-group col-md-6">
@@ -54,6 +57,9 @@ export const UserEdit = ({
                             nameid="lastName"
                             defaultValue={userdetails.lastName}
                             required
+                            isDisabled={
+                                userdetails.id === "User1" ? true : false
+                            }
                           />
                         </div>
                       </div>
@@ -67,6 +73,9 @@ export const UserEdit = ({
                             name="location"
                             isMulti
                             required
+                            isDisabled={
+                                userdetails.id === "User1" ? true : false
+                            }
                           />
                         </div>
                         <div className="form-group col-md-3">
@@ -86,6 +95,10 @@ export const UserEdit = ({
                             id="officePhoneNumber"
                             className="form-control"
                             defaultValue={userdetails.officePhoneNumber}
+                            
+                            disabled={
+                                userdetails.id === "User1" ? true : false
+                            }
                           />
                         </div>
                         <div className="form-group col-md-3">
@@ -105,6 +118,9 @@ export const UserEdit = ({
                             id="cellPhoneNumber"
                             className="form-control"
                             defaultValue={userdetails.cellPhoneNumber}
+                            disabled={
+                                userdetails.id === "User1" ? true : false
+                            }
                           />
                         </div>
                       </div>
@@ -117,6 +133,9 @@ export const UserEdit = ({
                             nameid="username"
                             defaultValue={userdetails.username}
                             required
+                            isDisabled={
+                                userdetails.id === "User1" ? true : false
+                            }
                           />
                         </div>
 
@@ -126,17 +145,23 @@ export const UserEdit = ({
                             type="email"
                             nameid="email"
                             defaultValue={userdetails.email}
+                            isDisabled={
+                                userdetails.id === "User1" ? true : false
+                            }
                           />
                         </div>
                       </div>
                     </div>
                     <div className="card-footer text-right">
-                      <button
-                        type="submit"
-                        className="btn bg-gradient-success mr-2"
-                      >
-                        <i className="fas fa-save"></i> Update
-                      </button>
+                    {
+                            userdetails.id === "User1" ? null : 
+                            <button
+                              type="submit"
+                              className="btn bg-gradient-success mr-2"
+                            >
+                              <i className="fas fa-save"></i> Update
+                            </button>
+                        }
                       <Link to="/users" className="btn bg-gradient-secondary">
                         <i className="fas fa-angle-double-left"></i> Back to
                         Users

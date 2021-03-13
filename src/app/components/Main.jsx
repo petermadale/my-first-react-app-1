@@ -19,6 +19,10 @@ import { ConnectedMyDetails } from "./pages/MyDetails/MyDetails";
 import { ConnectedUsers } from "./pages/Users/Users/Users";
 import { ConnectedUsersNew } from "./pages/Users/UsersNew/UsersNew";
 import { ConnectedUserEdit } from "./pages/Users/UsersEdit/UsersEdit";
+import { ConnectedMyFavorites } from "./pages/MyFavorites/MyFavorites";
+import { ConnectedMyMeetings } from "./pages/MyMeeting/MyMeetings/MyMeetings";
+import { ConnectedMeetingsNew } from "./pages/MyMeeting/MeetingsNew/MeetingsNew";
+import { ConnectedMeetingsEdit } from "./pages/MyMeeting/MeetingsEdit/MeetingsEdit";
 
 const RouteGuard = (Component) => ({ match }) =>
   !store.getState().session.authenticated ? (
@@ -73,11 +77,26 @@ export const Main = () => (
               path="/my-details"
               render={RouteGuard(ConnectedMyDetails)}
             />
-            {/* <Route
+            <Route
               exact
               path="/my-favorites"
               render={RouteGuard(ConnectedMyFavorites)}
-            /> */}
+            />
+            <Route
+              exact
+              path="/my-meetings"
+              render={RouteGuard(ConnectedMyMeetings)}
+            />
+            <Route
+              exact
+              path="/meetings-new/:id"
+              render={RouteGuard(ConnectedMeetingsNew)}
+            />
+            <Route
+              exact
+              path="/meeting/:id/"
+              render={RouteGuard(ConnectedMeetingsEdit)}
+            />
             <Route
               exact
               path="/client/:id/:isEdit?"

@@ -15,9 +15,25 @@ export function updateClient(client) {
     .catch((error) => ({ error }));
 }
 
+export function verifyClient(id) {
+  return axios
+    .post(url + `/clients/verify`, { id })
+    .then((response) => ({ response }))
+    .catch((error) => ({ error }));
+}
+
 export function deleteClient(id) {
   return axios
     .delete(url + `/clients/${id}`)
+    .then((response) => ({ response }))
+    .catch((error) => ({ error }));
+}
+
+export function deleteClientRequest(id, clientID, owner) {
+  return axios
+    .post(url + `/clients/deleteClientRequest`, {
+      data: { id, client: clientID, owner: owner },
+    })
     .then((response) => ({ response }))
     .catch((error) => ({ error }));
 }
@@ -66,6 +82,20 @@ export function approveClientContactDetailsSuggestions(
 export function rejectClientContactDetailsSuggestions(id) {
   return axios
     .delete(url + `/clientContactDetailsSuggestions/${id}`)
+    .then((response) => ({ response }))
+    .catch((error) => ({ error }));
+}
+
+export function requestRejectDeleteClientRequest(id) {
+  return axios
+    .delete(url + `/requestRejectCancelDeleteClientRequest/${id}`)
+    .then((response) => ({ response }))
+    .catch((error) => ({ error }));
+}
+
+export function requestCancelDeleteClientRequest(id) {
+  return axios
+    .delete(url + `/requestRejectCancelDeleteClientRequest/${id}`)
     .then((response) => ({ response }))
     .catch((error) => ({ error }));
 }

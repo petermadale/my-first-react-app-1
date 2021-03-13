@@ -3,11 +3,13 @@ import PropTypes from "prop-types";
 import styles from "./ClientsDetailLeft.module.css";
 import { connect } from "react-redux";
 import { ConnectedClientsAddress } from "../ClientsAddress/ClientsAddress";
+import { ConnectedButtonFavorite } from "../clientfunctions/ButtonFavorite/ButtonFavorite";
 
 const ClientsDetailLeft = ({ client }) => (
   <>
-    <div className="card card-client-primary card-outline">
+    <div className={`card ${!client.isVerified || (client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0) ? "card-warning" : "card-client-primary"} card-outline`}>
       <div className="card-body box-profile">
+      {client.isVerified && !(client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0) ? <ConnectedButtonFavorite client={client} /> : null}
         <h3 className="profile-username text-center">
           {client.name}
           {client.postNominalLetters ? (

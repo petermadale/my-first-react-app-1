@@ -6,6 +6,11 @@ export const addClient = async (client) => {
   try {
     let db = await connectDB();
     let collection = db.collection(`clients`);
+    // let { owner } = client;
+    // let collection =
+    //   owner === "User1"
+    //     ? db.collection(`clients`)
+    //     : db.collection(`clientsSuggestion`);
     await collection.insertOne(client);
   } catch (err) {
     console.log("error:".err.stack);
@@ -31,9 +36,13 @@ export const updateClient = async (client) => {
       specialties,
       groupsOffered,
       insuranceAccepted,
+      serviceDeliveryMethod,
       assignedLocations,
       users,
       notes,
+      isVerified,
+      lastUpdatedBy,
+      lastUpdatedDate,
     } = client;
     let db = await connectDB();
     let collection = db.collection(`clients`);
@@ -57,9 +66,32 @@ export const updateClient = async (client) => {
             specialties,
             groupsOffered,
             insuranceAccepted,
+            serviceDeliveryMethod,
             assignedLocations,
             users,
             notes,
+            isVerified,
+            lastUpdatedBy,
+            lastUpdatedDate,
+          },
+        }
+      );
+    }
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const verifyClient = async (id) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`clients`);
+    if (id) {
+      await collection.updateOne(
+        { id },
+        {
+          $set: {
+            isVerified: true,
           },
         }
       );
@@ -80,6 +112,20 @@ export const deleteClient = async (id) => {
       { client: id },
       (err, clients) => {}
     );
+
+    let clientsDeleteRequest = db.collection(`clientsDeleteRequest`);
+    await clientsDeleteRequest.deleteOne({ client: id }, (err, clients) => {});
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const deleteClientRequest = async (data) => {
+  try {
+    let db = await connectDB();
+
+    let collection = db.collection(`clientsDeleteRequest`);
+    await collection.insertOne(data);
   } catch (err) {
     console.log("error:".err.stack);
   }
@@ -309,6 +355,7 @@ export const addPersonalNotes = async (personalnote) => {
   try {
     let db = await connectDB();
     let collection = db.collection(`personalnotes`);
+    personalnote.isVerified = false;
     await collection.insertOne(personalnote);
   } catch (err) {
     console.log("error:".err.stack);
@@ -333,6 +380,112 @@ export const deletePersonalNote = async (id) => {
     let db = await connectDB();
     let collection = db.collection(`personalnotes`);
     await collection.deleteOne({ id: id }, (err, personalnotes) => {});
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const verifyPersonalNote = async (notedata) => {
+  try {
+    console.log(notedata);
+    let { id, isVerified } = notedata;
+    let db = await connectDB();
+    let collection = db.collection(`personalnotes`);
+    if (id) {
+      await collection.updateOne({ id }, { $set: { isVerified } });
+    }
+  } catch (err) {
+    console.log("error");
+  }
+};
+
+export const saveMeeting = async (data) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`mymeetings`);
+    await collection.insertOne(data);
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const editMeeting = async (meetingdata) => {
+  try {
+    let {
+      id,
+      attendees,
+      attendeesMore,
+      location,
+      otherLocation,
+      dateOfMeeting,
+      timeOfMeeting,
+      preMeetingNotes,
+      duringAfterMeetingNotes,
+      isVerified,
+      dateModified,
+    } = meetingdata;
+    let db = await connectDB();
+    let collection = db.collection(`mymeetings`);
+    if (id) {
+      await collection.updateOne(
+        { id },
+        {
+          $set: {
+            attendees,
+            attendeesMore,
+            location,
+            otherLocation,
+            dateOfMeeting,
+            timeOfMeeting,
+            preMeetingNotes,
+            duringAfterMeetingNotes,
+            isVerified,
+            dateModified,
+          },
+        }
+      );
+    }
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const deleteMeeting = async (id) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`mymeetings`);
+    await collection.deleteOne({ id: id }, (err, mymeetings) => {});
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const verifyMeeting = async (meetingdata) => {
+  try {
+    let { id, dateVerified } = meetingdata;
+    let db = await connectDB();
+    let collection = db.collection(`mymeetings`);
+    if (id) {
+      await collection.updateOne(
+        { id },
+        {
+          $set: {
+            isVerified: true,
+            dateVerified,
+          },
+        }
+      );
+    }
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const requestRejectCancelDeleteClientRequest = async (id) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`clientsDeleteRequest`);
+    await collection.deleteOne({ id: id }, (err, clients) => {});
   } catch (err) {
     console.log("error:".err.stack);
   }

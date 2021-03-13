@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { compare } from "../scripts/compare";
 
 import * as mutations from "./mutations";
 
@@ -12,6 +13,8 @@ let defaultState = {
   personalnotes: [],
   locations: [],
   clientContactDetailsSuggestions: [],
+  mymeetings: [],
+  clientSuggestions: [],
 };
 
 const persistConfig = {
@@ -25,6 +28,8 @@ const persistConfig = {
     "personalnotes",
     "locations",
     "clientContactDetailsSuggestions",
+    "mymeetings",
+    "clientSuggestions",
   ],
 };
 
@@ -103,15 +108,30 @@ const rootReducer = combineReducers({
         return action.state.clients.map((client) => {
           return {
             ...client,
+            clientContactDetails: client.clientContactDetails.map((contact) => {
+              return {
+                ...contact,
+                isFavorite: action.state.myfavorites.some((myfave) => {
+                  return myfave.clientContactDetailsID === contact.id
+                    ? {
+                        isFavorite: true,
+                      }
+                    : false;
+                }),
+              };
+            }),
             personalnotes: action.state.personalnotes.filter((note) => {
               return note.client === client.id;
             }),
             isFavorite: action.state.myfavorites.some((myfave) => {
               return myfave.client === client.id ? true : false;
             }),
-            myfave: action.state.myfavorites.find((myfave) => {
-              return myfave.client === client.id ? myfave : null;
+            myfave: action.state.myfavorites.filter((myfave) => {
+              return myfave.client === client.id;
             }),
+            // myfave: action.state.myfavorites.find((myfave) => {
+            //   return myfave.client === client.id ? myfave : null;
+            // }),
           };
         });
       case mutations.SET_CLIENT_NAME:
@@ -138,9 +158,13 @@ const rootReducer = combineReducers({
           specialties,
           groupsOffered,
           insuranceAccepted,
+          serviceDeliveryMethod,
           assignedLocations,
           users,
           notes,
+          isVerified,
+          lastUpdatedBy,
+          lastUpdatedDate,
         } = action.client;
         return clients.map((client) => {
           return client.id === id
@@ -161,9 +185,22 @@ const rootReducer = combineReducers({
                 specialties,
                 groupsOffered,
                 insuranceAccepted,
+                serviceDeliveryMethod,
                 assignedLocations,
                 users,
                 notes,
+                isVerified,
+                lastUpdatedBy,
+                lastUpdatedDate,
+              }
+            : client;
+        });
+      case mutations.VERIFY_CLIENT:
+        return clients.map((client) => {
+          return client.id === action.id
+            ? {
+                ...client,
+                isVerified: true,
               }
             : client;
         });
@@ -191,9 +228,27 @@ const rootReducer = combineReducers({
             : client;
         });
       case mutations.DELETE_CLIENT:
-        return (clients = clients.filter((client) => {
-          return client.id !== action.id;
-        }));
+        if (action.isAdmin) {
+          return (clients = clients.filter((client) => {
+            return client.id !== action.client.id;
+          }));
+        } else {
+          return (clients = clients.map((client) => {
+            return client.id === action.client.id
+              ? {
+                  ...client,
+                  clientsDeleteRequest: [
+                    ...client.clientsDeleteRequest,
+                    {
+                      id: action.clientDeleteRequestID,
+                      client: action.client.id,
+                      owner: action.owner,
+                    },
+                  ],
+                }
+              : client;
+          }));
+        }
       case mutations.ADD_TO_MY_FAVORITES:
         //add isFavorite, myfave object to each client
         return clients.map(function (client) {
@@ -201,27 +256,65 @@ const rootReducer = combineReducers({
             ? {
                 ...client,
                 isFavorite: true,
-                myfave: {
-                  client: action.clientID,
-                  id: action.id,
-                  owner: action.owner,
-                },
+                clientContactDetails: client.clientContactDetails.map(
+                  (contact) => {
+                    return contact.id === action.clientContactDetailsID
+                      ? { ...contact, isFavorite: true }
+                      : contact;
+                  }
+                ),
+                myfave: [
+                  {
+                    ...client.myfave,
+                    client: action.clientID,
+                    id: action.id,
+                    owner: action.owner,
+                    clientContactDetailsID: action.clientContactDetailsID,
+                  },
+                ],
               }
             : client;
         });
       case mutations.REMOVE_FROM_MY_FAVORITES:
         //add isFavorite, myfave object to each client
         return clients.map(function (client) {
-          if (client.myfave) {
-            return action.id === client.myfave.id
-              ? {
-                  ...client,
-                  isFavorite: false,
-                  myfave: null,
-                }
-              : client;
-          }
-          return client;
+          return {
+            ...client,
+            myfave: client.myfave.filter((fave) => {
+              return action.id != fave.id;
+            }),
+            clientContactDetails: client.clientContactDetails.map((contact) => {
+              return contact.id === action.clientContactDetailsID
+                ? { ...contact, isFavorite: false }
+                : contact;
+            }),
+            isFavorite:
+              client.myfave.length === 0
+                ? false
+                : client.clientContactDetails.some((fave) => {
+                    return fave.isFavorite;
+                  }),
+          };
+          //   if (client.myfave) {
+          //     return action.id === client.myfave.id
+          //       ? {
+          //           ...client,
+          //           myfave: client.myfave.filter((fave) => {
+          //             action.id != fave.id
+          //           }),
+          //           clientContactDetails: client.clientContactDetails.map(
+          //             (contact) => {
+          //               return contact.id === action.clientContactDetailsID
+          //                 ? { ...contact, isFavorite: false }
+          //                 : contact;
+          //             }
+          //           ),
+          //           isFavorite: false,
+          //           myfave: null,
+          //         }
+          //       : client;
+          //   }
+          //return client;
         });
       case mutations.CLIENT_CONTACT_TOGGLE_EDIT:
         return clients.map(function (client) {
@@ -338,6 +431,100 @@ const rootReducer = combineReducers({
             : client;
         });
       }
+      case mutations.SAVE_PERSONAL_NOTE:
+        return clients.map(function (client) {
+          return action.personalnote.client === client.id
+            ? {
+                ...client,
+                personalnotes: [
+                  ...client.personalnotes,
+                  {
+                    id: action.personalnote.id,
+                    client: action.personalnote.client,
+                    note: action.personalnote.note,
+                    datetimecreated: action.personalnote.datetimecreated,
+                    owner: action.personalnote.owner,
+                    // isVerified: action.isVerified,
+                  },
+                ],
+              }
+            : client;
+        });
+
+      case mutations.EDIT_PERSONAL_NOTE:
+        return clients.map(function (client) {
+          return action.personalnote.client === client.id
+            ? {
+                ...client,
+                personalnotes: client.personalnotes.map((pnote) => {
+                  return pnote.id === action.personalnote.id
+                    ? {
+                        ...pnote,
+                        note: action.personalnote.note,
+                        datetimeupdated: action.personalnote.datetimeupdated,
+                        toggleEdit: false,
+                      }
+                    : pnote;
+                }),
+              }
+            : client;
+        });
+      case mutations.VERIFY_PERSONAL_NOTE:
+        return clients.map(function (client) {
+          return action.notedata.client === client.id
+            ? {
+                ...client,
+                personalnotes: client.personalnotes.map((pnote) => {
+                  return pnote.id === action.notedata.id
+                    ? {
+                        ...pnote,
+                        isVerified: action.notedata.isVerified,
+                      }
+                    : pnote;
+                }),
+              }
+            : client;
+        });
+
+      case mutations.DELETE_PERSONAL_NOTE:
+        return clients.map(function (client) {
+          return action.client === client.id
+            ? {
+                ...client,
+                personalnotes: client.personalnotes.filter((pnote) => {
+                  return pnote.id !== action.noteid;
+                }),
+              }
+            : client;
+        });
+
+      case mutations.REJECT_DELETE_CLIENT_REQUEST:
+        return (clients = clients.map((client) => {
+          return client.id === action.clientsDeleteRequest.client
+            ? {
+                ...client,
+                clientsDeleteRequest: client.clientsDeleteRequest.filter(
+                  (del) => {
+                    return del.id != action.clientsDeleteRequest.id;
+                  }
+                ),
+              }
+            : client;
+        }));
+
+      case mutations.CANCEL_DELETE_CLIENT_REQUEST:
+        return (clients = clients.map((client) => {
+          return client.id === action.clientsDeleteRequest.client
+            ? {
+                ...client,
+                clientsDeleteRequest: client.clientsDeleteRequest.filter(
+                  (del) => {
+                    return del.id != action.clientsDeleteRequest.id;
+                  }
+                ),
+              }
+            : client;
+        }));
       case mutations.LOGOUT_USER:
         return [];
     }
@@ -377,20 +564,22 @@ const rootReducer = combineReducers({
           return user.id !== action.id;
         }));
       case mutations.UPDATE_USER_ACCOUNT:
-        return users.map((user) => {
-          return user.id === action.userdata.id
-            ? {
-                ...user,
-                firstName: action.userdata.firstName,
-                lastName: action.userdata.lastName,
-                location: action.userdata.location,
-                officePhoneNumber: action.userdata.officePhoneNumber,
-                cellPhoneNumber: action.userdata.cellPhoneNumber,
-                email: action.userdata.email,
-                username: action.userdata.username,
-              }
-            : user;
-        });
+        return users
+          .map((user) => {
+            return user.id === action.userdata.id
+              ? {
+                  ...user,
+                  firstName: action.userdata.firstName,
+                  lastName: action.userdata.lastName,
+                  location: action.userdata.location,
+                  officePhoneNumber: action.userdata.officePhoneNumber,
+                  cellPhoneNumber: action.userdata.cellPhoneNumber,
+                  email: action.userdata.email,
+                  username: action.userdata.username,
+                }
+              : user;
+          })
+          .sort(compare);
       case mutations.LOGOUT_USER:
         return [];
     }
@@ -402,11 +591,12 @@ const rootReducer = combineReducers({
       case mutations.SET_STATE:
         return action.state.myfavorites;
       case mutations.ADD_TO_MY_FAVORITES:
-        let { clientID, id, owner } = action;
+        let { clientID, id, owner, clientContactDetailsID } = action;
         return [
           ...myfavorites,
           {
             client: clientID,
+            clientContactDetailsID,
             id,
             owner,
           },
@@ -435,35 +625,44 @@ const rootReducer = combineReducers({
               }
             : note;
         });
-      case mutations.SAVE_PERSONAL_NOTE:
-        return [
-          ...personalnotes,
-          {
-            id: action.id,
-            client: action.client,
-            note: action.note,
-            datetime: action.datetime,
-            owner: action.owner,
-            // isVerified: action.isVerified,
-          },
-        ];
-      case mutations.EDIT_PERSONAL_NOTE:
-        let { id, note, datetimeupdated } = action.personalnote;
-        return personalnotes.map((pnote) => {
-          return pnote.id === id
+
+      case mutations.VERIFY_PERSONAL_NOTE:
+        return personalnotes.map(function (note) {
+          return note.id === action.notedata.id
             ? {
-                ...pnote,
-                // isVerified,
-                note,
-                datetimeupdated,
-                toggleEdit: false,
+                ...note,
+                isVerified: action.notedata.isVerified,
               }
-            : pnote;
+            : note;
         });
-      case mutations.DELETE_PERSONAL_NOTE:
-        return (personalnotes = personalnotes.filter((note) => {
-          return note.id !== action.id;
-        }));
+      // return [
+      //   ...personalnotes,
+      //   {
+      //     id: action.id,
+      //     client: action.client,
+      //     note: action.note,
+      //     datetime: action.datetime,
+      //     owner: action.owner,
+      //     // isVerified: action.isVerified,
+      //   },
+      //   // ];
+      //   case mutations.EDIT_PERSONAL_NOTE:
+      //     let { id, note, datetimeupdated } = action.personalnote;
+      //     return personalnotes.map((pnote) => {
+      //       return pnote.id === id
+      //         ? {
+      //             ...pnote,
+      //             // isVerified,
+      //             note,
+      //             datetimeupdated,
+      //             toggleEdit: false,
+      //           }
+      //         : pnote;
+      //     });
+      //   case mutations.DELETE_PERSONAL_NOTE:
+      //     return (personalnotes = personalnotes.filter((note) => {
+      //       return note.id !== action.id;
+      //     }));
       case mutations.LOGOUT_USER:
         return [];
     }
@@ -479,7 +678,14 @@ const rootReducer = combineReducers({
   locations(locations = defaultState.locations, action) {
     switch (action.type) {
       case mutations.SET_STATE:
-        return action.state.locations;
+        return action.state.locations
+          .map((loc) => {
+            return {
+              ...loc,
+              name: loc.location,
+            };
+          })
+          .sort(compare);
     }
     return locations;
   },
@@ -511,6 +717,100 @@ const rootReducer = combineReducers({
         ));
     }
     return clientContactDetailsSuggestions;
+  },
+  mymeetings(mymeetings = defaultState.mymeetings, action) {
+    switch (action.type) {
+      case mutations.SET_STATE:
+        return action.state.mymeetings;
+
+      case mutations.SAVE_MEETING:
+        return [...mymeetings, { ...action.meetingData }];
+
+      case mutations.EDIT_MEETING:
+        return mymeetings.map((meeting) => {
+          return meeting.id === action.meetingdata.id
+            ? {
+                ...meeting,
+                owner: action.meetingdata.owner,
+                client: action.meetingdata.client,
+                attendees: action.meetingdata.attendees,
+                attendeesMore: action.meetingdata.attendeesMore,
+                location: action.meetingdata.location,
+                otherLocation: action.meetingdata.otherLocation,
+                dateOfMeeting: action.meetingdata.dateOfMeeting,
+                timeOfMeeting: action.meetingdata.timeOfMeeting,
+                preMeetingNotes: action.meetingdata.preMeetingNotes,
+                duringAfterMeetingNotes:
+                  action.meetingdata.duringAfterMeetingNotes,
+                isVerified: action.meetingdata.isVerified,
+                dateModified: action.meetingdata.dateModified,
+              }
+            : meeting;
+        });
+
+      case mutations.DELETE_MEETING:
+        return mymeetings.filter((meeting) => {
+          return meeting.id != action.id;
+        });
+
+      case mutations.VERIFY_MEETING:
+        return mymeetings.map((meeting) => {
+          return meeting.id === action.id
+            ? {
+                ...meeting,
+                isVerified: true,
+                dateVerified: action.dateVerified,
+              }
+            : meeting;
+        });
+    }
+    return mymeetings;
+  },
+  clientSuggestions(
+    clientSuggestions = defaultState.clientSuggestions,
+    action
+  ) {
+    switch (action.type) {
+      case mutations.SET_STATE:
+        return action.state.clientSuggestions;
+      case mutations.VERIFY_CLIENT:
+        return clientSuggestions.filter((client) => {
+          return client.id != action.id;
+        });
+      case mutations.UPDATE_CLIENT:
+        return [
+          ...clientSuggestions,
+          {
+            ...action.client,
+          },
+        ];
+      //   case mutations.DELETE_CLIENT:
+      //     if (action.isAdmin) {
+      //       return clientSuggestions.filter((client) => {
+      //         return client.id != action.client.id;
+      //       });
+      //     } else {
+      //       return [
+      //         ...clientSuggestions,
+      //         {
+      //           ...action.client,
+      //           isDeleteRequest: true,
+      //         },
+      //       ];
+      //     }
+      case mutations.CREATE_NEW_CLIENT:
+        if (mutations.USER_ACCOUNT_CREATED && !action.isAdmin) {
+          return [
+            ...clientSuggestions,
+            {
+              ...action.client,
+              clientContactDetails: [action.clientContact],
+              clientContactDetailsSuggestions: [],
+            },
+          ];
+        }
+    }
+    return clientSuggestions;
   },
 });
 

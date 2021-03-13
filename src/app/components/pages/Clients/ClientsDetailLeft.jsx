@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { ConnectedButtonFavorite } from "./clientfunctions/ButtonFavorite";
+import { ConnectedButtonFavorite } from "./clientfunctions/ButtonFavorite/ButtonFavorite";
 import avatar from "../../../admin-lte/dist/img/avatar5.png";
 import { Link } from "react-router-dom";
 import { ConnectedClientContactDetails } from "./clientcontactdetails/ClientContactDetails";

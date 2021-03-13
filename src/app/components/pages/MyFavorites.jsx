@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { history } from "../../store/history";
-import { ConnectedButtonFavorite } from "./clients/clientfunctions/ButtonFavorite";
+import { ConnectedButtonFavorite } from "./clients/clientfunctions/ButtonFavorite/ButtonFavorite";
 import { Link } from "react-router-dom";
 import { ConnectedContentHeader } from "../template/contentholders/ContentHeader";
 

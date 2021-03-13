@@ -127,6 +127,10 @@ body {
     background-color: #188EC9 !important;
 }
 
+.card-my-favorites {
+    width: 100%;
+}
+
 @media (max-width: 900px) {
     .login-logo img {
         width: 100px;

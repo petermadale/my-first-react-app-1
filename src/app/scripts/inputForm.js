@@ -14,6 +14,7 @@ class InputForm extends Component {
       nameid: props.nameid,
       type: props.type,
       pattern: props.pattern ? props.pattern : null,
+      isDisabled: props.isDisabled ? true : false,
     };
   }
 
@@ -37,6 +38,7 @@ class InputForm extends Component {
       type,
       placeholder,
       pattern,
+      isDisabled,
     } = this.state;
     return (
       <>
@@ -55,6 +57,7 @@ class InputForm extends Component {
           defaultValue={defaultValue}
           required={required}
           pattern={pattern}
+          disabled={isDisabled}
         />
         {isEmpty && !isPristine ? (
           <p className="text-danger text-bold mb-0">

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { processUpdateMyDetails } from "../../.                                                     ./store/mutations";
+import { processUpdateMyDetails } from "../../../store/mutations";
 import { Link } from "react-router-dom";
 import NumberFormat from "react-number-format";
 import { ConnectedContentHeader } from "../../template/contentholders/ContentHeader";

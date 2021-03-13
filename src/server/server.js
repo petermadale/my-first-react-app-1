@@ -9,12 +9,15 @@ import {
   updateClient,
   deleteClient,
   addClient,
+  verifyClient,
+  deleteClientRequest,
   updateUser,
   addMyFavorites,
   removeMyFavorites,
   addPersonalNotes,
   updatePersonalNotes,
   deletePersonalNote,
+  verifyPersonalNote,
   addClientContactDetails,
   upateClientContactDetails,
   deleteClientContactDetails,
@@ -22,6 +25,11 @@ import {
   suggestEditsClientContactDetails,
   approveClientContactDetailsSuggestion,
   rejectClientContactDetailSuggestion,
+  requestRejectCancelDeleteClientRequest,
+  saveMeeting,
+  editMeeting,
+  verifyMeeting,
+  deleteMeeting,
 } from "./communicate-db";
 import { updateClientContactDetails } from "../app/store/mutations";
 
@@ -46,13 +54,21 @@ if (process.env.NODE_ENV == `production`) {
 }
 
 app.get("/clients", async (req, res) => {
-  await getClients();
-  res.status(200).send();
+  let db = await connectDB();
+  let collection = db.collection(`clients`);
+  let clients = await collection.find().toArray();
+  res.status(200).send({ clients: clients });
 });
 
 app.post("/clients/update", async (req, res) => {
   let client = req.body.client;
   await updateClient(client);
+  res.status(200).send();
+});
+
+app.post("/clients/verify", async (req, res) => {
+  let id = req.body.id;
+  await verifyClient(id);
   res.status(200).send();
 });
 
@@ -66,6 +82,12 @@ app.delete("/clients/:id", async (req, res) => {
   let id = req.params.id;
   await deleteClient(id);
   res.sendStatus(200);
+});
+
+app.post("/clients/deleteClientRequest", async (req, res) => {
+  let data = req.body.data;
+  await deleteClientRequest(data);
+  res.status(200).send();
 });
 
 app.post("/clientContactDetails/new", async (req, res) => {
@@ -115,6 +137,21 @@ app.post("/approveClientContactDetailsSuggestions", async (req, res) => {
 app.delete("/clientContactDetailsSuggestions/:id", async (req, res) => {
   let id = req.params.id;
   await rejectClientContactDetailSuggestion(id);
+  res.sendStatus(200);
+});
+
+app.delete("/requestRejectCancelDeleteClientRequest/:id", async (req, res) => {
+  let id = req.params.id;
+  let db = await connectDB();
+  let collection = db.collection(`clientsDeleteRequest`);
+  let data = await collection.findOne({ id: id });
+  if (!data || data === null) {
+    res.status(500).send({
+      message: "Delete client request not found.  Please login and try again.",
+    });
+    return;
+  }
+  await requestRejectCancelDeleteClientRequest(id);
   res.sendStatus(200);
 });
 
@@ -223,5 +260,69 @@ app.post("/personalnotes/update", async (req, res) => {
 app.delete("/personalnotes/:id", async (req, res) => {
   let id = req.params.id;
   await deletePersonalNote(id);
+  res.sendStatus(200);
+});
+app.get("/personalnotes/:id", async (req, res) => {
+  let id = req.params.id;
+  let db = await connectDB();
+  let note = await db.collection(`personalnotes`).findOne({ id: id });
+  if (note) {
+    res.status(200).send({
+      note: note,
+    });
+    return;
+  } else {
+    return res.status(500).send({
+      message:
+        "Personal note not found in database.  Please logout and log back in to refresh data.",
+    });
+  }
+});
+
+app.post("/personalnotes/verify", async (req, res) => {
+  let notedata = req.body.notedata;
+  await verifyPersonalNote(notedata);
+  res.sendStatus(200);
+});
+
+app.post("/mymeetings/new", async (req, res) => {
+  let data = req.body.data;
+  await saveMeeting(data);
+  res.status(200).send();
+});
+
+app.post("/mymeetings/update", async (req, res) => {
+  let meetingdata = req.body.meetingdata;
+  await editMeeting(meetingdata);
+  res.status(200).send();
+});
+
+app.post("/mymeetings/verify", async (req, res) => {
+  //   let meetingdata = req.body.meetingdata;
+  //   await verifyMeeting(meetingdata);
+  let { id, dateVerified } = req.body.meetingdata;
+  let db = await connectDB();
+  let collection = db.collection(`mymeetings`);
+  if (id) {
+    await collection.updateOne(
+      { id },
+      {
+        $set: {
+          isVerified: true,
+          dateVerified,
+        },
+      }
+    );
+    res.status(200).send();
+  } else {
+    res.status(500).send({
+      message: "Meeting not found!  Please login and try again.",
+    });
+  }
+});
+
+app.delete("/mymeetings/:id", async (req, res) => {
+  let id = req.params.id;
+  await deleteMeeting(id);
   res.sendStatus(200);
 });

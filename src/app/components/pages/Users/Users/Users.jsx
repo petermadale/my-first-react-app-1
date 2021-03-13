@@ -60,7 +60,7 @@ export const Users = ({ users, isAdmin, deleteUserAccount }) => (
                       <td className="d-none d-xl-block d-lg-none">
                         {user.email}
                       </td>
-                      <td>{user.username}</td>
+                      <td>{user.username === "Admin" && user.id === "User1" ? <span className="badge badge-success">Admin</span> : null} {user.username}</td>
                       <td className="project-actions text-right">
                         {/* <Link
                             to={`/user/${user.id}/true`}
@@ -77,6 +77,9 @@ export const Users = ({ users, isAdmin, deleteUserAccount }) => (
                           data-toggle="tooltip"
                           data-placement="top"
                           title="Delete"
+                          disabled={
+                            user.id === "User1" ? "disabled" : ""
+                          }
                         >
                           <i className="fas fa-trash  mr-0"></i>
                         </button>

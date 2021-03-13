@@ -4,13 +4,14 @@ import styles from "./ClientsEdit.module.css";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Select2 from "../../../../scripts/select2";
-import { updateClient } from "../../../../store/mutations";
+import { updateClient, verifyClient, requestDeleteClient, requestRejectDeleteClientRequest, requestCancelDeleteClientRequest } from "../../../../store/mutations";
 import { ConnectedClientNameInput } from "../ClientNameInput/ClientNameInput";
-import { Toast } from "../../../../scripts/sweetalert";
+import { Toast, Swal_alert } from "../../../../scripts/sweetalert";
 import { ConnectedClientsAddressEdit } from "../ClientsAddressEdit/ClientsAddressEdit";
 import { ConnectedClientSuggestionList } from "../ClientSuggestionsList/ClientSuggestionsList";
 import { clientDataSets } from "../../../../../server/clientDataSets";
 import { ConnectedInputForm } from "../../../../scripts/inputForm";
+import moment from 'moment';
 
 export const ClientsEdit = ({
   userid,
@@ -19,6 +20,10 @@ export const ClientsEdit = ({
   users,
   locations,
   updateClient,
+  verifyClient,
+  requestDeleteClient,
+  rejectDeleteClientRequest,
+  cancelDeleteClientRequest,
   isEdit,
   isAdmin,
   typeOfOrganization,
@@ -27,12 +32,12 @@ export const ClientsEdit = ({
   specialties,
   groupsOffered,
   insuranceAccepted,
+  serviceDeliveryMethod
 }) => (
   <>
     <div className="row">
       <div className="col-md-12">
-        {isAdmin ? (
-          <form onSubmit={updateClient}>
+      <form onSubmit={updateClient}>
             <div className="card card-client-primary collapsed-card">
               <div className="card-header">
                 <button
@@ -55,14 +60,12 @@ export const ClientsEdit = ({
                 </div>
               </div>
               <div className="card-body">
-                {!isAdmin ? (
-                  <input
+              <input
                     type="hidden"
                     id="userid"
                     name="userid"
                     defaultValue={userid}
                   />
-                ) : null}
                 <ConnectedClientNameInput
                   name={client.name}
                   id={client.id}
@@ -141,7 +144,7 @@ export const ClientsEdit = ({
                     label="Assign Location(s)"
                     required
                     isMulti
-                    disabled
+                    isDisabled={isAdmin ? false : true}
                     options={locations.map((d) => {
                       return {
                         ...d,
@@ -155,26 +158,25 @@ export const ClientsEdit = ({
                     name="assignedLocations"
                   />
                 </div>
-                {isAdmin ? (
-                  <div className="form-group">
+                <div className={`${!isAdmin ? "d-none" : ""} form-group`}>
                     <Select2
-                      label="Assign User(s)"
-                      required
-                      isMulti
-                      selected={client.users.map((d) => {
+                        label="Assign User(s)"
+                        required
+                        isMulti
+                        isDisabled={isAdmin ? false : true}
+                        selected={client.users.map((d) => {
                         return { value: d, label: d };
-                      })}
-                      options={users.map((d) => {
+                        })}
+                        options={users.map((d) => {
                         return {
-                          ...d,
-                          value: d.firstName + " " + d.lastName,
-                          label: d.firstName + " " + d.lastName,
+                            ...d,
+                            value: d.firstName + " " + d.lastName,
+                            label: d.firstName + " " + d.lastName,
                         };
-                      })}
-                      name="users"
+                        })}
+                        name="users"
                     />
-                  </div>
-                ) : null}
+                </div>
                 <div className="form-group">
                   <label htmlFor="notes">Notes</label>
                   <textarea
@@ -271,6 +273,7 @@ export const ClientsEdit = ({
                         : ""
                     }
                     name="specialties"
+                    maximumSelectionLength={5}
                   />
                 </div>
                 <div className="form-group">
@@ -288,6 +291,7 @@ export const ClientsEdit = ({
                         : null
                     }
                     name="groupsOffered"
+                    maximumSelectionLength={5}
                   />
                 </div>
                 <div className="form-group">
@@ -311,29 +315,51 @@ export const ClientsEdit = ({
                     name="insuranceAccepted"
                   />
                 </div>
+                <div className="form-group">
+                <Select2
+                    label="Service Delivery Method"
+                    options={serviceDeliveryMethod.map((s) => {
+                        return { ...s, value: s.name, label: s.name };
+                    })}
+                    selected={client.serviceDeliveryMethod}
+                    name="serviceDeliveryMethod"
+                />
+                </div>
               </div>
             </div>
             <div className="mt-3 mb-3 ml-1 text-right client-edit-btn">
-              <input
-                onChange={() => {
-                  return;
-                }}
-                className={styles.hidden}
-                type="checkbox"
-                name="isAdmin"
-                id="isAdmin"
-                checked={!isAdmin ? false : true}
-              />
-              <button type="submit" className="btn bg-gradient-success mr-2">
+                <input type="hidden" id="isAdmin" name="isAdmin" checked={isAdmin} onChange={() => { return; }} />
+                {!client.isVerified && isAdmin ? 
+                    <button type="button" onClick={() => {verifyClient(client.id)}} className="btn bg-gradient-warning mr-2">
+                        <i className="fas fa-user-check"></i> Verify
+                    </button> : null
+                }
+                {isAdmin && client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0 ? 
+                    <button type="button" onClick={() => {rejectDeleteClientRequest(client.clientsDeleteRequest[0])}}  className="btn bg-gradient-warning mr-2">
+                        <i className="fas fa-thumbs-down"></i> Reject Delete Request
+                    </button>
+                : null}
+                {!isAdmin && client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0 && client.clientsDeleteRequest[0].owner === userid ? 
+                    <button type="button" onClick={() => {cancelDeleteClientRequest(client.clientsDeleteRequest[0])}}  className="btn bg-gradient-warning mr-2">
+                        <i className="fas fa-times-circle"></i> Cancel Delete Request
+                    </button>
+                : null}
+              {isAdmin || client.isVerified ? <button type="submit" className="btn bg-gradient-success mr-2">
                 <i className="fas fa-save"></i> Update
-              </button>
-              <Link to="/clients" className="btn bg-gradient-danger">
+              </button> : null}
+              {isAdmin || client.isVerified ?
+              <button type="button" className="btn bg-gradient-danger mr-2"
+                    disabled={`${!isAdmin && client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0 ? "disabled" : ""}`}
+                    onClick={() => requestDeleteClient(client, isAdmin, userid)}>
+                <i className="fas fa-trash"></i> Delete
+              </button> : null}
+              {/* <Link to="/clients" className="btn bg-gradient-danger">
                 <i className="fas fa-times-circle"></i> Cancel
-              </Link>
+              </Link> */}
             </div>
           </form>
-        ) : null}
-
+        
+        <hr />
         {client.clientContactDetailsSuggestions &&
         client.clientContactDetailsSuggestions.length > 0 ? (
           <div className="card card-cyan">
@@ -354,6 +380,7 @@ export const ClientsEdit = ({
               clientContactDetailsSuggestions={
                 client.clientContactDetailsSuggestions
               }
+              userid={userid}
             />
           </div>
         ) : null}
@@ -398,6 +425,7 @@ const mapStatetoProps = (state, ownProps) => {
     specialties,
     groupsOffered,
     insuranceAccepted,
+    serviceDeliveryMethod
   } = clientDataSets;
   return {
     userid,
@@ -413,6 +441,7 @@ const mapStatetoProps = (state, ownProps) => {
     specialties,
     groupsOffered,
     insuranceAccepted,
+    serviceDeliveryMethod
   };
 };
 
@@ -422,9 +451,11 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
       e.preventDefault();
       const form = e.target;
       const isAdmin = form[`isAdmin`].checked;
+      const isVerified = form[`isAdmin`].checked ? true : false;
 
       const { id } = ownProps.client;
       const isduplicate = form[`name`].dataset.isduplicate;
+      const owner = form[`userid`];
       if (isduplicate === "true") {
         Toast.fire({
           icon: "warning",
@@ -454,11 +485,16 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
         insuranceAcceptedArr =
           insuranceAcceptedArr !== "" ? insuranceAcceptedArr.split(",") : null;
 
+        var serviceDeliveryMethodArr = form[`serviceDeliveryMethod`].value;
+        serviceDeliveryMethodArr =
+        serviceDeliveryMethodArr !== "" ? serviceDeliveryMethodArr.split(",") : null;
+
         var usersArr = form[`users`].value;
         usersArr = usersArr.split(",");
         const clientData = {
           id,
           name: form[`name`].value,
+          //owner: owner.value,
           email: form[`email`].value,
           website: form[`website`].value,
           postNominalLetters: form[`postNominalLetters`].value,
@@ -473,9 +509,13 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
           specialties: specialtiesArr,
           groupsOffered: groupsOfferedArr,
           insuranceAccepted: insuranceAcceptedArr,
+          serviceDeliveryMethod: serviceDeliveryMethodArr,
           assignedLocations: assignedLocationsArr,
           users: usersArr,
           notes: form[`notes`].value,
+          isVerified: isVerified,
+          lastUpdatedBy: owner.value,
+          lastUpdatedDate: moment(new Date()).format("YYYY-MM-DD hh:mm:ss a")
         };
         console.log(clientData);
         dispatch(updateClient(clientData));
@@ -535,6 +575,61 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
         // else dispatch(suggestEditsToClient(clientData));
       }
     },
+    verifyClient(id) {
+        dispatch(verifyClient(id));
+    },    
+    requestDeleteClient(client, isAdmin, owner) {
+        console.log(isAdmin);
+        const $html = isAdmin ? "<b><i>All address(es) attached to this client will also be removed from the database.</i></b>" : "<b><i>All address(es) attached to this client will also be removed from the database.</i></b><br>      <span class='badge bg-warning text-dark'>Important NOTE: Delete request will be pending Admin approval.</span>";
+        Swal_alert.fire({
+          title: "Are you sure?",
+          html: $html,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+          if (result.value) {
+            dispatch(requestDeleteClient(client, isAdmin, owner));
+            // const $title = isAdmin ? "Client deleted." : "Client delete request pending Admin approval.";
+            // Toast.fire({
+            //   icon: "success",
+            //   title: $title,
+            // });
+          }
+        });
+      },
+      rejectDeleteClientRequest(clientsDeleteRequest) {
+        Swal_alert.fire({
+            title: "Are you sure?",
+            html: "<b><i>Client delete request will be rejected.</i></b>",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, reject it!",
+          }).then((result) => {
+            if (result.value) {
+              dispatch(requestRejectDeleteClientRequest(clientsDeleteRequest));
+            }
+          });
+      },
+      cancelDeleteClientRequest(clientsDeleteRequest) {
+        Swal_alert.fire({
+            title: "Are you sure?",
+            html: "<b><i>Client delete request will be cancelled.</i></b>",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, cancel it!",
+          }).then((result) => {
+            if (result.value) {
+              dispatch(requestCancelDeleteClientRequest(clientsDeleteRequest))
+            }
+          });
+      }
   };
 };
 

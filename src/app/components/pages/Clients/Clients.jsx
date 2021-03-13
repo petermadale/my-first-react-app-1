@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { history } from "../../../store/history";
 import { deleteClient } from "../../../store/mutations";
 import { Toast, Swal_alert } from "../../../scripts/sweetalert";
-import { ConnectedButtonFavorite } from "./clientfunctions/ButtonFavorite";
+import { ConnectedButtonFavorite } from "./clientfunctions/ButtonFavorite/ButtonFavorite";
 import avatar from "../../../admin-lte/dist/img/avatar5.png";
 import ReactSlick from "../../../scripts/slick";
 

@@ -25,6 +25,14 @@ export async function assembleUserState(user) {
               },
             },
             {
+              $lookup: {
+                from: "clientsDeleteRequest",
+                localField: "id",
+                foreignField: "client",
+                as: "clientsDeleteRequest",
+              },
+            },
+            {
               $sort: {
                 name: 1,
               },
@@ -92,6 +100,14 @@ export async function assembleUserState(user) {
               },
             },
             {
+              $lookup: {
+                from: "clientsDeleteRequest",
+                localField: "id",
+                foreignField: "client",
+                as: "clientsDeleteRequest",
+              },
+            },
+            {
               $sort: {
                 name: 1,
               },
@@ -145,12 +161,12 @@ export async function assembleUserState(user) {
             // },
           ])
           .toArray();
-
+  //.find({ id: { $ne: "User1" } })
   let users =
     user.id === "User1"
       ? await db
           .collection(`users`)
-          .find({ id: { $ne: "User1" } })
+          .find()
           .project({
             id: 1,
             firstName: 1,
@@ -190,6 +206,50 @@ export async function assembleUserState(user) {
           .toArray();
 
   let locations = await db.collection(`locations`).find().toArray();
+
+  let mymeetings =
+    user.id === "User1"
+      ? await db.collection(`mymeetings`).find().toArray()
+      : await db.collection(`mymeetings`).find({ owner: user.id }).toArray();
+
+  let clientSuggestions =
+    user.id === "User1"
+      ? await db
+          .collection(`clients`)
+          .aggregate([
+            {
+              $match: { isVerified: { $eq: false } },
+            },
+            {
+              $lookup: {
+                from: "clientContactDetails",
+                localField: "id",
+                foreignField: "client",
+                as: "clientContactDetails",
+              },
+            },
+          ])
+          .toArray()
+      : await db
+          .collection(`clients`)
+          .aggregate([
+            {
+              $match: {
+                isVerified: { $eq: false },
+                owner: { $eq: user.id },
+              },
+            },
+            {
+              $lookup: {
+                from: "clientContactDetails",
+                localField: "id",
+                foreignField: "client",
+                as: "clientContactDetails",
+              },
+            },
+          ])
+          .toArray();
+
   return {
     clients,
     users,
@@ -197,6 +257,8 @@ export async function assembleUserState(user) {
     personalnotes,
     locations,
     clientContactDetailsSuggestions,
+    mymeetings,
+    clientSuggestions,
     session: {
       authenticated: `AUTHENTICATED`,
       id: user.id,

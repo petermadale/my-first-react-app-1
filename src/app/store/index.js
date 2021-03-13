@@ -12,11 +12,18 @@ import rootReducer from "./reducer";
 // import * as mutations from "./mutations";
 
 const sagaMiddleware = createSagaMiddleware();
+const middlewares = [];
 
-export const store = createStore(
-  rootReducer,
-  applyMiddleware(createLogger(), sagaMiddleware)
-);
+if (process.env.NODE_ENV === `development`) {
+  const { logger } = require(`redux-logger`);
+
+  middlewares.push(logger);
+}
+export const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
+// export const store = createStore(
+//   rootReducer,
+//   applyMiddleware(createLogger(), sagaMiddleware)
+// );
 
 export const persistor = persistStore(store);
 
