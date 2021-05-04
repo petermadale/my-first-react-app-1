@@ -127,7 +127,6 @@ export const defaultState = {
       location: "West",
     },
   ],
-  meetingnotes: [],
   myfavorites: [
     {
       id: "F2",
@@ -135,7 +134,6 @@ export const defaultState = {
       owner: "User2",
     },
   ],
-  mymeetings: [],
   personalnotes: [
     {
       id: "e5f3f6ec-9387-4f21-8fd8-938e290baa79",

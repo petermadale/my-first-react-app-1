@@ -50,7 +50,7 @@ export const MyMeetings = ({ meetings, deleteMeeting }) => (
                     <td>
                       {meeting.attendees.map((a, index) => (
                         <span key={a}>
-                          {a}
+                          <ConnectedUsernameDisplay id={a} />
                           {index + 1 === meeting.attendees.length ? null : ", "}
                         </span>
                       ))}

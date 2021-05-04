@@ -161,7 +161,7 @@ const mapStateToProps = (state, ownProps) => {
   const { id, isAdmin } = state.session;
   const users = state.users.map((user) => {
     var fullname = user.firstName + " " + user.lastName;
-    return { value: fullname, label: fullname };
+    return { value: user.id, label: fullname };
   });
   const { name, clientContactDetails } = state.clients.find(
     (client) => client.id === clientid

@@ -179,15 +179,19 @@ const mapStateToProps = (state, ownProps) => {
       JSON.stringify(state.mymeetings.find((meeting) => meeting.id === id))
     );
     mymeeting.attendees = mymeeting.attendees.map((m) => {
-      return { value: m, label: m };
+      const { firstName, lastName } = state.users.find(
+        (user) => m === user.id
+      );
+      const name = firstName + " " + lastName;
+      return { value: m, label: name };
     });
     // mymeeting.location = mymeeting.location.map((loc) => {
     //   return { value: loc, label: loc };
     // });
   //}
   const users = state.users.map((user) => {
-    var name = user.firstName + " " + user.lastName;
-    return { value: name, label: name };
+    var fullname = user.firstName + " " + user.lastName;
+    return { value: user.id, label: fullname };
   });
   const { name, clientContactDetails } = state.clients.find(
     (client) => client.id === mymeeting.client
