@@ -82,8 +82,9 @@ export const updateClient = async (client) => {
   }
 };
 
-export const verifyClient = async (id) => {
+export const verifyClient = async (data) => {
   try {
+    const {id, userid, approvedDate, lastContactMethod} = data;
     let db = await connectDB();
     let collection = db.collection(`clients`);
     if (id) {
@@ -92,6 +93,9 @@ export const verifyClient = async (id) => {
         {
           $set: {
             isVerified: true,
+            lastContactedBy: userid, 
+            lastContactedDate: approvedDate,
+            lastContactMethod: lastContactMethod
           },
         }
       );
@@ -162,6 +166,7 @@ export const approveClientContactDetailsSuggestion = async (
     let collection_contact_suggestion = db.collection(
       `clientContactDetailsSuggestions`
     );
+    let collection_clients = db.collection(`clients`);
     //let newID = uuid();
     let new_clientContactDetailsSuggestions = {
       ...clientContactDetailsSuggestions,
@@ -172,6 +177,13 @@ export const approveClientContactDetailsSuggestion = async (
     );
     await collection_contact_suggestion.deleteOne({
       id: clientContactDetailsSuggestions.id,
+    });
+    await collection_clients.updateOne({id: clientContactDetailsSuggestions.client}, 
+      { $set: {
+        lastContactedBy: clientContactDetailsSuggestions.userid, 
+        lastContactedDate: clientContactDetailsSuggestions.approvedDate,
+        lastContactMethod: clientContactDetailsSuggestions.lastContactMethod
+      }
     });
   } catch (err) {
     console.error("error:", err.stack);
@@ -364,11 +376,11 @@ export const addPersonalNotes = async (personalnote) => {
 
 export const updatePersonalNotes = async (personalnote) => {
   try {
-    let { id, note, datetimeupdated } = personalnote;
+    let { id, note, datetimeupdated, isVerified } = personalnote;
     let db = await connectDB();
     let collection = db.collection(`personalnotes`);
     if (id) {
-      await collection.updateOne({ id }, { $set: { note, datetimeupdated } });
+      await collection.updateOne({ id }, { $set: { note, datetimeupdated, isVerified } });
     }
   } catch (err) {
     console.log("error:".err.stack);
@@ -379,6 +391,7 @@ export const deletePersonalNote = async (id) => {
   try {
     let db = await connectDB();
     let collection = db.collection(`personalnotes`);
+    let collection_clients = db.collection(`clients`);
     await collection.deleteOne({ id: id }, (err, personalnotes) => {});
   } catch (err) {
     console.log("error:".err.stack);
@@ -388,11 +401,19 @@ export const deletePersonalNote = async (id) => {
 export const verifyPersonalNote = async (notedata) => {
   try {
     console.log(notedata);
-    let { id, isVerified } = notedata;
+    let { id, isVerified, approvedDate, client, lastContactMethod, owner } = notedata;
     let db = await connectDB();
     let collection = db.collection(`personalnotes`);
     if (id) {
-      await collection.updateOne({ id }, { $set: { isVerified } });
+      let collection_clients = db.collection(`clients`);
+      await collection.updateOne({ id }, { $set: { isVerified, approvedDate } });
+      await collection_clients.updateOne({id: client}, 
+        { $set: {
+          lastContactedBy: owner, 
+          lastContactedDate: approvedDate,
+          lastContactMethod: lastContactMethod
+        }
+      });
     }
   } catch (err) {
     console.log("error");

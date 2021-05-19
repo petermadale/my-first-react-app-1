@@ -31,6 +31,7 @@ const PersonalNotesEdit = ({
         ) : null}
       </div>
       <form onSubmit={editPersonalNote}>
+        <input type="hidden" value={isAdmin} name="isAdmin" />
         <div className="form-group row">
           <label htmlFor="note" className="col-sm-2 col-form-label">
             Note
@@ -115,7 +116,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         note: form[`note`].value,
         datetimeupdated: datetimeupdated.toLocaleString(),
         owner,
-        // isVerified,
+        isVerified: form[`isAdmin`].value == "true" ? true : false,
       };
       console.log(data);
       dispatch(editPersonalNote(data));

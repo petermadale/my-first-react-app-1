@@ -5,12 +5,16 @@ import { Link } from "react-router-dom";
 import { ConnectedClientSuggestionList } from "../Clients/ClientSuggestionsList/ClientSuggestionsList";
 import { ConnectedClientNameDisplay } from "../../ClientNameDisplay";
 import { ConnectedUsernameDisplay } from "../../UsernameDisplay";
+import moment from "moment";
+import Moment from "react-moment";
+import { ConnectedMeeting } from "../MyMeeting/Meeting/Meeting";
 
 export const Dashboard = ({
   isAdmin,
   personalnotes,
   clientContactDetailsSuggestions,
-  clientSuggestions
+  clientSuggestions,
+  _24hourReminder
 }) => (
   <>
     <section className="content-header">
@@ -24,6 +28,30 @@ export const Dashboard = ({
     </section>
 
     <section className="content">
+      {_24hourReminder.length > 0 ? 
+        
+      <div className="card card-danger mb-3">
+      <div className="card-header">
+        <h3 className="card-title">
+          24-hour Meeting Reminders
+        </h3>
+        <div className="card-tools">
+          <button
+            type="button"
+            className="btn btn-tool"
+            data-card-widget="collapse"
+          >
+            <i className="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+
+         <div className="card-body table-responsive p-0">
+           <ConnectedMeeting meetings={_24hourReminder} isAdmin={isAdmin} />
+       </div>
+    </div> : null
+      }
+
       <div className="card card-warning mb-3">
         <div className="card-header">
           <h3 className="card-title">
@@ -150,7 +178,11 @@ export const Dashboard = ({
                       
                       {note.note}
                     </td>
-                    <td>{note.datetimecreated}</td>
+                    <td>
+                      <Moment format="MMM DD, YYYY hh:mm A">
+                        {note.datetimecreated}
+                      </Moment>
+                    </td>
                     <td>
                       <ConnectedUsernameDisplay id={note.owner} />
                     </td>
@@ -183,11 +215,15 @@ export const Dashboard = ({
 const mapStateToProps = (state) => {
   const {clientContactDetailsSuggestions, clientSuggestions, personalnotes} = state;
   let { isAdmin } = state.session;
+  var dtoday = new Date();
+  dtoday = moment(dtoday).format('YYYY-MM-DD');
+  var _24hourReminder = state.mymeetings.filter((m) => m.dateOfMeeting == dtoday);
   return {
     isAdmin,
     personalnotes,
     clientContactDetailsSuggestions,
-    clientSuggestions
+    clientSuggestions,
+    _24hourReminder
   };
 };
 

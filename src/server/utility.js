@@ -182,7 +182,7 @@ export async function assembleUserState(user) {
           .toArray()
       : await db
           .collection(`users`)
-          .find({ id: user.id })
+          .find() //{ id: user.id }
           .project({ id: 1, firstName: 1, lastName: 1 })
           .sort({ firstName: 1 })
           .toArray();
@@ -210,7 +210,7 @@ export async function assembleUserState(user) {
   let mymeetings =
     user.id === "User1"
       ? await db.collection(`mymeetings`).find().toArray()
-      : await db.collection(`mymeetings`).find({ owner: user.id }).toArray();
+      : await db.collection(`mymeetings`).find({ $or: [ { owner: user.id }, { attendees: { $elemMatch: { $eq: user.id } } } ] }).toArray();
 
   let clientSuggestions =
     user.id === "User1"

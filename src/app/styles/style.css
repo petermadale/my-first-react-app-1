@@ -131,6 +131,10 @@ body {
     width: 100%;
 }
 
+.dropdown-toggle::after {
+    content: none;
+}
+
 @media (max-width: 900px) {
     .login-logo img {
         width: 100px;

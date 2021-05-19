@@ -20,6 +20,9 @@ const ClientsDetail = ({ isEdit, client, personalnotes, isAdmin, owner }) => (
             {!client.isVerified ? <><small className="badge badge-warning">Not Yet Verified</small><br/></> : null}
             {client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0 ? <small className="badge badge-warning">Delete Request Pending {owner === client.clientsDeleteRequest[0].owner || isAdmin ?  <>(by <ConnectedUsernameDisplay id={client.clientsDeleteRequest[0].owner} />)</>  : null}</small> : null}
             <h1>{client.name}</h1>
+            {client.lastContactedBy ? 
+            <span className="badge badge-info">Last contacted by <ConnectedUsernameDisplay id={client.lastContactedBy} /> {client.lastContactedDate}</span> 
+            : null}
           </div>
           <div className="col-sm-6">
             <Link
@@ -50,7 +53,7 @@ const ClientsDetail = ({ isEdit, client, personalnotes, isAdmin, owner }) => (
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-3">
-              <ConnectedClientsDetailLeft client={client} />
+              <ConnectedClientsDetailLeft client={client} /> 
             </div>
             <div className="col-md-9">
               <div className={`card ${!client.isVerified || (client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0) ? "card-warning" : "card-client-primary"} card-outline card-outline-tabs`}>

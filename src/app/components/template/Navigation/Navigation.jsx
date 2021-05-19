@@ -36,7 +36,7 @@ const Navigation = ({ isAdmin, logoutUser, notVerifiedMeetingCount, verifiedMeet
     <li className="nav-item">
       <NavLink to="/my-meetings" className="nav-link" activeClassName="active">
         <i className="nav-icon fas fa-calendar-alt"></i>
-        <p>My Meetings {notVerifiedMeetingCount > 0 ? <span className="badge badge-warning" data-toggle="tooltip" title="Not yet verified meetings">{notVerifiedMeetingCount}</span> : null}
+        <p>My Meetings {notVerifiedMeetingCount > 0 ? <span className="badge badge-warning mr-1" data-toggle="tooltip" title="Not yet verified meetings">{notVerifiedMeetingCount}</span> : null}
         {verifiedMeetingCount > 0 ? <span className="badge badge-success" data-toggle="tooltip" title="Verified meetings">{verifiedMeetingCount}</span> : null}</p>
       </NavLink>
     </li>

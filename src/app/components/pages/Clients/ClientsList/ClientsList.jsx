@@ -8,7 +8,9 @@ import { Toast, Swal_alert } from "../../../../scripts/sweetalert";
 import $ from "jquery";
 import { compare } from "../../../../scripts/compare";
 import { ConnectedClient } from "../Client/Client";
-
+import { ConnectedCSVImportExport } from "../clientfunctions/CSVImportExport/CSVImportExport";
+import { CSVLink, CSVDownload } from "react-csv";
+import moment from "moment";
 
 class ClientsList extends PureComponent {
     constructor(props) {
@@ -22,7 +24,9 @@ class ClientsList extends PureComponent {
             isAdmin: props.isAdmin,
             requestDeleteClient: props.requestDeleteClient,
             getClients: props.getClients,
-            owner: props.owner
+            owner: props.owner,
+            csvData: props.csvData,
+            fileName: props.fileName
         }
     }
     
@@ -44,7 +48,18 @@ class ClientsList extends PureComponent {
       getClients(isAdmin);
   }
     render() {//
-        const {locations, selectedLocation, sortedClients, clients, isAdmin, requestDeleteClient, owner, getClients} = this.state;
+        const {
+          locations, 
+          selectedLocation, 
+          sortedClients, 
+          clients, 
+          isAdmin, 
+          requestDeleteClient, 
+          owner, 
+          getClients, 
+          csvData,
+          fileName
+        } = this.state;
 
         return (
             <>
@@ -80,12 +95,67 @@ class ClientsList extends PureComponent {
                         <div className="col-sm-auto">
                             <Link
                                 to="/client-new"
-                                className="btn bg-gradient-success float-right"
+                                className="btn bg-gradient-success mr-2"
                             >
                                 <i className="fas fa-file-alt"></i>
                                 Create New Client
                             </Link>
-                        </div>
+                            <div className="dropdown float-right">
+                              <a className="btn btn-link text-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i className="fas fa-ellipsis-v" data-toggle="tooltip" title="Actions"></i>
+                              </a>
+
+                              <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                <button
+                                    type="button"
+                                    className="dropdown-item btn btn-link text-dark"
+                                    data-toggle="modal"
+                                    data-target="#modal-upload-client"
+                                  >
+                                  <i className="fas fa-upload"></i> Upload Clients
+                                </button>
+                                <CSVLink 
+                                data={csvData} 
+                                className="dropdown-item btn btn-link text-dark float-right"
+                                filename={fileName}><i className="fa fa-download"></i> Download Clients</CSVLink>
+                              </div>
+                            </div>
+                            <div className="modal fade" id="modal-upload-client">
+                              <div className="modal-dialog modal-lg">
+                                <div className="modal-content">
+                                <div className="modal-header">
+                                        <h4 className="modal-title">
+                                          Upload Clients
+                                        </h4>
+                                        <button
+                                          type="button"
+                                          className="close"
+                                          data-dismiss="modal"
+                                          aria-label="Close"
+                                        >
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div className="modal-body">
+                                      <ConnectedCSVImportExport />
+                                      </div>
+                                      <div className="modal-footer">
+                                        <button type="submit" className="btn bg-gradient-success" disabled>
+                                          <i className="fas fa-save"></i>{" "}
+                                          Upload
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="btn bg-gradient-danger"
+                                          data-dismiss="modal"
+                                        >
+                                          <i className="fas fa-times-circle"></i> Cancel
+                                        </button>
+                                      </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                     </div>
                 </div>
@@ -136,18 +206,27 @@ const mapStateToProps = (state, ownProps) => {
       })
       .sort(compare);
     $('[data-toggle="tooltip"]').tooltip();
+    const csvHeading = [
+      ["Name", "Email"]
+    ];
+    var csvRow = clients.map((client) => {return [client.name, client.email]});
+    var csvData = csvHeading.concat(csvRow);
+    var dtoday = new Date();
+    var fileName = "ClientList-" + moment(dtoday).format("MM-DD-YYYY") + ".csv";
     return {
       clients,
       isAdmin,
       locations,
-      owner
+      owner,
+      csvData,
+      fileName
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
       requestDeleteClient(client, isAdmin, owner) {
         console.log(isAdmin);
-        const $html = isAdmin ? "<b><i>All address(es) attached to this client will also be removed from the database.</i></b>" : "<b><i>All address(es) attached to this client will also be removed from the database.</i></b><br>      <span class='badge bg-warning text-dark'>Important NOTE: Delete request will be pending Admin approval.</span>";
+        const $html = isAdmin ? "<b><i>All address(es) attached to this client will also be removed from the database.</i></b>" : "<b><i>All address(es) attached to this client will also be removed from the database.</i></b><br>      <span className='badge bg-warning text-dark'>Important NOTE: Delete request will be pending Admin approval.</span>";
         Swal_alert.fire({
           title: "Are you sure?",
           html: $html,

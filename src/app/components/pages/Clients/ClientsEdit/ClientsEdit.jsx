@@ -12,6 +12,7 @@ import { ConnectedClientSuggestionList } from "../ClientSuggestionsList/ClientSu
 import { clientDataSets } from "../../../../../server/clientDataSets";
 import { ConnectedInputForm } from "../../../../scripts/inputForm";
 import moment from 'moment';
+import { lastContactMethod } from "../../../../scripts/lastContactMethod";
 
 export const ClientsEdit = ({
   userid,
@@ -330,7 +331,7 @@ export const ClientsEdit = ({
             <div className="mt-3 mb-3 ml-1 text-right client-edit-btn">
                 <input type="hidden" id="isAdmin" name="isAdmin" checked={isAdmin} onChange={() => { return; }} />
                 {!client.isVerified && isAdmin ? 
-                    <button type="button" onClick={() => {verifyClient(client.id)}} className="btn bg-gradient-warning mr-2">
+                    <button type="button" onClick={() => {verifyClient(client.id, client.lastUpdatedBy)}} className="btn bg-gradient-warning mr-2">
                         <i className="fas fa-user-check"></i> Verify
                     </button> : null
                 }
@@ -575,8 +576,11 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
         // else dispatch(suggestEditsToClient(clientData));
       }
     },
-    verifyClient(id) {
-        dispatch(verifyClient(id));
+    verifyClient(id, userid) {
+        console.log(userid);
+        var approvedDate = moment(new Date()).format("YYYY-MM-DD hh:mm:ss a");
+        var contactMethod = lastContactMethod.suggestClientInfo;
+        dispatch(verifyClient(id, userid, approvedDate, contactMethod));
     },    
     requestDeleteClient(client, isAdmin, owner) {
         console.log(isAdmin);

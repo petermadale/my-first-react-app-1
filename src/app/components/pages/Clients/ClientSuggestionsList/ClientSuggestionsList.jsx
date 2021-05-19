@@ -15,6 +15,9 @@ import {
   rejectAddressSuggestion,
 } from "../../../../store/mutations";
 import uuid from "uuid";
+import Moment from "react-moment";
+import moment from "moment";
+import { lastContactMethod } from "../../../../scripts/lastContactMethod";
 
 class ClientSuggestionsList extends Component {
   constructor(props) {
@@ -47,23 +50,21 @@ class ClientSuggestionsList extends Component {
           <thead>
             <tr>
               <th style={{ width: "2%" }}></th>
-              <th>Client</th>
+              {pathname === "/dashboard" ? <th>Client</th> : null}
               <th style={{ width: "20%" }}>Address</th>
               <th>Office Phone # (ext)</th>
               <th>Cell Phone #</th>
               {pathname === "/dashboard" ? (
                 <>
-                  {isAdmin ? <th>Suggested By</th> : <th>Status</th>}
+                  {isAdmin ? <><th>Suggested By</th><th>Suggested Date</th></> : <><th>Status</th><th>Suggested Date</th></>}
                   <th>&nbsp;</th>
                 </>
               ) : (
                 <>
                   {isAdmin ? (
-                    <>
-                      <th>Suggested By</th>
-                    </>
+                    <><th>Suggested By</th><th>Suggested Date</th></>
                   ) : (
-                    <th>&nbsp;</th>
+                    <><th>Suggested Date</th><th>&nbsp;</th></>
                   )}
                 </>
               )}
@@ -73,7 +74,7 @@ class ClientSuggestionsList extends Component {
             {clientContactDetailsSuggestions.map((contact, index) => (
               <tr key={contact.id}>
                 <td>{index + 1}.</td>
-                <td><ConnectedClientNameDisplay id={contact.client} /></td>
+                {pathname === "/dashboard" ? <td><ConnectedClientNameDisplay id={contact.client} /></td> : null}                
                 <td>                
                     {contact.address1}
                     {contact.city ? <>, {contact.city}</>  : null}
@@ -98,6 +99,11 @@ class ClientSuggestionsList extends Component {
                       )}
                     </td>
                     <td>
+                      <Moment format="MMM DD, YYYY hh:mm A">
+                        {contact.createdDate}
+                      </Moment>
+                    </td>
+                    <td>
                       <Link
                         className="btn bg-gradient-cyan btn-sm mr-1"
                         to={`/client/${contact.client}/true`}
@@ -116,6 +122,11 @@ class ClientSuggestionsList extends Component {
                           <ConnectedUsernameDisplay id={contact.userid} />
                         </td>
                         <td>
+                          <Moment format="MMM DD, YYYY hh:mm A">
+                            {contact.createdDate}
+                          </Moment>
+                        </td>
+                        <td>
                           <button
                             type="button"
                             className="btn btn-sm bg-gradient-cyan mr-2"
@@ -129,6 +140,12 @@ class ClientSuggestionsList extends Component {
                         </td>
                       </>
                     ) : (
+                        <>
+                        <td>
+                        <Moment format="MMM DD, YYYY hh:mm A">
+                          {contact.createdDate}
+                        </Moment>
+                        </td>
                         <td>
                         {contact.userid === userid ? 
                             <button
@@ -145,6 +162,7 @@ class ClientSuggestionsList extends Component {
                             </button>
                            : null}
                         </td>
+                        </>
                     )}
                   </>
                 )}
@@ -181,6 +199,18 @@ class ClientSuggestionsList extends Component {
                         name="client"
                         id="client"
                         defaultValue={selectedAddressSuggestion.client}
+                      />
+                      <input
+                        type="hidden"
+                        name="createdDate"
+                        id="createdDate"
+                        defaultValue={selectedAddressSuggestion.createdDate}
+                      />
+                      <input
+                        type="hidden"
+                        name="userid"
+                        id="userid"
+                        defaultValue={selectedAddressSuggestion.userid}
                       />
                       <div className="form-group">
                         <ConnectedInputForm
@@ -403,6 +433,10 @@ const mapDispatchStateToProps = (dispatch, ownProps) => {
         cellPhoneNumber: form[`cellPhoneNumber`].value,
         alternativePhoneNumber: form[`alternativePhoneNumber`].value,
         faxNumber: form[`faxNumber`].value,
+        userid: form[`userid`].value,
+        createdDate: form[`createdDate`].value,
+        approvedDate: moment(new Date()).format("YYYY-MM-DD hh:mm:ss a"),
+        lastContactMethod: lastContactMethod.suggestClientAddress
       };
       $("#modal-view-suggestion").modal("hide");
       dispatch(approveAddressSuggestion(clientContactDetailsSuggestions));

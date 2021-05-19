@@ -67,8 +67,9 @@ app.post("/clients/update", async (req, res) => {
 });
 
 app.post("/clients/verify", async (req, res) => {
-  let id = req.body.id;
-  await verifyClient(id);
+  //let id = req.body.id;  
+  let data = req.body.data;
+  await verifyClient(data);
   res.status(200).send();
 });
 

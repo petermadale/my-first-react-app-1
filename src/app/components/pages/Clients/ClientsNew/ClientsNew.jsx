@@ -50,7 +50,7 @@ export const ClientsNew = ({
         <div className="row">
           <div className="col-12">
             <form onSubmit={createNewClient} id="newClient">
-              <div className="card card-info collapsed-card">
+              <div className="card card-info card-client-info collapsed-card">
                 <div className="card-header">
                   <h3 className="card-title">Client Information</h3>
                   <div className="card-tools">
@@ -183,7 +183,7 @@ export const ClientsNew = ({
                 </div>
               </div>
 
-              <div className="card card-info collapsed-card">
+              <div className="card card-info card-additional-client-info collapsed-card">
                 <div className="card-header">
                   <h3 className="card-title">
                     Client Additional Information
@@ -290,7 +290,7 @@ export const ClientsNew = ({
                 </div>
               </div>
 
-              <div className="card card-info collapsed-card">
+              <div className="card card-info card-client-address collapsed-card">
                 <div className="card-header">
                   <h3 className="card-title">Client Address</h3>
                   <div className="card-tools">
@@ -304,6 +304,18 @@ export const ClientsNew = ({
                   </div>
                 </div>
                 <div className="card-body">
+                <div className="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="teletherapy" name="clientAddress" className="custom-control-input" value="teletherapy" />
+                  <label className="custom-control-label" htmlFor="teletherapy">Teletherapy</label>
+                </div>
+                <div className="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="noPhysicalAddress" name="clientAddress" className="custom-control-input" value="noPhysicalAddress" />
+                  <label className="custom-control-label" htmlFor="noPhysicalAddress">No Physical Address</label>
+                </div>
+                <div className="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="dontListAddress" name="clientAddress" className="custom-control-input" value="dontListAddress" />
+                  <label className="custom-control-label" htmlFor="dontListAddress">Don't List Address</label>
+                </div>
                   <div className="form-group">
                     <ConnectedInputForm
                       label="Address 1"
@@ -498,6 +510,7 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
       const users = form[`users`];
       var error_msg = [];
       const isAdmin = form[`isAdmin`].checked;
+      const clientAddress = $('input[name=clientAddress]:checked').val();
       const isVerified = isAdmin;
 
       if (name.required && name.value === "") {
@@ -602,8 +615,8 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
           alternativePhoneNumber: form[`alternativePhoneNumber`].value,
           faxNumber: form[`faxNumber`].value,
         };
-        //console.log(clientContactData);
-        dispatch(createNewClient(clientData, clientContactData, isAdmin));
+        console.log(clientContactData);
+        //dispatch(createNewClient(clientData, clientContactData, isAdmin));
       }
     },
   };

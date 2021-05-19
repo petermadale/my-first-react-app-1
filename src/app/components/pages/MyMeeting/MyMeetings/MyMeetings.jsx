@@ -9,88 +9,18 @@ import { ConnectedUsernameDisplay } from "../../../UsernameDisplay";
 import { ConnectedClientNameDisplay } from "../../../ClientNameDisplay";
 import { Toast, Swal_alert } from "../../../../scripts/sweetalert";
 import { deleteMeeting } from "../../../../store/mutations";
+import moment from "moment";
+import { ConnectedMeeting } from "../Meeting/Meeting";
 
 
-export const MyMeetings = ({ meetings, deleteMeeting }) => (
+export const MyMeetings = ({ meetings, deleteMeeting, dtoday, isAdmin }) => (
   <>
     <ConnectedContentHeader pagename={"My Meetings"} />
     <section className="content">
       <div className="card card-solid">
         <div className="card-body table-responsive p-0">
           {meetings.length > 0 ? (
-            <table className="table table-striped table-hover text-nowrap">
-              <thead>
-                <tr>
-                  <th>Client</th>
-                  <th>Created By</th>
-                  <th>People attending meeting</th>
-                  <th>Location of Meeting</th>
-                  <th>Date/Time of Meeting</th>
-                  <th>Status</th>
-                  <th className="action-btn"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {meetings.map((meeting) => (
-                  <tr key={meeting.id}>
-                    <td>                    
-                      <Link
-                        className="btn bg-gradient-primary btn-sm mr-1"
-                        to={`/client/${meeting.client}`}
-                        target="_blank"
-                      >
-                        <i className="fas fa-user-nurse  mr-0"></i>{" "}
-                        <ConnectedClientNameDisplay id={meeting.client} />
-                      </Link>
-                        
-                    </td>
-                    <td>
-                      <ConnectedUsernameDisplay id={meeting.owner} />
-                    </td>
-                    <td>
-                      {meeting.attendees.map((a, index) => (
-                        <span key={a}>
-                          <ConnectedUsernameDisplay id={a} />
-                          {index + 1 === meeting.attendees.length ? null : ", "}
-                        </span>
-                      ))}
-                      {meeting.attendeesMore ? (
-                        <>
-                          {", "}
-                          {meeting.attendeesMore}
-                        </>
-                      ) : null}
-                    </td>
-                    <td>{meeting.location} {meeting.otherLocation ? meeting.otherLocation : null}</td>
-                    <td>
-                      <Moment format="YYYY/MM/DD hh:mm A">
-                        {meeting.datetimeOfMeeting}
-                      </Moment>
-                    </td>
-                    <td>{meeting.isVerified ? <span className="badge badge-success">Verified</span> : <span className="badge badge-warning">Not Yet Verified</span>}</td>
-                    <td className="project-actions text-right">
-                      <button
-                        className="btn bg-gradient-danger btn-sm mr-1"
-                        onClick={() => deleteMeeting(meeting.id)}
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Delete"
-                      >
-                        <i className="fas fa-trash  mr-0"></i>
-                      </button>
-                      <Link
-                        to={`/meeting/${meeting.id}`}
-                        id={meeting.id}
-                        className="btn bg-gradient-primary btn-sm"
-                      >
-                        <i className="fa fa-calendar-alt"></i>
-                        Meeting Details
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <ConnectedMeeting meetings={meetings} isAdmin={isAdmin} />
           ) : (
             <div className="alert alert-warning mb-0">
               <h5>
@@ -107,6 +37,9 @@ export const MyMeetings = ({ meetings, deleteMeeting }) => (
 
 const mapStateToProps = (state, ownProps) => {
   const { mymeetings } = state;
+  const { isAdmin } = state.session;
+  var dtoday = new Date();
+  dtoday = moment(dtoday).format('YYYY-MM-DD');
   const meetings = mymeetings.map((meeting) => {
     return {
       ...meeting,
@@ -115,6 +48,8 @@ const mapStateToProps = (state, ownProps) => {
   });
   return {
     meetings,
+    dtoday,
+    isAdmin
   };
 };
 

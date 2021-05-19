@@ -126,9 +126,9 @@ export function* clientModificationSaga() {
 
 export function* clientVerificationSaga() {
   while (true) {
-    const { id } = yield take(mutations.VERIFY_CLIENT);
+    const { id, userid, approvedDate, lastContactMethod } = yield take(mutations.VERIFY_CLIENT);
 
-    const { response, error } = yield call(verifyClient, id);
+    const { response, error } = yield call(verifyClient, id, userid, approvedDate, lastContactMethod);
     try {
       if (response) {
         if (response.status === 200) {

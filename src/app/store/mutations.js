@@ -58,6 +58,8 @@ export const ADDRESS_SUGGESTION_SUCCESS = `ADDRESS_SUGGESTION_SUCCESS`;
 export const ADDRESS_SUGGESTION_FAILED = `ADDRESS_SUGGESTION_FAILED`;
 export const REJECT_ADDRESS_SUGGESTION = `REJECT_ADDRESS_SUGGESTION`;
 
+export const SUGGEST_ADD_TO_CLIENT_CONTACT_DETAILS = `SUGGEST_ADD_TO_CLIENT_CONTACT_DETAILS`;
+
 export const SAVE_MEETING = `SAVE_MEETING`;
 export const PROCESSING_EDIT_MEETING = `PROCESSING_EDIT_MEETING`;
 export const EDIT_MEETING = `EDIT_MEETING`;
@@ -81,15 +83,22 @@ export const updateClient = (client = {}) => ({
   client,
 });
 
-export const verifyClient = (id) => ({
+export const verifyClient = (id, userid, approvedDate, lastContactMethod) => ({
   type: VERIFY_CLIENT,
-  id,
+  id, userid, approvedDate, lastContactMethod
 });
 
 export const suggestEditsToClientContactDetails = (
   clientContactDetailsSuggestions = {}
 ) => ({
   type: SUGGEST_EDITS_TO_CLIENT_CONTACT_DETAILS,
+  clientContactDetailsSuggestions,
+});
+
+export const suggestAddToClientContactDetails = (
+  clientContactDetailsSuggestions = {}
+) => ({
+  type: SUGGEST_ADD_TO_CLIENT_CONTACT_DETAILS,
   clientContactDetailsSuggestions,
 });
 

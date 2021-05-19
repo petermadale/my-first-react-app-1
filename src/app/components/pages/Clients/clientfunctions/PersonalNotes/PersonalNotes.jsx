@@ -11,6 +11,8 @@ import {
 import { ConnectedPersonalNotesEdit } from "../PersonalNotesEdit/PersonalNotesEdit"; //"./PersonalNotesEdit";
 import { Toast, Swal_alert } from "../../../../../scripts/sweetalert";
 import { ConnectedUsernameDisplay } from "../../../../UsernameDisplay";
+import moment from "moment";
+import { lastContactMethod } from "../../../../../scripts/lastContactMethod";
 
 const PersonalNotes = ({
   personalnotes,
@@ -63,7 +65,7 @@ const PersonalNotes = ({
                 <button
                   className="btn btn-link link-black text-sm mr-2"
                   onClick={() =>
-                    verifyPersonalNote(note.id, note.isVerified, note.client)
+                    verifyPersonalNote(note.id, note.isVerified, note.client, note.owner)
                   }
                 >
                   <i className="fas fa-thumbs-up mr-1"></i> Verify
@@ -133,7 +135,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
       });
     },
-    verifyPersonalNote(id, isVerified, client) {
+    verifyPersonalNote(id, isVerified, client, owner) {
       const title = isVerified
         ? "Unverify personal note?"
         : "Verify personal note?";
@@ -147,7 +149,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }).then((result) => {
         if (result.value) {
           isVerified = !isVerified;
-          const notedata = { id: id, isVerified: isVerified, client: client };
+          const notedata = { 
+            id: id, 
+            isVerified: isVerified, 
+            owner: owner,
+            client: client,  
+            approvedDate: moment(new Date()).format("YYYY-MM-DD hh:mm:ss a"),
+            lastContactMethod: lastContactMethod.personalNote
+          };
           dispatch(verifyPersonalNote(notedata));
         }
       });

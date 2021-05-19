@@ -11,9 +11,11 @@ import {
   createClientContactDetails,
   updateClientContactDetails,
   deleteClientContactDetails,
+  suggestAddToClientContactDetails,
   suggestEditsToClientContactDetails,
 } from "../../../../store/mutations";
 import { Swal_alert } from "../../../../scripts/sweetalert";
+import moment from "moment";
 
 class ClientsAddressEdit extends Component {
   constructor(props) {
@@ -314,8 +316,8 @@ class ClientsAddressEdit extends Component {
                     <div className="modal-footer">
                       <button type="submit" className="btn bg-gradient-success">
                         <i className="fas fa-save"></i>{" "}
-                        {isNew ? <>Save</> : null}
-                        {isAdmin && !isNew ? <>Update</> : <>Suggest</>}
+                        {!isNew ? <>Update</> : <>Save</>}
+                        {/* {isAdmin && !isNew ? <>Update</> : <>Suggest</>} */}
                       </button>
                       <button
                         type="button"
@@ -333,17 +335,15 @@ class ClientsAddressEdit extends Component {
           </div>
         </div>
         <div className="card-footer text-right card-footer-client-address">
-          {isAdmin ? (
-            <button
-              type="button"
-              className="btn bg-gradient-info mr-2"
-              data-toggle="modal"
-              data-target="#modal-edit-address"
-              onClick={() => this.onClick(null, true)}
-            >
-              <i className="fa fa-map-marker-alt"></i> Add Another Address
-            </button>
-          ) : null}
+          <button
+            type="button"
+            className="btn bg-gradient-info mr-2"
+            data-toggle="modal"
+            data-target="#modal-edit-address"
+            onClick={() => this.onClick(null, true)}
+          >
+            <i className="fa fa-map-marker-alt"></i> Add Another Address
+          </button>
 
           <Link to="/clients" className="btn bg-gradient-secondary">
             <i className="fa fa-angle-double-left"></i> Back to Clients
@@ -382,6 +382,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           cellPhoneNumber: form[`cellPhoneNumber`].value,
           alternativePhoneNumber: form[`alternativePhoneNumber`].value,
           faxNumber: form[`faxNumber`].value,
+          userid: ownProps.userid,
         };
         if (isNew) dispatch(createClientContactDetails(clientContact));
         else dispatch(updateClientContactDetails(clientContact));
@@ -402,13 +403,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           alternativePhoneNumber: form[`alternativePhoneNumber`].value,
           faxNumber: form[`faxNumber`].value,
           userid: ownProps.userid,
+          createdDate: moment(new Date()).format("YYYY-MM-DD hh:mm:ss a")
         };
-        // if (isNew) dispatch(createClientContactDetails(clientContact));
-        // else {
-        dispatch(
-          suggestEditsToClientContactDetails(clientContactDetailsSuggestions)
-        );
-        // }
+        dispatch(suggestEditsToClientContactDetails(clientContactDetailsSuggestions));
+        // if (isNew) dispatch(suggestAddToClientContactDetails(clientContactDetailsSuggestions));
+        // else dispatch(suggestEditsToClientContactDetails(clientContactDetailsSuggestions));
       }
 
       $("#modal-edit-address").modal("hide");

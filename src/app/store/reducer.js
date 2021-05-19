@@ -201,6 +201,9 @@ const rootReducer = combineReducers({
             ? {
                 ...client,
                 isVerified: true,
+                lastContactedBy: action.userid,
+                lastContactedDate: action.approvedDate,
+                lastContactMethod: action.lastContactMethod,
               }
             : client;
         });
@@ -276,7 +279,7 @@ const rootReducer = combineReducers({
             : client;
         });
       case mutations.REMOVE_FROM_MY_FAVORITES:
-        //add isFavorite, myfave object to each client
+        //remove isFavorite, myfave object to each client
         return clients.map(function (client) {
           return {
             ...client,
@@ -295,6 +298,25 @@ const rootReducer = combineReducers({
                     return fave.isFavorite;
                   }),
           };
+        });
+        // return clients.map(function (client) {
+        //   return {
+        //     ...client,
+        //     myfave: client.myfave.filter((fave) => {
+        //       return action.id != fave.id;
+        //     }),
+        //     clientContactDetails: client.clientContactDetails.map((contact) => {
+        //       return contact.id === action.clientContactDetailsID
+        //         ? { ...contact, isFavorite: false }
+        //         : contact;
+        //     }),
+        //     isFavorite:
+        //       client.myfave.length === 0
+        //         ? false
+        //         : client.clientContactDetails.some((fave) => {
+        //             return fave.isFavorite;
+        //           }),
+        //   };
           //   if (client.myfave) {
           //     return action.id === client.myfave.id
           //       ? {
@@ -315,7 +337,7 @@ const rootReducer = combineReducers({
           //       : client;
           //   }
           //return client;
-        });
+        
       case mutations.CLIENT_CONTACT_TOGGLE_EDIT:
         return clients.map(function (client) {
           return action.clientID === client.id
@@ -399,6 +421,9 @@ const rootReducer = combineReducers({
           return action.clientContactDetailsSuggestions.client === client.id
             ? {
                 ...client,
+                lastContactedBy: action.clientContactDetailsSuggestions.userid,
+                lastContactedDate: action.clientContactDetailsSuggestions.approvedDate,
+                lastContactMethod: action.clientContactDetailsSuggestions.lastContactMethod,
                 clientContactDetails: [
                   ...client.clientContactDetails,
                   {
@@ -463,6 +488,7 @@ const rootReducer = combineReducers({
                         note: action.personalnote.note,
                         datetimeupdated: action.personalnote.datetimeupdated,
                         toggleEdit: false,
+                        isVerified: action.personalnote.isVerified
                       }
                     : pnote;
                 }),
@@ -474,6 +500,9 @@ const rootReducer = combineReducers({
           return action.notedata.client === client.id
             ? {
                 ...client,
+                lastContactedBy: action.notedata.owner,
+                lastContactedDate: action.notedata.approvedDate,
+                lastContactMethod: action.notedata.lastContactMethod,
                 personalnotes: client.personalnotes.map((pnote) => {
                   return pnote.id === action.notedata.id
                     ? {
@@ -632,6 +661,7 @@ const rootReducer = combineReducers({
             ? {
                 ...note,
                 isVerified: action.notedata.isVerified,
+                approvedDate: action.notedata.approvedDate
               }
             : note;
         });

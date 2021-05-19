@@ -111,6 +111,9 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
               </li>
             ) : null}
           </ul>
+            {client.lastContactedBy ? 
+            <span className="badge badge-info">Last contacted by <ConnectedUsernameDisplay id={client.lastContactedBy} /> {client.lastContactedDate}</span> 
+            : null}
         </div>
         <div className="card-footer">
           <div className="text-right">

@@ -15,9 +15,9 @@ export function updateClient(client) {
     .catch((error) => ({ error }));
 }
 
-export function verifyClient(id) {
+export function verifyClient(id, userid, approvedDate, lastContactMethod) {
   return axios
-    .post(url + `/clients/verify`, { id })
+    .post(url + `/clients/verify`, { data: { id, userid, approvedDate, lastContactMethod } })
     .then((response) => ({ response }))
     .catch((error) => ({ error }));
 }
