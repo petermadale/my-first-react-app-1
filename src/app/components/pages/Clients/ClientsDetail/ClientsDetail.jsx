@@ -21,7 +21,7 @@ const ClientsDetail = ({ isEdit, client, personalnotes, isAdmin, owner }) => (
             {client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0 ? <small className="badge badge-warning">Delete Request Pending {owner === client.clientsDeleteRequest[0].owner || isAdmin ?  <>(by <ConnectedUsernameDisplay id={client.clientsDeleteRequest[0].owner} />)</>  : null}</small> : null}
             <h1>{client.name}</h1>
             {client.lastContactedBy ? 
-            <span className="badge badge-info">Last contacted by <ConnectedUsernameDisplay id={client.lastContactedBy} /> {client.lastContactedDate}</span> 
+            <span className="badge badge-info"><i className="fa fa-info-circle"></i> Last contacted by <ConnectedUsernameDisplay id={client.lastContactedBy} /> {client.lastContactedDate}</span> 
             : null}
           </div>
           <div className="col-sm-6">

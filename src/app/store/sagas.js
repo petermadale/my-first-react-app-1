@@ -47,27 +47,42 @@ export function* clientCreationSaga() {
   while (true) {
     const { client, clientContact } = yield take(mutations.CREATE_NEW_CLIENT);
 
-    const [newClient, newClientContactDetails] = yield all([
-      call(createNewClient, client),
-      call(createNewClientContactDetails, clientContact),
-    ]);
-    // console.log(newClient);
-    // console.log(newClientContactDetails);
-    if (
-      newClient.response.status === 200 &&
-      newClientContactDetails.response.status === 200
-    ) {
-      Toast.fire({
-        icon: "success",
-        title: alert_msg.client_and_address_create_success,
-      });
-      history.push("/client/" + newClient.response.data.id + "/true");
-      $("[data-widget='control-sidebar']").click(); //find another solution
+    if (clientContact) {
+      const [newClient, newClientContactDetails] = yield all([
+        call(createNewClient, client),
+        call(createNewClientContactDetails, clientContact),
+      ]);
+      if (
+        newClient.response.status === 200 &&
+        newClientContactDetails.response.status === 200
+      ) {
+        Toast.fire({
+          icon: "success",
+          title: alert_msg.client_and_address_create_success,
+        });
+        history.push("/client/" + newClient.response.data.id + "/true");
+        $("[data-widget='control-sidebar']").click(); //find another solution
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: alert_msg.server_error,
+        });
+      }
     } else {
-      Toast.fire({
-        icon: "error",
-        title: alert_msg.server_error,
-      });
+      const {response, error} = yield call(createNewClient, client);
+      if (response.status === 200) {
+        Toast.fire({
+          icon: "success",
+          title: alert_msg.client_create_success,
+        });
+        history.push("/client/" + response.data.id + "/true");
+        $("[data-widget='control-sidebar']").click(); //find another solution
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: alert_msg.server_error,
+        });
+      }
     }
     // axios.post(url + `/client/new`, {
     //   client: {

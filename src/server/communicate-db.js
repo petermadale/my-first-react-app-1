@@ -23,6 +23,7 @@ export const updateClient = async (client) => {
       id,
       name,
       email,
+      contactNumber,
       website,
       postNominalLetters,
       nameOfOrg,
@@ -53,6 +54,7 @@ export const updateClient = async (client) => {
           $set: {
             name,
             email,
+            contactNumber,
             website,
             postNominalLetters,
             nameOfOrg,

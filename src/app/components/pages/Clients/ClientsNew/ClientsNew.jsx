@@ -12,6 +12,7 @@ import Select2 from "../../../../scripts/select2";
 import { clientDataSets } from "../../../../../server/clientDataSets";
 import { ConnectedInputForm } from "../../../../scripts/inputForm";
 import { ConnectedNoAccess } from "../../NoAccess/NoAccess";
+import { ConnectedClientsAddressCreate } from "../ClientsAddressCreate/ClientsAddressCreate";
 
 export const ClientsNew = ({
   id,
@@ -46,13 +47,20 @@ export const ClientsNew = ({
       </div>
     </section>
     <section className="content">
-      <div className="container-fluid">
         <div className="row">
           <div className="col-12">
             <form onSubmit={createNewClient} id="newClient">
-              <div className="card card-info card-client-info collapsed-card">
+              <div className="card card-info card-client-info">
                 <div className="card-header">
-                  <h3 className="card-title">Client Information</h3>
+                    <button
+                      type="button"
+                      className="btn btn-tool p-0"
+                      data-card-widget="collapse"
+                    >
+                      <h3 className="card-title">
+                        <i className="fas fa-angle-down"></i> 1. Client Information
+                      </h3>
+                    </button>
                   <div className="card-tools">
                     <button
                       type="button"
@@ -72,7 +80,7 @@ export const ClientsNew = ({
                   </p>
                   <ConnectedClientNameInput />
                   <div className="form-row mb-3">
-                    <div className="col-sm-6 col-12">
+                    <div className="col-sm-4 col-12">
                       <ConnectedInputForm
                         label="Email"
                         required
@@ -81,7 +89,23 @@ export const ClientsNew = ({
                         nameid="email"
                       />
                     </div>
-                    <div className="col-sm-6 col-12">
+                    <div className="col-sm-4 col-12">
+                      <label htmlFor="contactNumber">
+                        Contact Number
+                      </label>
+                      <NumberFormat
+                        format="###-###-####"
+                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        mask="_"
+                        placeholder="555-555-5555"
+                        title="e.g. 555-555-5555"
+                        name="contactNumber"
+                        id="contactNumber"
+                        className="form-control"
+                        defaultValue=""
+                      />
+                    </div>
+                    <div className="col-sm-4 col-12">
                       <ConnectedInputForm
                         label="Website"
                         type="url"
@@ -183,11 +207,17 @@ export const ClientsNew = ({
                 </div>
               </div>
 
-              <div className="card card-info card-additional-client-info collapsed-card">
+              <div className="card card-info card-additional-client-info">
                 <div className="card-header">
-                  <h3 className="card-title">
-                    Client Additional Information
-                  </h3>
+                    <button
+                      type="button"
+                      className="btn btn-tool p-0"
+                      data-card-widget="collapse"
+                    >
+                      <h3 className="card-title">
+                      <i className="fas fa-angle-down"></i> 2. Client Additional Information
+                      </h3>
+                    </button>
                   <div className="card-tools">
                     <button
                       type="button"
@@ -290,9 +320,17 @@ export const ClientsNew = ({
                 </div>
               </div>
 
-              <div className="card card-info card-client-address collapsed-card">
+              <div className="card card-info card-client-address">
                 <div className="card-header">
-                  <h3 className="card-title">Client Address</h3>
+                    <button
+                      type="button"
+                      className="btn btn-tool p-0"
+                      data-card-widget="collapse"
+                    >
+                      <h3 className="card-title">
+                      <i className="fas fa-angle-down"></i> 3. Client Address
+                      </h3>
+                    </button>
                   <div className="card-tools">
                     <button
                       type="button"
@@ -304,151 +342,10 @@ export const ClientsNew = ({
                   </div>
                 </div>
                 <div className="card-body">
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="teletherapy" name="clientAddress" className="custom-control-input" value="teletherapy" />
-                  <label className="custom-control-label" htmlFor="teletherapy">Teletherapy</label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="noPhysicalAddress" name="clientAddress" className="custom-control-input" value="noPhysicalAddress" />
-                  <label className="custom-control-label" htmlFor="noPhysicalAddress">No Physical Address</label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="dontListAddress" name="clientAddress" className="custom-control-input" value="dontListAddress" />
-                  <label className="custom-control-label" htmlFor="dontListAddress">Don't List Address</label>
-                </div>
-                  <div className="form-group">
-                    <ConnectedInputForm
-                      label="Address 1"
-                      type="text"
-                      nameid="address1"
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <ConnectedInputForm
-                      label="Address 2"
-                      type="text"
-                      nameid="address2"
-                    />
-                  </div>
-                  <div className="form-row mb-3">
-                    <div className="col-sm-6 col-12">
-                      <ConnectedInputForm
-                        label="Work Email"
-                        type="email"
-                        nameid="workEmail"
-                        placeholder="email@gmail.com"
-                      />
-                    </div>
-                    <div className="col-sm-6 col-12">
-                      <ConnectedInputForm
-                        label="Aleternate Email"
-                        type="email"
-                        nameid="alternateEmail"
-                        placeholder="email@gmail.com"
-                      />
-                    </div>
-                  </div>
-                  <div className="form-row mb-3">
-                    <div className="col-sm-6 col-12">
-                      <ConnectedInputForm
-                        label="City"
-                        type="text"
-                        nameid="city"
-                      />
-                    </div>
-                    <div className="col-sm-3 col-12">
-                      <ConnectedInputForm
-                        label="State"
-                        type="text"
-                        nameid="state"
-                      />
-                    </div>
-                    <div className="col-sm-3 col-12">
-                      <ConnectedInputForm
-                        label="Zip"
-                        type="text"
-                        nameid="zip"
-                      />
-                    </div>
-                  </div>
-                  <div className="form-row mb-3">
-                    <div className="col-sm-6 col-12">
-                      <label htmlFor="officePhoneNumber">
-                        Office Phone Number
-                      </label>
-                      <NumberFormat
-                        format="###-###-####"
-                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                        mask="_"
-                        placeholder="555-555-5555"
-                        title="e.g. 555-555-5555"
-                        name="officePhoneNumber"
-                        id="officePhoneNumber"
-                        className="form-control"
-                        defaultValue=""
-                      />
-                    </div>
-                    <div className="col-sm-6 col-12">
-                      <ConnectedInputForm
-                        label="Extension Number"
-                        type="number"
-                        nameid="officePhoneNumberExt"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-row mb-3">
-                    <div className="col-sm-4 col-12">
-                      <label htmlFor="cellPhoneNumber">
-                        Cell Phone Number
-                      </label>
-                      <NumberFormat
-                        format="###-###-####"
-                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                        mask="_"
-                        placeholder="555-555-5555"
-                        title="e.g. 555-555-5555"
-                        name="cellPhoneNumber"
-                        id="cellPhoneNumber"
-                        className="form-control"
-                        defaultValue=""
-                      />
-                    </div>
-                    <div className="col-sm-4 col-12">
-                      <label htmlFor="alternativePhoneNumber">
-                        Alternative Phone Number
-                      </label>
-                      <NumberFormat
-                        format="###-###-####"
-                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                        mask="_"
-                        placeholder="555-555-5555"
-                        title="e.g. 555-555-5555"
-                        name="alternativePhoneNumber"
-                        id="alternativePhoneNumber"
-                        className="form-control"
-                        defaultValue=""
-                      />
-                    </div>
-                    <div className="col-sm-4 col-12">
-                      <label htmlFor="faxNumber">Fax Number</label>
-
-                      <NumberFormat
-                        format="###-###-####"
-                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                        mask="_"
-                        placeholder="555-555-5555"
-                        title="e.g. 555-555-5555"
-                        name="faxNumber"
-                        id="faxNumber"
-                        className="form-control"
-                        defaultValue=""
-                      />
-                    </div>
-                  </div>
+                  <ConnectedClientsAddressCreate />
                 </div>
               </div>
+              
               <div className="mt-3 mb-3 ml-1 text-right client-new-btn">
                   <input type="hidden" id="owner" name="owner" value={id} />
                   <input type="hidden" id="isAdmin" name="isAdmin" checked={isAdmin} onChange={() => { return; }} />
@@ -465,7 +362,6 @@ export const ClientsNew = ({
             </form>
           </div>
         </div>
-      </div>
     </section>
   </>
 );
@@ -505,12 +401,13 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
       const form = e.target;
       const name = form[`name`];
       const email = form[`email`];
+      const contactNumber = form[`contactNumber`];
       const owner = form[`owner`];
       const assignedLocations = form[`assignedLocations`];
       const users = form[`users`];
       var error_msg = [];
       const isAdmin = form[`isAdmin`].checked;
-      const clientAddress = $('input[name=clientAddress]:checked').val();
+      const clientAddressOption = form[`clientAddressOption`]; //$('input[name=clientAddress]:checked').val();
       const isVerified = isAdmin;
 
       if (name.required && name.value === "") {
@@ -578,6 +475,7 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
           name: name.value,
           owner: owner.value,
           email: email.value,
+          contactNumber: contactNumber.value,
           website: form[`website`].value,
           postNominalLetters: form[`postNominalLetters`].value,
           nameOfOrg: form[`nameOfOrg`].value,
@@ -595,28 +493,32 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
           assignedLocations: assignedLocationsArr,
           users: usersArr,
           notes: form[`notes`].value,
-          isVerified: isVerified
+          isVerified: isVerified,
+          clientAddressOption: clientAddressOption.value
         };
         // console.log(clientData);
-        const clientContactID = uuid();
-        const clientContactData = {
-          id: clientContactID,
-          client: clientID,
-          address1: form[`address1`].value,
-          address2: form[`address2`].value,
-          workEmail: form[`workEmail`].value,
-          alternateEmail: form[`alternateEmail`].value,
-          city: form[`city`].value,
-          state: form[`state`].value,
-          zip: form[`zip`].value,
-          officePhoneNumber: form[`officePhoneNumber`].value,
-          officePhoneNumberExt: form[`officePhoneNumberExt`].value,
-          cellPhoneNumber: form[`cellPhoneNumber`].value,
-          alternativePhoneNumber: form[`alternativePhoneNumber`].value,
-          faxNumber: form[`faxNumber`].value,
-        };
+        var clientContactData = null;
+        if (clientAddressOption.value === 'hasAddress') {
+          const clientContactID = uuid();
+          clientContactData = {
+            id: clientContactID,
+            client: clientID,
+            address1: form[`address1`].value,
+            address2: form[`address2`].value,
+            workEmail: form[`workEmail`].value,
+            alternateEmail: form[`alternateEmail`].value,
+            city: form[`city`].value,
+            state: form[`state`].value,
+            zip: form[`zip`].value,
+            officePhoneNumber: form[`officePhoneNumber`].value,
+            officePhoneNumberExt: form[`officePhoneNumberExt`].value,
+            cellPhoneNumber: form[`cellPhoneNumber`].value,
+            alternativePhoneNumber: form[`alternativePhoneNumber`].value,
+            faxNumber: form[`faxNumber`].value,
+          };
+        }
         console.log(clientContactData);
-        //dispatch(createNewClient(clientData, clientContactData, isAdmin));
+        dispatch(createNewClient(clientData, clientContactData, isAdmin));
       }
     },
   };

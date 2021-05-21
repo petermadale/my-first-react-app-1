@@ -13,6 +13,7 @@ import { clientDataSets } from "../../../../../server/clientDataSets";
 import { ConnectedInputForm } from "../../../../scripts/inputForm";
 import moment from 'moment';
 import { lastContactMethod } from "../../../../scripts/lastContactMethod";
+import NumberFormat from "react-number-format";
 
 export const ClientsEdit = ({
   userid,
@@ -47,7 +48,7 @@ export const ClientsEdit = ({
                   data-card-widget="collapse"
                 >
                   <h3 className="card-title text-white">
-                    <i className="fas fa-angle-down"></i> Edit {client.name}
+                    <i className="fas fa-angle-down"></i> 1. Edit {client.name}
                   </h3>
                 </button>
                 <div className="card-tools">
@@ -74,7 +75,7 @@ export const ClientsEdit = ({
                   postNominalLetters={client.postNominalLetters}
                 />
                 <div className="form-row mb-3">
-                  <div className="col-sm-6 col-12">
+                  <div className="col-sm-4 col-12">
                     <ConnectedInputForm
                       label="Email"
                       required
@@ -84,7 +85,23 @@ export const ClientsEdit = ({
                       defaultValue={client.email}
                     />
                   </div>
-                  <div className="col-sm-6 col-12">
+                  <div className="col-sm-4 col-12">
+                    <label htmlFor="contactNumber">
+                      Contact Number
+                    </label>
+                    <NumberFormat
+                      format="###-###-####"
+                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                      mask="_"
+                      placeholder="555-555-5555"
+                      title="e.g. 555-555-5555"
+                      name="contactNumber"
+                      id="contactNumber"
+                      className="form-control"
+                      defaultValue={client.contactNumber}
+                    />
+                  </div>
+                  <div className="col-sm-4 col-12">
                     <ConnectedInputForm
                       label="Website"
                       type="url"
@@ -200,7 +217,7 @@ export const ClientsEdit = ({
                   data-card-widget="collapse"
                 >
                   <h3 className="card-title text-white">
-                    <i className="fas fa-angle-down"></i> Edit Client Additional
+                    <i className="fas fa-angle-down"></i> 2. Edit Client Additional
                     Information
                   </h3>
                 </button>
@@ -328,6 +345,7 @@ export const ClientsEdit = ({
                 </div>
               </div>
             </div>
+            
             <div className="mt-3 mb-3 ml-1 text-right client-edit-btn">
                 <input type="hidden" id="isAdmin" name="isAdmin" checked={isAdmin} onChange={() => { return; }} />
                 {!client.isVerified && isAdmin ? 
@@ -387,7 +405,13 @@ export const ClientsEdit = ({
         ) : null}
         <div className="card card-client-primary">
           <div className="card-header">
-            <h3 className="card-title">Client Address:</h3>
+              <button
+                type="button"
+                className="btn btn-tool p-0"
+                data-card-widget="collapse"
+              >
+                <h3 className="card-title text-white">3. Client Address:</h3>
+              </button>
 
             <div className="card-tools">
               <button
@@ -406,7 +430,11 @@ export const ClientsEdit = ({
               isAdmin={isAdmin}
               userid={userid}
             />
-          ) : null}
+          ) : 
+            <div className="card-body">
+              <span className="badge badge-success">{client.clientAddressOption}</span>
+            </div>
+          }
         </div>
       </div>
     </div>
@@ -497,6 +525,7 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
           name: form[`name`].value,
           //owner: owner.value,
           email: form[`email`].value,
+          contactNumber: form[`contactNumber`].value,
           website: form[`website`].value,
           postNominalLetters: form[`postNominalLetters`].value,
           nameOfOrg: form[`nameOfOrg`].value,

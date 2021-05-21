@@ -163,24 +163,20 @@ class ClientsList extends PureComponent {
             </section>
         
             <section className="content">
-              <div className="card card-solid">
-                <div className="card-body p-0">
-                  {sortedClients.length > 0 ? (
-                    <div className="row d-flex align-items-stretch">              
-                        {sortedClients.map((client) => (
-                        <ConnectedClient client={client} key={client.id} isAdmin={isAdmin} requestDeleteClient={requestDeleteClient} owner={owner} />
-                        ))}
-                    </div>
-                  ) : (
-                    <div className="alert alert-warning">
-                      <h5>
-                        <i className="icon fas fa-exclamation-triangle"></i>
-                        No clients found.
-                      </h5>
-                    </div>
-                  )}
-                </div>
-              </div>
+                {sortedClients.length > 0 ? (
+                  <div className="row d-flex align-items-stretch">              
+                      {sortedClients.map((client) => (
+                      <ConnectedClient client={client} key={client.id} isAdmin={isAdmin} requestDeleteClient={requestDeleteClient} owner={owner} />
+                      ))}
+                  </div>
+                ) : (
+                  <div className="alert alert-warning">
+                    <h5>
+                      <i className="icon fas fa-exclamation-triangle"></i>
+                      No clients found.
+                    </h5>
+                  </div>
+                )}
             </section>
           </>
         )
@@ -207,9 +203,20 @@ const mapStateToProps = (state, ownProps) => {
       .sort(compare);
     $('[data-toggle="tooltip"]').tooltip();
     const csvHeading = [
-      ["Name", "Email"]
+      ["Client Name", "Email", "Contact Number", "Website", "Name of Organization", "Title", "License Number", "License Expiry Date", "Date the License was last verified", "Locations", "Notes"]
     ];
-    var csvRow = clients.map((client) => {return [client.name, client.email]});
+    var csvRow = clients.map((client) => {return [
+      client.name, 
+      client.email, 
+      client.contactNumber,
+      client.website,
+      client.nameOfOrg,
+      client.titleWithOrg,
+      client.licenseNumber,
+      client.licenseExpiryDate,
+      client.licenseLastVerifiedDate,
+      client.assignedLocations.toString(),
+      client.notes]});
     var csvData = csvHeading.concat(csvRow);
     var dtoday = new Date();
     var fileName = "ClientList-" + moment(dtoday).format("MM-DD-YYYY") + ".csv";

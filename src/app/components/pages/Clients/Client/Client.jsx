@@ -15,7 +15,7 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
         className={`card ${!client.isVerified || (client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0) ? "card-warning" : "card-client-primary"} card-outline ${styles.cardClient}`}
       >
         <div className="card-body box-profile">
-          {client.isVerified && !(client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0) ? <ConnectedButtonFavorite client={client} /> : null}
+          {client.isVerified && !(client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0) && client.clientAddressOption === "Has Address" ? <ConnectedButtonFavorite client={client} /> : null}
           {!client.isVerified ? <><small className="badge badge-warning">Not Yet Verified</small><br/></> : null}
           {client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0 ? 
           <small className="badge badge-warning">Delete Request Pending {owner === client.clientsDeleteRequest[0].owner || isAdmin ? <>(by <ConnectedUsernameDisplay id={client.clientsDeleteRequest[0].owner} />)</> : null}</small> 
@@ -41,32 +41,39 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                 {client.email}
               </a>
             </li>
-            <li className="list-group-item">
-              <b>
-                <i className="fas fa-lg fa-phone"></i> Office Phone
-                Number
-              </b>
-              <a
-                className="float-right"
-                href={`tel:+${client.clientContactDetails[0].officePhoneNumber}`}
-              >
-                {client.clientContactDetails[0].officePhoneNumber}
-              </a>
-            </li>
-            {client.clientContactDetails[0].address1 ? (
+            {client.contactNumber ?
+              <li className="list-group-item">
+                <b>
+                  <i className="fas fa-lg fa-phone"></i> Contact Number
+                </b>
+                <a
+                  className="float-right"
+                  href={`tel:+${client.contactNumber}`}
+                >
+                  {client.contactNumber}
+                </a>
+              </li> : null}
+            {client.clientAddressOption === 'Has Address' && client.clientContactDetails[0].address1 ? (
+              <>
               <li className="list-group-item">
                 <b>
                   <i className="fas fa-map-marker-alt mr-1"></i>{" "}
                   Address{" "}
                   {client.clientContactDetails.length > 1 ? (
-                    <span
-                      className="badge badge-client-primary right mr-2"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Addresses Found"
+                    <Link
+                      to={`/client/${client.id}`}
+                      id={client.id}
+                      className="btn btn-link m-0 p-0 btn-sm"
                     >
-                      {client.clientContactDetails.length} Addresses Found
-                    </span>
+                      <span
+                        className="badge badge-client-primary right mr-2"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Addresses Found"
+                      >
+                        {client.clientContactDetails.length} Addresses Found
+                      </span>
+                    </Link>
                   ) : null}
                   {client.clientContactDetailsSuggestions.length >
                   0 ? (
@@ -92,7 +99,29 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                   ) : null}
                 </p>
               </li>
-            ) : null}
+              <li className="list-group-item">
+                <b>
+                  <i className="fas fa-lg fa-phone"></i> Office Phone
+                  Number
+                </b>
+                <a
+                  className="float-right"
+                  href={`tel:+${client.clientContactDetails[0].officePhoneNumber}`}
+                >
+                  {client.clientContactDetails[0].officePhoneNumber}
+                </a>
+              </li>
+              </>
+            ) : 
+              <li className="list-group-item">
+                <b>
+                  <i className="fas fa-map-marker-alt mr-1"></i>{" "}
+                  Address{" "}
+                </b>
+
+                <p className="float-right mb-0"><span className="badge badge-success">{client.clientAddressOption}</span></p>
+              </li>
+            }
             {client.assignedLocations.length > 0 ? (
               <li className="list-group-item">
                 <b>
@@ -109,10 +138,11 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
             ))}
                 </p>
               </li>
-            ) : null}
+            ) : null }
+            
           </ul>
             {client.lastContactedBy ? 
-            <span className="badge badge-info">Last contacted by <ConnectedUsernameDisplay id={client.lastContactedBy} /> {client.lastContactedDate}</span> 
+            <span className="badge badge-info text-wrap"><i className="fa fa-info-circle"></i> Last contacted by <ConnectedUsernameDisplay id={client.lastContactedBy} /> {client.lastContactedDate}</span> 
             : null}
         </div>
         <div className="card-footer">
@@ -173,6 +203,7 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
 
 const mapStateToProps = (state, ownProps) => {
     const {client, isAdmin, requestDeleteClient, owner} = ownProps;
+    
   return {
       client,
       isAdmin,
