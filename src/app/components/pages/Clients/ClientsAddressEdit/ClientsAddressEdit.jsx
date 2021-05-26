@@ -25,7 +25,7 @@ class ClientsAddressEdit extends Component {
       clientID: props.clientID,
       selectedContactDetails: null,
       isNew: false,
-      isAdmin: props.isAdmin,
+      isAdmin: props.isAdmin
     };
   }
 
@@ -69,6 +69,7 @@ class ClientsAddressEdit extends Component {
     return (
       <>
         <div className="card-body table-responsive p-0">
+          {clientContactDetails.length > 0 ?
           <table className="table table table-hover text-nowrap">
             <thead>
               <tr>
@@ -128,7 +129,7 @@ class ClientsAddressEdit extends Component {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> : null}
           <div className="modal fade" id="modal-edit-address">
             <div className="modal-dialog modal-lg">
               <div className="modal-content">
@@ -342,7 +343,7 @@ class ClientsAddressEdit extends Component {
             data-target="#modal-edit-address"
             onClick={() => this.onClick(null, true)}
           >
-            <i className="fa fa-map-marker-alt"></i> Add Another Address
+            <i className="fa fa-map-marker-alt"></i> Add {clientContactDetails.length > 0 ? <span>Another</span> : <span>New</span>} Address
           </button>
 
           <Link to="/clients" className="btn bg-gradient-secondary">
@@ -358,6 +359,7 @@ const mapStateToProps = (state, ownProps) => {
   return ownProps;
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const clientAddressOption = ownProps.clientContactDetails.length > 0 ? "Has Address" : null;
   return {
     updateClientContactDetails(e) {
       e.preventDefault();
@@ -384,8 +386,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           faxNumber: form[`faxNumber`].value,
           userid: ownProps.userid,
         };
-        if (isNew) dispatch(createClientContactDetails(clientContact));
-        else dispatch(updateClientContactDetails(clientContact));
+        console.log(clientContact);
+        //if (isNew) dispatch(createClientContactDetails(clientContact));
+        //else dispatch(updateClientContactDetails(clientContact));
       } else {
         const clientContactDetailsSuggestions = {
           id: clientContactID,
@@ -405,7 +408,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           userid: ownProps.userid,
           createdDate: moment(new Date()).format("YYYY-MM-DD hh:mm:ss a")
         };
-        dispatch(suggestEditsToClientContactDetails(clientContactDetailsSuggestions));
+        console.log(clientContactDetailsSuggestions);
+        //dispatch(suggestEditsToClientContactDetails(clientContactDetailsSuggestions));
+
         // if (isNew) dispatch(suggestAddToClientContactDetails(clientContactDetailsSuggestions));
         // else dispatch(suggestEditsToClientContactDetails(clientContactDetailsSuggestions));
       }

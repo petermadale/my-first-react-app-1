@@ -119,7 +119,7 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                   Address{" "}
                 </b>
 
-                <p className="float-right mb-0"><span className="badge badge-success">{client.clientAddressOption}</span></p>
+                <p className="float-right mb-0"><span className="badge badge-warning">{client.clientAddressOption}</span></p>
               </li>
             }
             {client.assignedLocations.length > 0 ? (

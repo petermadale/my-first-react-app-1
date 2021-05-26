@@ -410,7 +410,8 @@ export const ClientsEdit = ({
                 className="btn btn-tool p-0"
                 data-card-widget="collapse"
               >
-                <h3 className="card-title text-white">3. Client Address:</h3>
+                <h3 className="card-title text-white mr-2">3. Client Address:</h3>
+                {client.clientAddressOption != "Has Address" ? <span className="badge badge-warning">{client.clientAddressOption}</span> : null}
               </button>
 
             <div className="card-tools">
@@ -423,18 +424,12 @@ export const ClientsEdit = ({
               </button>
             </div>
           </div>
-          {client.clientContactDetails.length > 0 ? (
-            <ConnectedClientsAddressEdit
+          <ConnectedClientsAddressEdit
               clientContactDetails={client.clientContactDetails}
               clientID={client.id}
               isAdmin={isAdmin}
               userid={userid}
             />
-          ) : 
-            <div className="card-body">
-              <span className="badge badge-success">{client.clientAddressOption}</span>
-            </div>
-          }
         </div>
       </div>
     </div>
