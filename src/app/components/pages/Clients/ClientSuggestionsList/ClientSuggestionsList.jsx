@@ -46,7 +46,7 @@ class ClientSuggestionsList extends Component {
     } = this.props;
     return (
       <div className="card-body table-responsive p-0">
-        <table className="table table table-hover text-nowrap">
+        <table className="table table-sm table table-hover text-nowrap">
           <thead>
             <tr>
               <th style={{ width: "2%" }}></th>
@@ -129,7 +129,7 @@ class ClientSuggestionsList extends Component {
                         <td>
                           <button
                             type="button"
-                            className="btn btn-sm bg-gradient-cyan mr-2"
+                            className="btn btn-xs btn-outline-info mr-2"
                             data-toggle="modal"
                             data-target="#modal-view-suggestion"
                             onClick={() => this.onClick(contact)}

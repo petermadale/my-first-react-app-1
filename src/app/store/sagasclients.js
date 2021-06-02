@@ -59,6 +59,13 @@ export function deleteClientContactDetails(id) {
     .catch((error) => ({ error }));
 }
 
+export function deleteAllClientContactDetails(clientData) {
+  return axios
+    .post(url + `/clientContactDetails/deleteAll`, {clientData})
+    .then((response) => ({ response }))
+    .catch((error) => ({ error }));
+}
+
 export function suggestEditsToClientContactDetails(clientContact) {
   return axios
     .post(url + `/clientContactDetailsSuggestions/new`, { clientContact })

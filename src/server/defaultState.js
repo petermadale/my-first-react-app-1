@@ -98,14 +98,14 @@ export const defaultState = {
     },
   ],
   locations: [
-    {
-      id: "L1",
-      location: "North",
-    },
-    {
-      id: "L2",
-      location: "East",
-    },
+    // {
+    //   id: "L1",
+    //   location: "North",
+    // },
+    // {
+    //   id: "L2",
+    //   location: "East",
+    // },
     {
       id: "L3",
       location: "Clear Lake",
@@ -120,12 +120,16 @@ export const defaultState = {
     },
     {
       id: "L6",
-      location: "South",
+      location: "Others",
     },
-    {
-      id: "L7",
-      location: "West",
-    },
+    // {
+    //   id: "L6",
+    //   location: "South",
+    // },
+    // {
+    //   id: "L7",
+    //   location: "West",
+    // },
   ],
   myfavorites: [
     {

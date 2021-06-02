@@ -50,6 +50,7 @@ export const TOGGLE_EDIT = `TOGGLE_EDIT`;
 export const CREATE_CLIENT_CONTACT_DETAILS = `CREATE_CLIENT_CONTACT_DETAILS`;
 export const UPDATE_CLIENT_CONTACT_DETAILS = `UPDATE_CLIENT_CONTACT_DETAILS`;
 export const DELETE_CLIENT_CONTACT_DETAILS = `DELETE_CLIENT_CONTACT_DETAILS`;
+export const DELETE_ALL_CLIENT_CONTACT_DETAILS = `DELETE_ALL_CLIENT_CONTACT_DETAILS`;
 export const CLIENT_CONTACT_TOGGLE_EDIT = `CLIENT_CONTACT_TOGGLE_EDIT`;
 
 export const SUGGEST_EDITS_TO_CLIENT_CONTACT_DETAILS = `SUGGEST_EDITS_TO_CLIENT_CONTACT_DETAILS`;
@@ -130,10 +131,11 @@ export const addToMyFavorites = (
   clientContactDetailsID,
 });
 
-export const removeFromMyFavorites = (id, clientContactDetailsID) => ({
+export const removeFromMyFavorites = (id, clientContactDetailsID, clientID) => ({
   type: REMOVE_FROM_MY_FAVORITES,
   id,
   clientContactDetailsID,
+  clientID
 });
 
 export const deleteClient = (
@@ -250,6 +252,11 @@ export const deleteClientContactDetails = (id, client) => ({
   type: DELETE_CLIENT_CONTACT_DETAILS,
   id,
   client,
+});
+
+export const deleteAllClientContactDetails = (clientData) => ({
+  type: DELETE_ALL_CLIENT_CONTACT_DETAILS,
+  clientData,
 });
 
 export const requestAuthenticateUser = (username, password) => ({

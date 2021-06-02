@@ -9,7 +9,7 @@ const ClientsDetailLeft = ({ client }) => (
   <>
     <div className={`card ${!client.isVerified || (client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0) ? "card-warning" : "card-client-primary"} card-outline`}>
       <div className="card-body box-profile">
-      {client.isVerified && !(client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0) ? <ConnectedButtonFavorite client={client} /> : null}
+      {client.isVerified && !(client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0) && client.clientAddressOption === "Has Address" ? <ConnectedButtonFavorite client={client} /> : null}
         <h3 className="profile-username text-center">
           {client.name}
           {client.postNominalLetters ? (
@@ -75,6 +75,7 @@ const ClientsDetailLeft = ({ client }) => (
     </div>
     <ConnectedClientsAddress
       clientContactDetails={client.clientContactDetails}
+      clientAddressOption={client.clientAddressOption}
     />
   </>
 );

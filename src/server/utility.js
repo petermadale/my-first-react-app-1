@@ -172,6 +172,7 @@ export async function assembleUserState(user) {
             firstName: 1,
             lastName: 1,
             location: 1,
+            otherLocation: 1,
             officePhoneNumber: 1,
             cellPhoneNumber: 1,
             email: 1,

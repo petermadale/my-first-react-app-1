@@ -77,7 +77,13 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                   ) : null}
                   {client.clientContactDetailsSuggestions.length >
                   0 ? (
+                    <Link
+                      to={`/client/${client.id}/true`}
+                      id={client.id}
+                      className="btn btn-link m-0 p-0 btn-sm"
+                    >
                     <span className="badge badge-danger right mr-2">Pending Address Suggestion</span>
+                    </Link>
                   ) : null}
                 </b>
 
@@ -117,6 +123,16 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                 <b>
                   <i className="fas fa-map-marker-alt mr-1"></i>{" "}
                   Address{" "}
+                  {client.clientContactDetailsSuggestions.length >
+                  0 ? (
+                    <Link
+                      to={`/client/${client.id}/true`}
+                      id={client.id}
+                      className="btn btn-link m-0 p-0 btn-sm"
+                    >
+                    <span className="badge badge-danger right mr-2">Pending Address Suggestion</span>
+                    </Link>
+                  ) : null}
                 </b>
 
                 <p className="float-right mb-0"><span className="badge badge-warning">{client.clientAddressOption}</span></p>
@@ -132,7 +148,7 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                 <p className="text-muted">
                 {client.assignedLocations.map((loc, index) => (
               <span key={loc}>
-                {loc}
+                {loc === "Others" ? client.otherLocation : loc}
                 {index + 1 === client.assignedLocations.length ? null : ", "}
               </span>
             ))}

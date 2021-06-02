@@ -160,9 +160,11 @@ const rootReducer = combineReducers({
           insuranceAccepted,
           serviceDeliveryMethod,
           assignedLocations,
+          otherLocation,
           users,
           notes,
           isVerified,
+          clientAddressOption,
           lastUpdatedBy,
           lastUpdatedDate,
         } = action.client;
@@ -187,9 +189,11 @@ const rootReducer = combineReducers({
                 insuranceAccepted,
                 serviceDeliveryMethod,
                 assignedLocations,
+                otherLocation,
                 users,
                 notes,
                 isVerified,
+                clientAddressOption,
                 lastUpdatedBy,
                 lastUpdatedDate,
               }
@@ -223,6 +227,7 @@ const rootReducer = combineReducers({
           return action.clientContact.client === client.id
             ? {
                 ...client,
+                clientAddressOption: "Has Address",
                 clientContactDetails: [
                   ...client.clientContactDetails,
                   { ...action.clientContact },
@@ -281,24 +286,43 @@ const rootReducer = combineReducers({
       case mutations.REMOVE_FROM_MY_FAVORITES:
         //remove isFavorite, myfave object to each client
         return clients.map(function (client) {
-          return {
-            ...client,
-            myfave: client.myfave.filter((fave) => {
-              return action.id != fave.id;
-            }),
-            clientContactDetails: client.clientContactDetails.map((contact) => {
-              return contact.id === action.clientContactDetailsID
-                ? { ...contact, isFavorite: false }
-                : contact;
-            }),
-            isFavorite:
-              client.myfave.length === 0
-                ? false
-                : client.clientContactDetails.some((fave) => {
-                    return fave.isFavorite;
-                  }),
-          };
+          return action.clientID === client.id
+            ? {
+                ...client,
+                isFavorite: false,
+                clientContactDetails: client.clientContactDetails.map(
+                  (contact) => {
+                    return contact.id === action.clientContactDetailsID
+                      ? { ...contact, isFavorite: false }
+                      : contact;
+                  }
+                ),
+                myfave: client.myfave.filter((fave) => {
+                  return action.id != fave.id;
+                }),
+              }
+            : client;
         });
+          // return {
+          //   ...client,
+          //   isFavorite: false,
+          //   myfave: client.myfave.filter((fave) => {
+          //     return action.id != fave.id;
+          //   }),
+          //   clientContactDetails: client.clientContactDetails.map((contact) => {
+          //     return contact.id === action.clientContactDetailsID
+          //       ? { ...contact, isFavorite: false }
+          //       : contact;
+          //   }),
+          //   isFavorite:
+          //     client.myfave.length === 0
+          //       ? false
+          //       : client.clientContactDetails.some((fave) => {
+          //           return fave.isFavorite;
+          //         }),
+          // };
+        // });
+
         // return clients.map(function (client) {
         //   return {
         //     ...client,
@@ -404,6 +428,19 @@ const rootReducer = combineReducers({
             : client;
         });
       }
+
+      case mutations.DELETE_ALL_CLIENT_CONTACT_DETAILS: {
+        return clients.map((client) => {
+          return client.id === action.clientData.id
+          ? {
+            ...client,
+            clientAddressOption: action.clientData.clientAddressOption,
+            clientContactDetails: []
+          } 
+          : client
+        })
+      }
+
       case mutations.SUGGEST_EDITS_TO_CLIENT_CONTACT_DETAILS:
         return clients.map(function (client) {
           return action.clientContactDetailsSuggestions.client === client.id
@@ -424,6 +461,7 @@ const rootReducer = combineReducers({
                 lastContactedBy: action.clientContactDetailsSuggestions.userid,
                 lastContactedDate: action.clientContactDetailsSuggestions.approvedDate,
                 lastContactMethod: action.clientContactDetailsSuggestions.lastContactMethod,
+                clientAddressOption: "Has Address",
                 clientContactDetails: [
                   ...client.clientContactDetails,
                   {
@@ -601,6 +639,7 @@ const rootReducer = combineReducers({
                   firstName: action.userdata.firstName,
                   lastName: action.userdata.lastName,
                   location: action.userdata.location,
+                  otherLocation: action.userdata.otherLocation,
                   officePhoneNumber: action.userdata.officePhoneNumber,
                   cellPhoneNumber: action.userdata.cellPhoneNumber,
                   email: action.userdata.email,

@@ -52,7 +52,7 @@ export const Users = ({ users, isAdmin, deleteUserAccount }) => (
                       <td>
                         {user.location.map((loc, index) => (
                           <span key={loc}>
-                            {loc}
+                            {loc === "Others" ? user.otherLocation : loc}
                             {index + 1 === user.location.length ? null : ", "}
                           </span>
                         ))}

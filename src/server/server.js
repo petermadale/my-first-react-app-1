@@ -21,6 +21,7 @@ import {
   addClientContactDetails,
   upateClientContactDetails,
   deleteClientContactDetails,
+  deleteAllClientContactDetails,
   deleteUser,
   suggestEditsClientContactDetails,
   approveClientContactDetailsSuggestion,
@@ -109,6 +110,12 @@ app.delete("/clientContactDetails/:id", async (req, res) => {
   res.sendStatus(200);
 });
 
+app.post("/clientContactDetails/deleteAll", async (req, res) => {
+  let clientData = req.body.clientData;
+  await deleteAllClientContactDetails(clientData);
+  res.status(200).send();
+});
+
 app.get("/clientContactDetailsSuggestions", async (req, res) => {
   try {
     let db = await connectDB();
@@ -165,6 +172,7 @@ app.post("/users/update", async (req, res) => {
     firstName,
     lastName,
     location,
+    otherLocation,
     officePhoneNumber,
     cellPhoneNumber,
     email,
@@ -202,6 +210,7 @@ app.post("/users/update", async (req, res) => {
       firstName,
       lastName,
       location,
+      otherLocation,
       officePhoneNumber,
       cellPhoneNumber,
       email,
@@ -215,6 +224,7 @@ app.post("/users/update", async (req, res) => {
           firstName,
           lastName,
           location,
+          otherLocation,
           officePhoneNumber,
           cellPhoneNumber,
           email,

@@ -39,9 +39,11 @@ export const updateClient = async (client) => {
       insuranceAccepted,
       serviceDeliveryMethod,
       assignedLocations,
+      otherLocation,
       users,
       notes,
       isVerified,
+      clientAddressOption,
       lastUpdatedBy,
       lastUpdatedDate,
     } = client;
@@ -70,9 +72,11 @@ export const updateClient = async (client) => {
             insuranceAccepted,
             serviceDeliveryMethod,
             assignedLocations,
+            otherLocation,
             users,
             notes,
             isVerified,
+            clientAddressOption,
             lastUpdatedBy,
             lastUpdatedDate,
           },
@@ -184,7 +188,8 @@ export const approveClientContactDetailsSuggestion = async (
       { $set: {
         lastContactedBy: clientContactDetailsSuggestions.userid, 
         lastContactedDate: clientContactDetailsSuggestions.approvedDate,
-        lastContactMethod: clientContactDetailsSuggestions.lastContactMethod
+        lastContactMethod: clientContactDetailsSuggestions.lastContactMethod,
+        clientAddressOption: "Has Address"
       }
     });
   } catch (err) {
@@ -212,6 +217,11 @@ export const addClientContactDetails = async (clientContact) => {
     if (client) {
       let collection = db.collection(`clientContactDetails`);
       await collection.insertOne(clientContact);
+      await clientCollection.updateOne({ id: clientContact.client},
+        { $set: {
+          clientAddressOption: "Has Address"
+        }
+      });
     }
   } catch (err) {
     console.log("error:".err.stack);
@@ -269,6 +279,17 @@ export const deleteClientContactDetails = async (id) => {
     let db = await connectDB();
     let collection = db.collection(`clientContactDetails`);
     await collection.deleteOne({ id: id }, (err, clients) => {});
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
+export const deleteAllClientContactDetails = async (clientData) => {
+  try {
+    let db = await connectDB();
+    let clientContactDetailsCollection = db.collection(`clientContactDetails`);
+    await updateClient(clientData);
+    await clientContactDetailsCollection.deleteMany({ client: clientData.id });
   } catch (err) {
     console.log("error:".err.stack);
   }

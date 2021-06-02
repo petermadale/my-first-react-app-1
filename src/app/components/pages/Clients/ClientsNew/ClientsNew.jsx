@@ -342,7 +342,7 @@ export const ClientsNew = ({
                   </div>
                 </div>
                 <div className="card-body">
-                  <ConnectedClientsAddressCreate />
+                  <ConnectedClientsAddressCreate isNew={true}/>
                 </div>
               </div>
               
@@ -404,10 +404,11 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
       const contactNumber = form[`contactNumber`];
       const owner = form[`owner`];
       const assignedLocations = form[`assignedLocations`];
+      const otherLocation = form[`otherLocation`];
       const users = form[`users`];
       var error_msg = [];
       const isAdmin = form[`isAdmin`].checked;
-      const clientAddressOption = form[`clientAddressOption`]; //$('input[name=clientAddress]:checked').val();
+      const clientAddressOption = form[`clientAddressOption`];
       const isVerified = isAdmin;
 
       if (name.required && name.value === "") {
@@ -491,6 +492,7 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
           insuranceAccepted: insuranceAcceptedArr,
           serviceDeliveryMethod: serviceDeliveryMethodArr,
           assignedLocations: assignedLocationsArr,
+          otherLocation: otherLocation ? otherLocation.value : null,
           users: usersArr,
           notes: form[`notes`].value,
           isVerified: isVerified,

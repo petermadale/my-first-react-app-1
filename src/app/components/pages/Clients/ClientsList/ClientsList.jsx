@@ -203,20 +203,81 @@ const mapStateToProps = (state, ownProps) => {
       .sort(compare);
     $('[data-toggle="tooltip"]').tooltip();
     const csvHeading = [
-      ["Client Name", "Email", "Contact Number", "Website", "Name of Organization", "Title", "License Number", "License Expiry Date", "Date the License was last verified", "Locations", "Notes"]
+      [
+        "Client Name", 
+        "Email", 
+        "Contact Number", 
+        "Address 1",
+        "Address 2",
+        "City",
+        "State",
+        "Zip",
+        "Office Phone #",
+        "Cell Phone #",
+        "Alt Phone #",
+        "Fax #",
+        "Website", 
+        "Name of Organization", 
+        "Title", 
+        "License Number", 
+        "License Expiry Date", 
+        "Date the License was last verified", 
+        "Locations", 
+        "Notes"
+      ]
     ];
-    var csvRow = clients.map((client) => {return [
-      client.name, 
-      client.email, 
-      client.contactNumber,
-      client.website,
-      client.nameOfOrg,
-      client.titleWithOrg,
-      client.licenseNumber,
-      client.licenseExpiryDate,
-      client.licenseLastVerifiedDate,
-      client.assignedLocations.toString(),
-      client.notes]});
+    var csvRow = [];
+    clients.forEach(function(client) {
+      if (client.clientContactDetails.length > 0) {
+        client.clientContactDetails.forEach(function(contact) {
+          csvRow.push([
+            client.name, 
+            client.email, 
+            client.contactNumber,
+            contact.address1,
+            contact.address2,
+            contact.city,
+            contact.state,
+            contact.zip,
+            contact.officePhoneNumber,
+            contact.cellPhoneNumber,
+            contact.alternativePhoneNumber,
+            contact.faxNumber,
+            client.website,
+            client.nameOfOrg,
+            client.titleWithOrg,
+            client.licenseNumber,
+            client.licenseExpiryDate,
+            client.licenseLastVerifiedDate,
+            client.assignedLocations.toString(),
+            client.notes
+          ]);
+        });
+      } else {
+        csvRow.push([
+          client.name, 
+          client.email, 
+          client.contactNumber,
+          client.clientAddressOption,
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          client.website,
+          client.nameOfOrg,
+          client.titleWithOrg,
+          client.licenseNumber,
+          client.licenseExpiryDate,
+          client.licenseLastVerifiedDate,
+          client.assignedLocations.toString(),
+          client.notes
+        ]);
+      }
+    });
     var csvData = csvHeading.concat(csvRow);
     var dtoday = new Date();
     var fileName = "ClientList-" + moment(dtoday).format("MM-DD-YYYY") + ".csv";

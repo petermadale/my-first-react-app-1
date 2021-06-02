@@ -9,8 +9,9 @@ class ClientsAddress extends Component {
 
     this.state = {
       clientContactDetails: props.clientContactDetails,
-      defaultContactDetails: props.clientContactDetails[0],
+      defaultContactDetails: props.clientContactDetails[0] ? props.clientContactDetails[0] : null,
       selectAddress: props.clientContactDetails[0],
+      clientAddressOption: props.clientAddressOption ? props.clientAddressOption : null
     };
   }
 
@@ -32,7 +33,7 @@ class ClientsAddress extends Component {
   };
 
   render() {
-    const { clientContactDetails, defaultContactDetails } = this.state;
+    const { clientContactDetails, defaultContactDetails, clientAddressOption } = this.state;
 
     return (
       <div className="card card-client-primary">
@@ -47,6 +48,9 @@ class ClientsAddress extends Component {
           </h3>
         </div>
         <div className="card-body">
+            {clientAddressOption != "Has Address" ? 
+                <p className="mb-0"><span className="badge badge-warning">{clientAddressOption}</span></p> : null}
+          {defaultContactDetails ? 
           <ul className="list-group list-group-unbordered mb-3">
             {defaultContactDetails.address1 ? (
               <li className="list-group-item">
@@ -112,6 +116,7 @@ class ClientsAddress extends Component {
               </li>
             ) : null}
           </ul>
+          : null}
           {clientContactDetails.length > 1 ? (
             <button
               type="button"

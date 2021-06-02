@@ -26,6 +26,7 @@ import {
   rejectClientContactDetailsSuggestions,
   requestRejectDeleteClientRequest,
   requestCancelDeleteClientRequest,
+  deleteAllClientContactDetails,
 } from "./sagasclients";
 
 import {
@@ -356,6 +357,44 @@ export function* clientContactDetailDeletionSaga() {
             title: alert_msg.client_address_delete_success,
           });
           history.push("/client/" + client + "/true");
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: alert_msg.server_error,
+          });
+        }
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: error.message,
+        });
+      }
+    } catch (err) {
+      Toast.fire({
+        icon: "error",
+        title: alert_msg.server_error,
+      });
+    }
+  }
+}
+
+export function* clientContactDetailDeletionAllSaga() {
+  while (true) {
+    const { clientData } = yield take(mutations.DELETE_ALL_CLIENT_CONTACT_DETAILS);
+    const { response, error } = yield call(deleteAllClientContactDetails, clientData);
+
+    try {
+      if (response) {
+        if (response.status === 200) {
+          Toast.fire({
+            icon: "success",
+            title: alert_msg.client_address_delete_success,
+          });
+          Toast.fire({
+            icon: "success",
+            title: alert_msg.client_update_success,
+          });
+          history.push("/client/" + clientData.id + "/true");
         } else {
           Toast.fire({
             icon: "error",
@@ -1009,6 +1048,7 @@ export function* userAccountModificationSaga() {
       firstName: userdata.firstName,
       lastName: userdata.lastName,
       location: userdata.location,
+      otherLocation: userdata.otherLocation,
       officePhoneNumber: userdata.officePhoneNumber,
       cellPhoneNumber: userdata.cellPhoneNumber,
       email: userdata.email,
@@ -1026,8 +1066,9 @@ export function* userAccountModificationSaga() {
           });
           var fullName = firstName + " " + lastName;
           sendFeedback(fullName, userdata.id);
-          history.push(history.location.pathname);
+          //history.push("/users");
           yield put(mutations.updateUserAccount(user));
+          history.push(history.location.pathname);
         } else {
           Toast.fire({
             icon: "error",

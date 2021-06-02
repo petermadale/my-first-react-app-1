@@ -127,7 +127,7 @@ function mapStateToProps(state, ownProps) {
   const { clients, myfavorites } = state;
 
   var myfaveclients = clients.filter((client) => {
-    return client.myfave.length>0 ? client : null;
+    return client.myfave.length > 0 ? client : null;
   });
 
 // const myfaveclients = myfavorites.map((fave) => {

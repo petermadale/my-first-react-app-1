@@ -76,6 +76,7 @@ export const UserEdit = ({
                             isDisabled={
                                 userdetails.id === "User1" ? true : false
                             }
+                            otherLocation={userdetails.otherLocation}
                           />
                         </div>
                         <div className="form-group col-md-3">
@@ -218,6 +219,7 @@ const mapDispatchToprops = (dispatch, ownProps) => {
       const firstName = form[`firstName`];
       const lastName = form[`lastName`];
       const location = form[`location`];
+      const otherLocation = form[`otherLocation`];
       const username = form[`username`];
       //   const password = form[`password`];
       var error_msg = [];
@@ -259,6 +261,7 @@ const mapDispatchToprops = (dispatch, ownProps) => {
           firstName: firstName.value,
           lastName: lastName.value,
           location: locationArr,
+          otherLocation: otherLocation ? otherLocation.value : null,
           officePhoneNumber: form[`officePhoneNumber`].value,
           cellPhoneNumber: form[`cellPhoneNumber`].value,
           email: form[`email`].value,

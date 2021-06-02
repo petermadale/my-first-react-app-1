@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 import { ConnectedInputForm } from '../../../../scripts/inputForm';
 import styles from './ClientsAddressCreate.module.css';
 
+
 class ClientsAddressCreate extends Component {
   constructor(props) {
     super();
 
     this.state = {
-      selectedAddressOption: "Has Address"
+      selectedAddressOption: props.selectedAddressOption ? props.selectedAddressOption : "Has Address",
+      isNew: props.isNew
     };
 
     this.onValueChange = this.onValueChange.bind(this);
@@ -22,25 +24,35 @@ class ClientsAddressCreate extends Component {
   }
 
   render () {
+    const { selectedAddressOption, isNew } = this.state;
+    const clientAddressOption = [
+      {id: "hasAddress", label: "Create Address", value: "Has Address", display: isNew},
+      {id: "teletherapy", label: "Teletherapy", value: "Teletherapy", display: true},
+      {id: "noPhysicalAddress", label: "No Physical Address", value: "No Physical Address", display: true},
+      {id: "dontListAddress", label: "Don't List Address", value: "Don't List Address", display: true},
+    ];
     return (
       <>
-        <div className="custom-control custom-radio custom-control-inline">
-          <input type="radio" id="hasAddress" name="clientAddressOption" className="custom-control-input" value="Has Address" defaultChecked onChange={this.onValueChange} />
-          <label className="custom-control-label" htmlFor="hasAddress">Create Address</label>
+      <div className="form-group">
+        <label>Client Address Option:</label>
+        <div>
+        {clientAddressOption.map(option => (
+          <div className={`custom-control custom-radio custom-control-inline ${!option.display ? "d-none" : ""}`} key={option.id}>
+            <input type="radio" id={option.id} name="clientAddressOption" className="custom-control-input" value={option.value} defaultChecked={selectedAddressOption === option.value} onChange={this.onValueChange} />
+            <label className="custom-control-label" htmlFor={option.id}>{option.label}</label>
+          </div>
+        ))}
         </div>
-        <div className="custom-control custom-radio custom-control-inline">
-          <input type="radio" id="teletherapy" name="clientAddressOption" className="custom-control-input" value="Teletherapy" onChange={this.onValueChange} />
-          <label className="custom-control-label" htmlFor="teletherapy">Teletherapy</label>
-        </div>
-        <div className="custom-control custom-radio custom-control-inline">
-          <input type="radio" id="noPhysicalAddress" name="clientAddressOption" className="custom-control-input" value="No Physical Address" onChange={this.onValueChange} />
-          <label className="custom-control-label" htmlFor="noPhysicalAddress">No Physical Address</label>
-        </div>
-        <div className="custom-control custom-radio custom-control-inline">
-          <input type="radio" id="dontListAddress" name="clientAddressOption" className="custom-control-input" value="Don't List Address" onChange={this.onValueChange} />
-          <label className="custom-control-label" htmlFor="dontListAddress">Don't List Address</label>
-        </div>
-        {this.state.selectedAddressOption === 'Has Address' ? 
+      </div>
+        {/* <div className="btn-group btn-group-toggle" data-toggle="buttons">
+        {clientAddressOption.map(option => (
+          <label className={`btn btn-secondary ${!option.display ? "d-none" : ""}`} key={option.id}>
+            <input type="radio" id={option.id} name="clientAddressOption" value={option.value} defaultChecked={selectedAddressOption === option.value} onChange={this.onValueChange}/> {option.label}
+          </label>
+
+        ))}
+        </div> */}
+        {selectedAddressOption === 'Has Address' && isNew ? 
           <>
           <div className="form-group">
             <ConnectedInputForm

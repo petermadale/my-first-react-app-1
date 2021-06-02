@@ -71,9 +71,10 @@ export const MeetingsNew = ({
                         selected=""
                         name="location"
                         isMulti={false}
-                        required
+                        required={clientLocations.length > 0 ? true : false}
+                        isDisabled={clientLocations.length > 0 ? false : true}
                       />
-                      {isAdmin ? <ConnectedOtherLocation /> : null }
+                      <ConnectedOtherLocation />
                     </div>
                   </div>
                   <div className="form-row">

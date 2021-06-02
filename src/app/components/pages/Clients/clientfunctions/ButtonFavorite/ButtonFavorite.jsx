@@ -225,7 +225,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     addRemoveToMyFavorites(clientID, myfave, ownerID, isFavorite, clientContactDetailsID) {
       const myfaveID = isFavorite ? uuid() : null; //move myfaveid uuid to server
       const fave = myfave.length > 0 ? myfave.find((fave) => fave.clientContactDetailsID === clientContactDetailsID) : null;
-      if (fave && fave.id) dispatch(removeFromMyFavorites(fave.id, clientContactDetailsID));
+      if (fave && fave.id) dispatch(removeFromMyFavorites(fave.id, clientContactDetailsID, clientID));
       else dispatch(addToMyFavorites(myfaveID, clientID, ownerID, isFavorite, clientContactDetailsID));
     },
   };

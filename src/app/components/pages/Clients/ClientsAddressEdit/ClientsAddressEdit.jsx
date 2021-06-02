@@ -70,7 +70,7 @@ class ClientsAddressEdit extends Component {
       <>
         <div className="card-body table-responsive p-0">
           {clientContactDetails.length > 0 ?
-          <table className="table table table-hover text-nowrap">
+          <table className="table table-sm table table-hover text-nowrap">
             <thead>
               <tr>
                 <th style={{ width: "2%" }}>#</th>
@@ -107,7 +107,7 @@ class ClientsAddressEdit extends Component {
                   <td className="text-right">
                     <button
                       type="button"
-                      className="btn btn-sm bg-gradient-success mr-2"
+                      className="btn btn-xs btn-outline-secondary mr-2"
                       data-toggle="modal"
                       data-target="#modal-edit-address"
                       onClick={() => this.onClick(contact, false)}
@@ -117,7 +117,8 @@ class ClientsAddressEdit extends Component {
                     </button>
                     {isAdmin ? (
                       <button
-                        className="btn btn-sm bg-gradient-danger"
+                        type="button"
+                        className="btn btn-xs btn-outline-danger"
                         onClick={() =>
                           deleteClientContactDetails(contact.id, contact.client)
                         }
@@ -338,17 +339,17 @@ class ClientsAddressEdit extends Component {
         <div className="card-footer text-right card-footer-client-address">
           <button
             type="button"
-            className="btn bg-gradient-info mr-2"
+            className="btn btn-sm bg-gradient-info"
             data-toggle="modal"
             data-target="#modal-edit-address"
             onClick={() => this.onClick(null, true)}
           >
             <i className="fa fa-map-marker-alt"></i> Add {clientContactDetails.length > 0 ? <span>Another</span> : <span>New</span>} Address
           </button>
-
+{/* 
           <Link to="/clients" className="btn bg-gradient-secondary">
             <i className="fa fa-angle-double-left"></i> Back to Clients
-          </Link>
+          </Link> */}
         </div>
       </>
     );
@@ -387,8 +388,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           userid: ownProps.userid,
         };
         console.log(clientContact);
-        //if (isNew) dispatch(createClientContactDetails(clientContact));
-        //else dispatch(updateClientContactDetails(clientContact));
+        if (isNew) {
+          dispatch(createClientContactDetails(clientContact));
+        } else {
+          dispatch(updateClientContactDetails(clientContact));
+        }
       } else {
         const clientContactDetailsSuggestions = {
           id: clientContactID,
@@ -409,7 +413,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           createdDate: moment(new Date()).format("YYYY-MM-DD hh:mm:ss a")
         };
         console.log(clientContactDetailsSuggestions);
-        //dispatch(suggestEditsToClientContactDetails(clientContactDetailsSuggestions));
+        dispatch(suggestEditsToClientContactDetails(clientContactDetailsSuggestions));
 
         // if (isNew) dispatch(suggestAddToClientContactDetails(clientContactDetailsSuggestions));
         // else dispatch(suggestEditsToClientContactDetails(clientContactDetailsSuggestions));
@@ -423,7 +427,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         Swal_alert.fire({
           title: "Cannot delete address.",
           icon: "warning",
-          text: "Client must have at least one address.",
+          text: "To Delete: Please select a Client Address Option then click Update button.",
         });
       } else {
         Swal_alert.fire({
