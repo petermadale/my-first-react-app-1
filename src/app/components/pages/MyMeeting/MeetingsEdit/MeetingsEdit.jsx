@@ -75,7 +75,7 @@ const MeetingsEdit = ({
                         name="location"
                         required
                       />
-                      {isAdmin ? <ConnectedOtherLocation defaultValue={mymeeting.otherLocation} /> : null }
+                      <ConnectedOtherLocation defaultValue={mymeeting.otherLocation} />
                     </div>
                   </div>
                   <div className="form-row">
@@ -242,7 +242,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         var err = attendees.placeholder + " is required.";
         error_msg.push(err);
       }
-      if ((location.required && location.value === "") || (otherLocation && otherLocation.value === "")) {
+      if ((location.required && location.value === "") && (otherLocation && otherLocation.value === "")) {
         var err = location.placeholder + " is required.";
         error_msg.push(err);
       }

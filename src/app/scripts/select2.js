@@ -35,6 +35,12 @@ class Select2 extends Component {
     if (newValue && newValue.length > this.props.maximumSelectionLength) {
       toastjs.error("Can only select up to 5 " + this.props.label + ".");
     } else {
+      var hasValue = false;
+      if (newValue && newValue.length > 0) {
+        hasValue = newValue.some((v) => v.value === "Others");
+      } else {        
+        if (newValue.value === "Others") hasValue = true;
+      }
       const selectedValues = this.props.isMulti
         ? newValue
           ? newValue.map((s) => s.value)
@@ -46,7 +52,7 @@ class Select2 extends Component {
         isEmpty: selectedValues ? false : true,
         isPristine: false,
         allregions: newValue && newValue.length < this.props.options.length ? false : true,
-        showOtherLocation: newValue && newValue.find((v) => v.value === "Others") ? true : false
+        showOtherLocation: hasValue //newValue && (newValue.find((v) => v.value === "Others") || newValue.value === "Others") ? true : false
       });
     }
   };
@@ -139,6 +145,7 @@ class Select2 extends Component {
             id="otherLocation"
             className="form-control"
             defaultValue={otherLocation}
+            disabled={isDisabled}
           />
           </>
         : null}

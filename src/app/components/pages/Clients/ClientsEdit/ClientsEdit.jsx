@@ -477,6 +477,7 @@ const mapStatetoProps = (state, ownProps) => {
 };
 
 const mapDispatchtoProps = (dispatch, ownProps) => {
+  var client = ownProps.client;
   return {
     updateClient(e) {
       e.preventDefault();
@@ -553,7 +554,7 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
           lastUpdatedDate: moment(new Date()).format("YYYY-MM-DD hh:mm:ss a")
         };
         console.log(clientData);
-        if (clientData.clientAddressOption != "Has Address") {
+        if (clientData.clientAddressOption != "Has Address" && client.clientContactDetails.length > 0) {
           var $html = "<b><i>Changing Client Address option to <span class='bg-warning text-dark rounded pl-2 pr-2'>" + clientData.clientAddressOption + "</span> will remove all the address(es) attached to this client.</i></b>";
           Swal_alert.fire({
             title: "Do you want to proceed?",
