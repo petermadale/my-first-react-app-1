@@ -217,7 +217,7 @@ const rootReducer = combineReducers({
             ...clients,
             {
               ...action.client,
-              clientContactDetails: [action.clientContact],
+              clientContactDetails: action.clientContact ? [action.clientContact] : [],
               clientContactDetailsSuggestions: [],
             },
           ];
@@ -873,7 +873,7 @@ const rootReducer = combineReducers({
             ...clientSuggestions,
             {
               ...action.client,
-              clientContactDetails: [action.clientContact],
+              clientContactDetails: action.clientContact ? [action.clientContact] : [],
               clientContactDetailsSuggestions: [],
             },
           ];

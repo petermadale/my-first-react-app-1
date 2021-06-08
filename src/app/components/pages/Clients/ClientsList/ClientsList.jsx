@@ -26,7 +26,8 @@ class ClientsList extends PureComponent {
             getClients: props.getClients,
             owner: props.owner,
             csvData: props.csvData,
-            fileName: props.fileName
+            fileName: props.fileName,
+            isSort: false
         }
     }
     
@@ -34,7 +35,10 @@ class ClientsList extends PureComponent {
       const {value} = event.target;
       const {clients} = this.state;
       let newSortedClients = [];
-    this.setState({selectedLocation: value})
+    this.setState({
+      selectedLocation: value,
+      isSort: true
+    })
     clients.map((client) => {
         client.assignedLocations.map((loc) => {
             if(loc === value) newSortedClients.push(client)
@@ -52,14 +56,18 @@ class ClientsList extends PureComponent {
           locations, 
           selectedLocation, 
           sortedClients, 
-          clients, 
+          //clients, 
           isAdmin, 
           requestDeleteClient, 
           owner, 
           getClients, 
           csvData,
-          fileName
+          fileName,
+          isSort
         } = this.state;
+        const {clients} = this.props;
+        
+        //this.setState({sortedClients : this.props.clients});
 
         return (
             <>
@@ -163,7 +171,7 @@ class ClientsList extends PureComponent {
             </section>
         
             <section className="content">
-                {sortedClients.length > 0 ? (
+              {isSort ? <>{sortedClients.length > 0 ? (
                   <div className="row d-flex align-items-stretch">              
                       {sortedClients.map((client) => (
                       <ConnectedClient client={client} key={client.id} isAdmin={isAdmin} requestDeleteClient={requestDeleteClient} owner={owner} />
@@ -176,7 +184,25 @@ class ClientsList extends PureComponent {
                       No clients found.
                     </h5>
                   </div>
+                )}</> : 
+                <>
+                {clients.length > 0 ? (
+                  <div className="row d-flex align-items-stretch">              
+                      {clients.map((client) => (
+                      <ConnectedClient client={client} key={client.id} isAdmin={isAdmin} requestDeleteClient={requestDeleteClient} owner={owner} />
+                      ))}
+                  </div>
+                ) : (
+                  <div className="alert alert-warning">
+                    <h5>
+                      <i className="icon fas fa-exclamation-triangle"></i>
+                      No clients found.
+                    </h5>
+                  </div>
                 )}
+                </>
+              } 
+                
             </section>
           </>
         )

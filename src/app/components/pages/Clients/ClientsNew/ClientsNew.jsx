@@ -500,7 +500,7 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
         };
         // console.log(clientData);
         var clientContactData = null;
-        if (clientAddressOption.value === 'hasAddress') {
+        if (clientAddressOption.value === 'Has Address') {
           const clientContactID = uuid();
           clientContactData = {
             id: clientContactID,
