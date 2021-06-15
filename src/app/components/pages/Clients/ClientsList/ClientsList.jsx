@@ -294,9 +294,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
       requestDeleteClient(client, isAdmin, owner) {
         console.log(isAdmin);
-        const $html = isAdmin ? "<b><i>All address(es) attached to this client will also be removed from the database.</i></b>" : "<b><i>All address(es) attached to this client will also be removed from the database.</i></b><br>      <span className='badge bg-warning text-dark'>Important NOTE: Delete request will be pending Admin approval.</span>";
+        const $html = isAdmin ? "<b><i>All address(es), note(s) and meetings attached to this client will also be removed from the database.  Proceed?</i></b>" : "<b><i>All address(es), note(s) and meetings attached to this client will also be removed from the database.  Proceed?</i></b><br>      <span className='badge bg-warning text-dark'>Important NOTE: Delete request will be pending Admin approval.</span>";
         Swal_alert.fire({
-          title: "Are you sure?",
+          title: "Warning!",
           html: $html,
           icon: "warning",
           showCancelButton: true,

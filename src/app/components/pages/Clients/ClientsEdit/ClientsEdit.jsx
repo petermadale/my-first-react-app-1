@@ -423,13 +423,13 @@ export const ClientsEdit = ({
                 </button>
             : null}
             {isAdmin || client.isVerified ? <button type="submit" className="btn bg-gradient-success mr-2">
-              <i className="fas fa-save"></i> Update
+              <i className="fas fa-save"></i> Update Client
             </button> : null}
             {isAdmin || client.isVerified ?
             <button type="button" className="btn bg-gradient-danger mr-2"
                   disabled={`${!isAdmin && client.clientsDeleteRequest && client.clientsDeleteRequest.length > 0 ? "disabled" : ""}`}
                   onClick={() => requestDeleteClient(client, isAdmin, userid)}>
-              <i className="fas fa-trash"></i> Delete
+              <i className="fas fa-trash"></i> Delete Client
             </button> : null}
             {/* <Link to="/clients" className="btn bg-gradient-danger">
               <i className="fas fa-times-circle"></i> Cancel
@@ -636,7 +636,7 @@ const mapDispatchtoProps = (dispatch, ownProps) => {
     },    
     requestDeleteClient(client, isAdmin, owner) {
         console.log(isAdmin);
-        const $html = isAdmin ? "<b><i>All address(es) attached to this client will also be removed from the database.</i></b>" : "<b><i>All address(es) attached to this client will also be removed from the database.</i></b><br>      <span class='badge bg-warning text-dark'>Important NOTE: Delete request will be pending Admin approval.</span>";
+        const $html = isAdmin ? "<b><i>All address(es), note(s) and meetings attached to this client will also be removed from the database.  Proceed?</i></b>" : "<b><i>All address(es), note(s) and meetings attached to this client will also be removed from the database.  Proceed?</i></b><br>      <span className='badge bg-warning text-dark'>Important NOTE: Delete request will be pending Admin approval.</span>";
         Swal_alert.fire({
           title: "Are you sure?",
           html: $html,

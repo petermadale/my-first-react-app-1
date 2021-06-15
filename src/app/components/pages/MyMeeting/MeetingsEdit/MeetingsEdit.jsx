@@ -178,13 +178,16 @@ const mapStateToProps = (state, ownProps) => {
     mymeeting = JSON.parse(
       JSON.stringify(state.mymeetings.find((meeting) => meeting.id === id))
     );
-    mymeeting.attendees = mymeeting.attendees.map((m) => {
-      const { firstName, lastName } = state.users.find(
-        (user) => m === user.id
-      );
-      const name = firstName + " " + lastName;
-      return { value: m, label: name };
-    });
+    if (mymeeting.attendees) 
+    {
+        mymeeting.attendees = mymeeting.attendees.map((m) => {
+            const { firstName, lastName } = state.users.find(
+              (user) => m === user.id
+            );
+            const name = firstName + " " + lastName;
+            return { value: m, label: name };
+          });
+    } 
     // mymeeting.location = mymeeting.location.map((loc) => {
     //   return { value: loc, label: loc };
     // });
@@ -238,27 +241,44 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const client = form[`client`];
       var error_msg = [];
 
-      if (attendees.required && attendees.value === "") {
-        var err = attendees.placeholder + " is required.";
-        error_msg.push(err);
-      }
-      if ((location.required && location.value === "") && (otherLocation && otherLocation.value === "")) {
-        var err = location.placeholder + " is required.";
-        error_msg.push(err);
-      }
+      if (attendeesMore) {
+        if (attendeesMore.value === "") {
+            var err = attendeesMore.placeholder + " is required.";
+            error_msg.push(err);
+        }
+    } 
+    if (!attendeesMore) {
+        if (attendees.required && attendees.value === "") {
+            var err = attendees.placeholder + " is required.";
+            error_msg.push(err);
+        }
+    } 
 
+    if (otherLocation) {
+        if (otherLocation.value === "") {
+            var err = otherLocation.placeholder + " is required.";
+            error_msg.push(err);
+        }
+    }
+
+    if (!otherLocation) {
+        if (location.required && location.value === "") {
+          var err = location.placeholder + " is required.";
+          error_msg.push(err);
+        }
+    }
 
       if (error_msg.length > 0) {
         error_msg.forEach(function (e) {
           toastjs.error(e);
         });
       } else {
-        var attendeesArr = attendees.value;
-        attendeesArr = attendeesArr.split(",");
         var locationArr = otherLocation && otherLocation.value ? null : location.value;
         //locationArr = otherLocation.value ? null : locationArr.split(",");
         var otherLoc = otherLocation ? otherLocation.value : null;
 
+        var attendeesArr = attendeesMore && attendeesMore.value ? null : attendees.value;
+        attendeesArr = attendeesArr ? attendeesArr.split(",") : null;
         var attendeesMoreVal = attendeesMore ? attendeesMore.value : null;
 
         let dateModified = new Date();

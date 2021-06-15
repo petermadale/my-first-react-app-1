@@ -38,15 +38,15 @@ export const Meeting = ({meetings, dtoday, isAdmin}) => (
             <ConnectedUsernameDisplay id={meeting.owner} />
           </td>
           <td>
-            {meeting.attendees.map((a, index) => (
+              {meeting.attendees ? meeting.attendees.map((a, index) => (
               <span key={a}>
                 <ConnectedUsernameDisplay id={a} />
                 {index + 1 === meeting.attendees.length ? null : ", "}
               </span>
-            ))}
+            )) : null}
             {meeting.attendeesMore ? (
               <>
-                {", "}
+                {meeting.attendees ? ", " : null}
                 {meeting.attendeesMore}
               </>
             ) : null}

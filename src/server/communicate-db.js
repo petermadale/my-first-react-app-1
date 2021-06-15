@@ -90,7 +90,7 @@ export const updateClient = async (client) => {
 
 export const verifyClient = async (data) => {
   try {
-    const {id, userid, approvedDate, lastContactMethod} = data;
+    const { id, userid, approvedDate, lastContactMethod } = data;
     let db = await connectDB();
     let collection = db.collection(`clients`);
     if (id) {
@@ -99,9 +99,9 @@ export const verifyClient = async (data) => {
         {
           $set: {
             isVerified: true,
-            lastContactedBy: userid, 
+            lastContactedBy: userid,
             lastContactedDate: approvedDate,
-            lastContactMethod: lastContactMethod
+            lastContactMethod: lastContactMethod,
           },
         }
       );
@@ -118,13 +118,19 @@ export const deleteClient = async (id) => {
     await collection.deleteOne({ id: id }, (err, clients) => {});
 
     let clientContactCollection = db.collection(`clientContactDetails`);
-    await clientContactCollection.deleteOne(
+    await clientContactCollection.deleteMany(
       { client: id },
       (err, clients) => {}
     );
 
     let clientsDeleteRequest = db.collection(`clientsDeleteRequest`);
     await clientsDeleteRequest.deleteOne({ client: id }, (err, clients) => {});
+
+    let personalNotes = db.collection(`personalnotes`);
+    await personalNotes.deleteMany({ client: id }, (err, clients) => {});
+
+    let myMeetings = db.collection(`mymeetings`);
+    await myMeetings.deleteMany({ client: id }, (err, clients) => {});
   } catch (err) {
     console.log("error:".err.stack);
   }
@@ -184,14 +190,17 @@ export const approveClientContactDetailsSuggestion = async (
     await collection_contact_suggestion.deleteOne({
       id: clientContactDetailsSuggestions.id,
     });
-    await collection_clients.updateOne({id: clientContactDetailsSuggestions.client}, 
-      { $set: {
-        lastContactedBy: clientContactDetailsSuggestions.userid, 
-        lastContactedDate: clientContactDetailsSuggestions.approvedDate,
-        lastContactMethod: clientContactDetailsSuggestions.lastContactMethod,
-        clientAddressOption: "Has Address"
+    await collection_clients.updateOne(
+      { id: clientContactDetailsSuggestions.client },
+      {
+        $set: {
+          lastContactedBy: clientContactDetailsSuggestions.userid,
+          lastContactedDate: clientContactDetailsSuggestions.approvedDate,
+          lastContactMethod: clientContactDetailsSuggestions.lastContactMethod,
+          clientAddressOption: "Has Address",
+        },
       }
-    });
+    );
   } catch (err) {
     console.error("error:", err.stack);
   }
@@ -217,11 +226,14 @@ export const addClientContactDetails = async (clientContact) => {
     if (client) {
       let collection = db.collection(`clientContactDetails`);
       await collection.insertOne(clientContact);
-      await clientCollection.updateOne({ id: clientContact.client},
-        { $set: {
-          clientAddressOption: "Has Address"
+      await clientCollection.updateOne(
+        { id: clientContact.client },
+        {
+          $set: {
+            clientAddressOption: "Has Address",
+          },
         }
-      });
+      );
     }
   } catch (err) {
     console.log("error:".err.stack);
@@ -403,7 +415,10 @@ export const updatePersonalNotes = async (personalnote) => {
     let db = await connectDB();
     let collection = db.collection(`personalnotes`);
     if (id) {
-      await collection.updateOne({ id }, { $set: { note, datetimeupdated, isVerified } });
+      await collection.updateOne(
+        { id },
+        { $set: { note, datetimeupdated, isVerified } }
+      );
     }
   } catch (err) {
     console.log("error:".err.stack);
@@ -424,19 +439,26 @@ export const deletePersonalNote = async (id) => {
 export const verifyPersonalNote = async (notedata) => {
   try {
     console.log(notedata);
-    let { id, isVerified, approvedDate, client, lastContactMethod, owner } = notedata;
+    let { id, isVerified, approvedDate, client, lastContactMethod, owner } =
+      notedata;
     let db = await connectDB();
     let collection = db.collection(`personalnotes`);
     if (id) {
       let collection_clients = db.collection(`clients`);
-      await collection.updateOne({ id }, { $set: { isVerified, approvedDate } });
-      await collection_clients.updateOne({id: client}, 
-        { $set: {
-          lastContactedBy: owner, 
-          lastContactedDate: approvedDate,
-          lastContactMethod: lastContactMethod
+      await collection.updateOne(
+        { id },
+        { $set: { isVerified, approvedDate } }
+      );
+      await collection_clients.updateOne(
+        { id: client },
+        {
+          $set: {
+            lastContactedBy: owner,
+            lastContactedDate: approvedDate,
+            lastContactMethod: lastContactMethod,
+          },
         }
-      });
+      );
     }
   } catch (err) {
     console.log("error");

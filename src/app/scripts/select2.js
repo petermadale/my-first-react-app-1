@@ -27,7 +27,7 @@ class Select2 extends Component {
         : 0,
       onChange: props.onChange ? props.onChange : this.handleChange,
       otherLocation: props.otherLocation ? props.otherLocation : null,
-      showOtherLocation: props.otherLocation ? true : false
+      showOtherLocation: props.otherLocation ? true : false,
     };
   }
 
@@ -38,8 +38,8 @@ class Select2 extends Component {
       var hasValue = false;
       if (newValue && newValue.length > 0) {
         hasValue = newValue.some((v) => v.value === "Others");
-      } else {        
-        if (newValue.value === "Others") hasValue = true;
+      } else {
+        if (newValue && newValue.value === "Others") hasValue = true;
       }
       const selectedValues = this.props.isMulti
         ? newValue
@@ -51,8 +51,11 @@ class Select2 extends Component {
         selectedValues,
         isEmpty: selectedValues ? false : true,
         isPristine: false,
-        allregions: newValue && newValue.length < this.props.options.length ? false : true,
-        showOtherLocation: hasValue //newValue && (newValue.find((v) => v.value === "Others") || newValue.value === "Others") ? true : false
+        allregions:
+          newValue && newValue.length < this.props.options.length
+            ? false
+            : true,
+        showOtherLocation: hasValue, //newValue && (newValue.find((v) => v.value === "Others") || newValue.value === "Others") ? true : false
       });
     }
   };
@@ -95,7 +98,7 @@ class Select2 extends Component {
       allregions,
       isDisabled,
       showOtherLocation,
-      otherLocation
+      otherLocation,
     } = this.state;
     return (
       <>
@@ -133,22 +136,20 @@ class Select2 extends Component {
             </label>
           </small>
         ) : null}
-        {showOtherLocation ? 
-          <>          
-          <label htmlFor="otherLocation">
-            Other Location
-          </label>
-          <input
-            type="text"
-            placeholder="Other Location"
-            name="otherLocation"
-            id="otherLocation"
-            className="form-control"
-            defaultValue={otherLocation}
-            disabled={isDisabled}
-          />
+        {showOtherLocation ? (
+          <>
+            <label htmlFor="otherLocation">Other Location</label>
+            <input
+              type="text"
+              placeholder="Other Location"
+              name="otherLocation"
+              id="otherLocation"
+              className="form-control"
+              defaultValue={otherLocation}
+              disabled={isDisabled}
+            />
           </>
-        : null}
+        ) : null}
         <input
           type="hidden"
           id={name}
