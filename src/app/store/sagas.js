@@ -193,8 +193,8 @@ export function* clientDeletionSaga() {
               icon: "success",
               title: alert_msg.client_delete_success,
             });
-            history.push("/clients");
             yield put(mutations.deleteClient(client, isAdmin, owner));
+            history.push("/clients");
           } else {
             Toast.fire({
               icon: "error",
