@@ -65,6 +65,7 @@ export const SAVE_MEETING = `SAVE_MEETING`;
 export const PROCESSING_EDIT_MEETING = `PROCESSING_EDIT_MEETING`;
 export const EDIT_MEETING = `EDIT_MEETING`;
 export const DELETE_MEETING = `DELETE_MEETING`;
+export const ON_DELETE_MEETING = `ON_DELETE_MEETING`;
 export const PROCESS_VERIFY_MEETING = `PROCESS_VERIFY_MEETING`;
 export const VERIFY_MEETING = `VERIFY_MEETING`;
 
@@ -351,6 +352,11 @@ export const deleteMeeting = (id) => ({
   type: DELETE_MEETING,
   id,
 });
+
+export const onDeleteMeeting = (id) => ({
+    type: ON_DELETE_MEETING,
+    id
+})
 
 //TODO for dashboard client suggestions
 export const fetchClientSuggestionsPending = () => ({

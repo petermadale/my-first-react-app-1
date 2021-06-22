@@ -1236,7 +1236,7 @@ export function* editMeetingSaga() {
 
 export function* deleteMeetingSaga() {
   while (true) {
-    const { id } = yield take(mutations.DELETE_MEETING);
+    const { id } = yield take(mutations.ON_DELETE_MEETING);
 
     const { response, error } = yield call(deleteMeeting, id);
     try {
@@ -1247,6 +1247,7 @@ export function* deleteMeetingSaga() {
             title: alert_msg.meeting_delete_success,
           });
           history.push("/my-meetings");
+          yield put(mutations.deleteMeeting(id));
         } else {
           Toast.fire({
             icon: "error",
