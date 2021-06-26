@@ -56,10 +56,13 @@ const MeetingsEdit = ({
                                                 name="attendees"
                                                 isMulti={true}
                                                 required
+                                                isDisabled={isAdmin ? false : true}
                                             />
-                                            {isAdmin ? <ConnectedAddMoreAttendee
+                                            <ConnectedAddMoreAttendee
                                                 defaultValue={mymeeting.attendeesMore}
-                                            /> : null}
+                                                isDisabled={isAdmin ? false : true}
+                                                isAdmin={isAdmin}
+                                            />
                                             {/* <ConnectedInputForm
                         label="People attending meeting"
                         type="text"
@@ -74,8 +77,9 @@ const MeetingsEdit = ({
                                                 selected={mymeeting.location}
                                                 name="location"
                                                 required
+                                                isDisabled={isAdmin ? false : true}
                                             />
-                                            <ConnectedOtherLocation defaultValue={mymeeting.otherLocation} />
+                                            <ConnectedOtherLocation defaultValue={mymeeting.otherLocation} isAdmin={isAdmin} />
                                         </div>
                                     </div>
                                     <div className="form-row">
@@ -85,6 +89,7 @@ const MeetingsEdit = ({
                                                 type="date"
                                                 nameid="dateOfMeeting"
                                                 defaultValue={mymeeting.dateOfMeeting}
+                                                isDisabled={isAdmin ? false : true}
                                             />
                                         </div>
                                         <div className="form-group col-md-6">
@@ -93,6 +98,7 @@ const MeetingsEdit = ({
                                                 type="time"
                                                 nameid="timeOfMeeting"
                                                 defaultValue={mymeeting.timeOfMeeting}
+                                                isDisabled={isAdmin ? false : true}
                                             />
                                         </div>
                                     </div>
@@ -105,6 +111,7 @@ const MeetingsEdit = ({
                                                 placeholder="Pre-meeting Notes"
                                                 name="preMeetingNotes"
                                                 defaultValue={mymeeting.preMeetingNotes}
+                                                disabled={isAdmin ? false : true}
                                             ></textarea>
                                         </div>
                                         <div className="form-group col-md-6">
@@ -117,6 +124,7 @@ const MeetingsEdit = ({
                                                 placeholder="During/After Meeting Notes"
                                                 name="duringAfterMeetingNotes"
                                                 defaultValue={mymeeting.duringAfterMeetingNotes}
+                                                disabled={isAdmin ? false : true}
                                             ></textarea>
                                         </div>
                                     </div>
@@ -149,7 +157,7 @@ const MeetingsEdit = ({
                                     >
                                         <i className="fas fa-thumbs-up"></i> Verify
                                     </button> : null}
-                                    <button
+                                    {isAdmin ? <><button
                                         type="submit"
                                         className="btn bg-gradient-success mr-2"
                                     >
@@ -160,7 +168,7 @@ const MeetingsEdit = ({
                                         className="btn bg-gradient-danger mr-2"
                                         onClick={() => deleteMeeting(mymeeting.id)}>
                                         <i className="fas fa-trash"></i> Delete
-                                    </button>
+                                    </button></> : null}
 
                                     <Link to="/my-meetings" className="btn bg-gradient-secondary">
                                         <i className="fas fa-angle-double-left"></i> Back to My Meetings

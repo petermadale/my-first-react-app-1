@@ -8,6 +8,8 @@ class AddMoreAttendee extends Component {
     this.state = {
       showMoreAttendee: props.defaultValue ? true : false,
       defaultValue: props.defaultValue ? props.defaultValue : null,
+      isDisabled: props.isDisabled ? props.isDisabled : false,
+      isAdmin: props.isAdmin ? props.isAdmin : false
     };
   }
 
@@ -19,7 +21,7 @@ class AddMoreAttendee extends Component {
   };
 
   render() {
-    const { showMoreAttendee, defaultValue } = this.state;
+    const { showMoreAttendee, defaultValue, isDisabled, isAdmin } = this.state;
     return (
       <>
         {showMoreAttendee ? (
@@ -32,24 +34,25 @@ class AddMoreAttendee extends Component {
                 id="attendeesMore"
                 className="form-control mt-1"
                 defaultValue={defaultValue}
+                disabled={isDisabled}
               />
             </div>
-            <button
+            {isAdmin ? <button
               type="button"
               className="btn btn-sm bg-gradient-danger mt-1"
               onClick={() => this.handleClick()}
             >
               <i className="fa fa-trash"></i> Remove
-            </button>
+            </button> : null }
           </>
         ) : (
-          <button
+          <>{isAdmin ? <button
             type="button"
             className="btn btn-sm bg-gradient-primary mt-1"
             onClick={() => this.handleClick()}
           >
             <i className="fa fa-plus-circle"></i> Add More Attendee
-          </button>
+          </button> : null}</>
         )}
       </>
     );

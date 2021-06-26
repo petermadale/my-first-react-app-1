@@ -8,6 +8,7 @@ class OtherLocation extends Component {
       this.state = {
         showOtherLoc: props.defaultValue ? true : false,
         defaultValue: props.defaultValue ? props.defaultValue : "",
+        isAdmin: props.isAdmin ? props.isAdmin : false
       };
     }
   
@@ -19,7 +20,7 @@ class OtherLocation extends Component {
     };
   
     render() {
-      const { showOtherLoc, defaultValue } = this.state;
+      const { showOtherLoc, defaultValue, isAdmin } = this.state;
       return (
         <>
           {showOtherLoc ? (
@@ -32,15 +33,16 @@ class OtherLocation extends Component {
                     id="otherLocation"
                     className="form-control mt-1"
                     defaultValue={defaultValue}
+                    disabled={isAdmin ? false : true}
                 />
               </div>
-              <button
+              {isAdmin ? <button
                 type="button"
                 className="btn btn-sm bg-gradient-danger mt-1"
                 onClick={() => this.handleClick()}
               >
                 <i className="fa fa-trash"></i> Remove
-              </button>
+              </button> : null}
             </>
           ) : (
             <button
