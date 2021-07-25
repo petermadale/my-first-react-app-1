@@ -184,9 +184,9 @@ export const ClientsEdit = ({
                       required
                       isMulti
                       isDisabled={isAdmin ? false : true}
-                      selected={client.users.map((d) => {
+                      selected={client.users ? client.users.map((d) => {
                       return { value: d, label: d };
-                      })}
+                      }) : null}
                       options={users.map((d) => {
                       return {
                           ...d,

@@ -31,6 +31,7 @@ import {
   editMeeting,
   verifyMeeting,
   deleteMeeting,
+  uploadClients,
 } from "./communicate-db";
 import { updateClientContactDetails } from "../app/store/mutations";
 
@@ -68,7 +69,7 @@ app.post("/clients/update", async (req, res) => {
 });
 
 app.post("/clients/verify", async (req, res) => {
-  //let id = req.body.id;  
+  //let id = req.body.id;
   let data = req.body.data;
   await verifyClient(data);
   res.status(200).send();
@@ -78,6 +79,12 @@ app.post("/clients/new", async (req, res) => {
   let client = req.body.client;
   await addClient(client);
   res.status(200).send({ id: client.id });
+});
+
+app.post("/clients/upload", async (req, res) => {
+  let { clientData, clientContactData } = req.body;
+  await uploadClients(clientData, clientContactData);
+  res.sendStatus(200);
 });
 
 app.delete("/clients/:id", async (req, res) => {

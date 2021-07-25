@@ -217,11 +217,37 @@ const rootReducer = combineReducers({
             ...clients,
             {
               ...action.client,
-              clientContactDetails: action.clientContact ? [action.clientContact] : [],
+              clientContactDetails: action.clientContact
+                ? [action.clientContact]
+                : [],
               clientContactDetailsSuggestions: [],
             },
           ];
         }
+      case mutations.CREATE_CLIENT_CONTACT_DETAILS:
+        return clients.map(function (client) {
+          return action.clientContact.client === client.id
+            ? {
+                ...client,
+                clientAddressOption: "Has Address",
+                clientContactDetails: [
+                  ...client.clientContactDetails,
+                  { ...action.clientContact },
+                ],
+              }
+            : client;
+        });
+      case mutations.UPLOAD_CLIENTS:
+        return [
+          ...clients,
+          ...action.clientData.map(function (cd) {
+            return {
+              ...cd,
+              myfave: [],
+              personalnotes: [],
+            };
+          }),
+        ];
       case mutations.CREATE_CLIENT_CONTACT_DETAILS:
         return clients.map(function (client) {
           return action.clientContact.client === client.id
@@ -303,65 +329,65 @@ const rootReducer = combineReducers({
               }
             : client;
         });
-          // return {
-          //   ...client,
-          //   isFavorite: false,
-          //   myfave: client.myfave.filter((fave) => {
-          //     return action.id != fave.id;
-          //   }),
-          //   clientContactDetails: client.clientContactDetails.map((contact) => {
-          //     return contact.id === action.clientContactDetailsID
-          //       ? { ...contact, isFavorite: false }
-          //       : contact;
-          //   }),
-          //   isFavorite:
-          //     client.myfave.length === 0
-          //       ? false
-          //       : client.clientContactDetails.some((fave) => {
-          //           return fave.isFavorite;
-          //         }),
-          // };
-        // });
+      // return {
+      //   ...client,
+      //   isFavorite: false,
+      //   myfave: client.myfave.filter((fave) => {
+      //     return action.id != fave.id;
+      //   }),
+      //   clientContactDetails: client.clientContactDetails.map((contact) => {
+      //     return contact.id === action.clientContactDetailsID
+      //       ? { ...contact, isFavorite: false }
+      //       : contact;
+      //   }),
+      //   isFavorite:
+      //     client.myfave.length === 0
+      //       ? false
+      //       : client.clientContactDetails.some((fave) => {
+      //           return fave.isFavorite;
+      //         }),
+      // };
+      // });
 
-        // return clients.map(function (client) {
-        //   return {
-        //     ...client,
-        //     myfave: client.myfave.filter((fave) => {
-        //       return action.id != fave.id;
-        //     }),
-        //     clientContactDetails: client.clientContactDetails.map((contact) => {
-        //       return contact.id === action.clientContactDetailsID
-        //         ? { ...contact, isFavorite: false }
-        //         : contact;
-        //     }),
-        //     isFavorite:
-        //       client.myfave.length === 0
-        //         ? false
-        //         : client.clientContactDetails.some((fave) => {
-        //             return fave.isFavorite;
-        //           }),
-        //   };
-          //   if (client.myfave) {
-          //     return action.id === client.myfave.id
-          //       ? {
-          //           ...client,
-          //           myfave: client.myfave.filter((fave) => {
-          //             action.id != fave.id
-          //           }),
-          //           clientContactDetails: client.clientContactDetails.map(
-          //             (contact) => {
-          //               return contact.id === action.clientContactDetailsID
-          //                 ? { ...contact, isFavorite: false }
-          //                 : contact;
-          //             }
-          //           ),
-          //           isFavorite: false,
-          //           myfave: null,
-          //         }
-          //       : client;
-          //   }
-          //return client;
-        
+      // return clients.map(function (client) {
+      //   return {
+      //     ...client,
+      //     myfave: client.myfave.filter((fave) => {
+      //       return action.id != fave.id;
+      //     }),
+      //     clientContactDetails: client.clientContactDetails.map((contact) => {
+      //       return contact.id === action.clientContactDetailsID
+      //         ? { ...contact, isFavorite: false }
+      //         : contact;
+      //     }),
+      //     isFavorite:
+      //       client.myfave.length === 0
+      //         ? false
+      //         : client.clientContactDetails.some((fave) => {
+      //             return fave.isFavorite;
+      //           }),
+      //   };
+      //   if (client.myfave) {
+      //     return action.id === client.myfave.id
+      //       ? {
+      //           ...client,
+      //           myfave: client.myfave.filter((fave) => {
+      //             action.id != fave.id
+      //           }),
+      //           clientContactDetails: client.clientContactDetails.map(
+      //             (contact) => {
+      //               return contact.id === action.clientContactDetailsID
+      //                 ? { ...contact, isFavorite: false }
+      //                 : contact;
+      //             }
+      //           ),
+      //           isFavorite: false,
+      //           myfave: null,
+      //         }
+      //       : client;
+      //   }
+      //return client;
+
       case mutations.CLIENT_CONTACT_TOGGLE_EDIT:
         return clients.map(function (client) {
           return action.clientID === client.id
@@ -432,13 +458,13 @@ const rootReducer = combineReducers({
       case mutations.DELETE_ALL_CLIENT_CONTACT_DETAILS: {
         return clients.map((client) => {
           return client.id === action.clientData.id
-          ? {
-            ...client,
-            clientAddressOption: action.clientData.clientAddressOption,
-            clientContactDetails: []
-          } 
-          : client
-        })
+            ? {
+                ...client,
+                clientAddressOption: action.clientData.clientAddressOption,
+                clientContactDetails: [],
+              }
+            : client;
+        });
       }
 
       case mutations.SUGGEST_EDITS_TO_CLIENT_CONTACT_DETAILS:
@@ -459,8 +485,10 @@ const rootReducer = combineReducers({
             ? {
                 ...client,
                 lastContactedBy: action.clientContactDetailsSuggestions.userid,
-                lastContactedDate: action.clientContactDetailsSuggestions.approvedDate,
-                lastContactMethod: action.clientContactDetailsSuggestions.lastContactMethod,
+                lastContactedDate:
+                  action.clientContactDetailsSuggestions.approvedDate,
+                lastContactMethod:
+                  action.clientContactDetailsSuggestions.lastContactMethod,
                 clientAddressOption: "Has Address",
                 clientContactDetails: [
                   ...client.clientContactDetails,
@@ -469,13 +497,12 @@ const rootReducer = combineReducers({
                     id: action.clientContactDetailsSuggestions.newID,
                   },
                 ],
-                clientContactDetailsSuggestions: client.clientContactDetailsSuggestions.filter(
-                  (suggest) => {
+                clientContactDetailsSuggestions:
+                  client.clientContactDetailsSuggestions.filter((suggest) => {
                     return (
                       action.clientContactDetailsSuggestions.id !== suggest.id
                     );
-                  }
-                ),
+                  }),
               }
             : client;
         });
@@ -485,11 +512,10 @@ const rootReducer = combineReducers({
           return action.clientID === client.id
             ? {
                 ...client,
-                clientContactDetailsSuggestions: client.clientContactDetailsSuggestions.filter(
-                  (suggest) => {
+                clientContactDetailsSuggestions:
+                  client.clientContactDetailsSuggestions.filter((suggest) => {
                     return action.id !== suggest.id;
-                  }
-                ),
+                  }),
               }
             : client;
         });
@@ -526,7 +552,7 @@ const rootReducer = combineReducers({
                         note: action.personalnote.note,
                         datetimeupdated: action.personalnote.datetimeupdated,
                         toggleEdit: false,
-                        isVerified: action.personalnote.isVerified
+                        isVerified: action.personalnote.isVerified,
                       }
                     : pnote;
                 }),
@@ -673,6 +699,10 @@ const rootReducer = combineReducers({
         return myfavorites.filter((myfave) => {
           return myfave.id !== action.id;
         });
+      case mutations.DELETE_CLIENT:
+        return myfavorites.filter((myfave) => {
+          return myfave.client !== action.client.id;
+        });
       case mutations.LOGOUT_USER:
         return [];
     }
@@ -700,7 +730,7 @@ const rootReducer = combineReducers({
             ? {
                 ...note,
                 isVerified: action.notedata.isVerified,
-                approvedDate: action.notedata.approvedDate
+                approvedDate: action.notedata.approvedDate,
               }
             : note;
         });
@@ -773,17 +803,15 @@ const rootReducer = combineReducers({
           },
         ];
       case mutations.APPROVE_ADDRESS_SUGGESTION:
-        return (clientContactDetailsSuggestions = clientContactDetailsSuggestions.filter(
-          (suggest) => {
+        return (clientContactDetailsSuggestions =
+          clientContactDetailsSuggestions.filter((suggest) => {
             return action.clientContactDetailsSuggestions.id !== suggest.id;
-          }
-        ));
+          }));
       case mutations.REJECT_ADDRESS_SUGGESTION:
-        return (clientContactDetailsSuggestions = clientContactDetailsSuggestions.filter(
-          (suggest) => {
+        return (clientContactDetailsSuggestions =
+          clientContactDetailsSuggestions.filter((suggest) => {
             return action.id !== suggest.id;
-          }
-        ));
+          }));
     }
     return clientContactDetailsSuggestions;
   },
@@ -873,7 +901,9 @@ const rootReducer = combineReducers({
             ...clientSuggestions,
             {
               ...action.client,
-              clientContactDetails: action.clientContact ? [action.clientContact] : [],
+              clientContactDetails: action.clientContact
+                ? [action.clientContact]
+                : [],
               clientContactDetailsSuggestions: [],
             },
           ];

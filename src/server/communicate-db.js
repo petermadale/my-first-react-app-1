@@ -17,6 +17,43 @@ export const addClient = async (client) => {
   }
 };
 
+export const uploadClients = async (clientData, clientContactData) => {
+  try {
+    let db = await connectDB();
+    let collection = db.collection(`clients`);
+    //await collection.insertMany(clientData);
+    for (var x in clientData) {
+      var client = clientData[x];
+      await collection.insertOne({
+        id: client.id,
+        name: client.name,
+        email: client.email,
+        contactNumber: client.contactNumber,
+        website: client.website,
+        nameOfOrg: client.nameOfOrg,
+        titleWithOrg: client.titleWithOrg,
+        licenseNumber: client.licenseNumber,
+        licenseExpiryDate: client.licenseExpiryDate,
+        licenseLastVerifiedDate: client.date_the_license_was_last_verified,
+        assignedLocations: client.assignedLocations,
+        notes: client.notes,
+        populationsServed: client.populationsServed,
+        typesOfServices: client.typesOfServices,
+        specialties: client.specialties,
+        insuranceAccepted: client.insuranceAccepted,
+        isVerified: client.isVerified,
+        clientAddressOption: client.clientAddressOption,
+        owner: client.owner,
+      });
+    }
+
+    let collectionClientContactDetails = db.collection(`clientContactDetails`);
+    await collectionClientContactDetails.insertMany(clientContactData);
+  } catch (err) {
+    console.log("error:".err.stack);
+  }
+};
+
 export const updateClient = async (client) => {
   try {
     let {
@@ -131,6 +168,9 @@ export const deleteClient = async (id) => {
 
     let myMeetings = db.collection(`mymeetings`);
     await myMeetings.deleteMany({ client: id }, (err, clients) => {});
+
+    let myfavorites = db.collection(`myfavorites`);
+    await myfavorites.deleteMany({ client: id }, (err, clients) => {});
   } catch (err) {
     console.log("error:".err.stack);
   }
