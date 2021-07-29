@@ -123,7 +123,7 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                 <b>
                   <i className="fas fa-map-marker-alt mr-1"></i>{" "}
                   Address{" "}
-                  {client.clientContactDetailsSuggestions.length >
+                  {client.clientContactDetailsSuggestions && client.clientContactDetailsSuggestions.length >
                   0 ? (
                     <Link
                       to={`/client/${client.id}/true`}
