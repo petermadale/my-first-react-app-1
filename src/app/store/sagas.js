@@ -27,6 +27,7 @@ import {
   requestRejectDeleteClientRequest,
   requestCancelDeleteClientRequest,
   deleteAllClientContactDetails,
+  uploadClients,
 } from "./sagasclients";
 
 import {
@@ -70,7 +71,7 @@ export function* clientCreationSaga() {
         });
       }
     } else {
-      const {response, error} = yield call(createNewClient, client);
+      const { response, error } = yield call(createNewClient, client);
       if (response.status === 200) {
         Toast.fire({
           icon: "success",
@@ -85,19 +86,38 @@ export function* clientCreationSaga() {
         });
       }
     }
-    // axios.post(url + `/client/new`, {
-    //   client: {
-    //     address: client.address,
-    //     cell: client.cell,
-    //     email: client.email,
-    //     ext: client.ext,
-    //     fax: client.fax,
-    //     id: client.id,
-    //     name: client.name,
-    //     owner: client.owner,
-    //     phone: client.phone,
-    //   },
-    // });
+  }
+}
+
+export function* clientUploadSaga() {
+  while (true) {
+    const { clientData, clientContactData } = yield take(
+      mutations.PROCESSING_UPLOAD_CLIENTS
+    );
+
+    Toast.fire({
+      icon: "warning",
+      title: alert_msg.client_upload_processing,
+    });
+    const { response, error } = yield call(
+      uploadClients,
+      clientData,
+      clientContactData
+    );
+    if (response.status === 200) {
+      Toast.fire({
+        icon: "success",
+        title: alert_msg.client_upload_success,
+      });
+
+      yield put(mutations.uploadClients(clientData, clientContactData));
+      location.reload();
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: alert_msg.client_upload_success,
+      });
+    }
   }
 }
 
@@ -142,9 +162,17 @@ export function* clientModificationSaga() {
 
 export function* clientVerificationSaga() {
   while (true) {
-    const { id, userid, approvedDate, lastContactMethod } = yield take(mutations.VERIFY_CLIENT);
+    const { id, userid, approvedDate, lastContactMethod } = yield take(
+      mutations.VERIFY_CLIENT
+    );
 
-    const { response, error } = yield call(verifyClient, id, userid, approvedDate, lastContactMethod);
+    const { response, error } = yield call(
+      verifyClient,
+      id,
+      userid,
+      approvedDate,
+      lastContactMethod
+    );
     try {
       if (response) {
         if (response.status === 200) {
@@ -380,8 +408,13 @@ export function* clientContactDetailDeletionSaga() {
 
 export function* clientContactDetailDeletionAllSaga() {
   while (true) {
-    const { clientData } = yield take(mutations.DELETE_ALL_CLIENT_CONTACT_DETAILS);
-    const { response, error } = yield call(deleteAllClientContactDetails, clientData);
+    const { clientData } = yield take(
+      mutations.DELETE_ALL_CLIENT_CONTACT_DETAILS
+    );
+    const { response, error } = yield call(
+      deleteAllClientContactDetails,
+      clientData
+    );
 
     try {
       if (response) {

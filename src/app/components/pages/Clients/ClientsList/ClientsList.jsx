@@ -144,22 +144,7 @@ class ClientsList extends PureComponent {
                                           <span aria-hidden="true">&times;</span>
                                         </button>
                                       </div>
-                                      <div className="modal-body">
                                       <ConnectedCSVImportExport />
-                                      </div>
-                                      <div className="modal-footer">
-                                        <button type="submit" className="btn bg-gradient-success" disabled>
-                                          <i className="fas fa-save"></i>{" "}
-                                          Upload
-                                        </button>
-                                        <button
-                                          type="button"
-                                          className="btn bg-gradient-danger"
-                                          data-dismiss="modal"
-                                        >
-                                          <i className="fas fa-times-circle"></i> Cancel
-                                        </button>
-                                      </div>
                                 </div>
                               </div>
                             </div>
@@ -230,18 +215,20 @@ const mapStateToProps = (state, ownProps) => {
     $('[data-toggle="tooltip"]').tooltip();
     const csvHeading = [
       [
+        //"ID",
         "Client Name", 
         "Email", 
         "Contact Number", 
+        //"Contact Client ID",
         "Address 1",
         "Address 2",
         "City",
         "State",
         "Zip",
-        "Office Phone #",
-        "Cell Phone #",
-        "Alt Phone #",
-        "Fax #",
+        "Office Phone Number",
+        "Cell Phone Number",
+        "Alt Phone Number",
+        "Fax Number",
         "Website", 
         "Name of Organization", 
         "Title", 
@@ -249,7 +236,11 @@ const mapStateToProps = (state, ownProps) => {
         "License Expiry Date", 
         "Date the License was last verified", 
         "Locations", 
-        "Notes"
+        "Notes",
+        "Population Served",
+        "Types of Services",
+        "Specialties",
+        "Insurance Accepted"
       ]
     ];
     var csvRow = [];
@@ -257,9 +248,11 @@ const mapStateToProps = (state, ownProps) => {
       if (client.clientContactDetails.length > 0) {
         client.clientContactDetails.forEach(function(contact) {
           csvRow.push([
+            //client.id,
             client.name, 
             client.email, 
             client.contactNumber,
+            //contact.id,
             contact.address1,
             contact.address2,
             contact.city,
@@ -276,31 +269,41 @@ const mapStateToProps = (state, ownProps) => {
             client.licenseExpiryDate,
             client.licenseLastVerifiedDate,
             client.assignedLocations.toString(),
-            client.notes
+            client.notes,
+            client.populationsServed ? client.populationsServed.toString() : "",
+            client.typesOfServices ? client.typesOfServices.toString() : "",
+            client.specialties ? client.specialties.toString() : "",
+            client.insuranceAccepted ? client.insuranceAccepted.toString() : ""
           ]);
         });
       } else {
         csvRow.push([
-          client.name, 
-          client.email, 
-          client.contactNumber,
-          client.clientAddressOption,
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          client.website,
-          client.nameOfOrg,
-          client.titleWithOrg,
-          client.licenseNumber,
-          client.licenseExpiryDate,
-          client.licenseLastVerifiedDate,
-          client.assignedLocations.toString(),
-          client.notes
+            //client.id,
+            client.name, 
+            client.email, 
+            client.contactNumber,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            client.website,
+            client.nameOfOrg,
+            client.titleWithOrg,
+            client.licenseNumber,
+            client.licenseExpiryDate,
+            client.licenseLastVerifiedDate,
+            client.assignedLocations.toString(),
+            client.notes,
+            client.populationsServed ? client.populationsServed.toString() : "",
+            client.typesOfServices ? client.typesOfServices.toString() : "",
+            client.specialties ? client.specialties.toString() : "",
+            client.insuranceAccepted ? client.insuranceAccepted.toString() : ""
         ]);
       }
     });

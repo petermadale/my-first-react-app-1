@@ -36,6 +36,8 @@ export const UPDATE_CLIENT = `UPDATE_CLIENT`;
 export const VERIFY_CLIENT = `VERIFY_CLIENT`;
 export const REQUEST_CREATE_CLIENT = `REQUEST_CREATE_CLIENT`;
 export const GET_CLIENTS = `GET_CLIENTS`;
+export const UPLOAD_CLIENTS = `UPLOAD_CLIENTS`;
+export const PROCESSING_UPLOAD_CLIENTS = `PROCESSING_UPLOAD_CLIENTS`;
 
 export const ADD_TO_MY_FAVORITES = `ADD_TO_MY_FAVORITES`;
 export const REMOVE_FROM_MY_FAVORITES = `REMOVE_FROM_MY_FAVORITES`;
@@ -73,6 +75,21 @@ export const FETCH_CLIENT_SUGGESTIONS_PENDING = `FETCH_CLIENT_SUGGESTIONS_PENDIN
 export const FETCH_CLIENT_SUGGESTIONS_ERROR = `FETCH_CLIENT_SUGGESTIONS_ERROR`;
 export const FETCH_CLIENT_SUGGESTIONS_SUCCESS = `FETCH_CLIENT_SUGGESTIONS_SUCCESS`;
 
+export const uploadClients = (clientData = {}, clientContactData = {}) => ({
+  type: UPLOAD_CLIENTS,
+  clientData,
+  clientContactData,
+});
+
+export const processingUploadClients = (
+  clientData = {},
+  clientContactData = {}
+) => ({
+  type: PROCESSING_UPLOAD_CLIENTS,
+  clientData,
+  clientContactData,
+});
+
 export const createNewClient = (client = {}, clientContact = {}, isAdmin) => ({
   type: CREATE_NEW_CLIENT,
   client,
@@ -87,7 +104,10 @@ export const updateClient = (client = {}) => ({
 
 export const verifyClient = (id, userid, approvedDate, lastContactMethod) => ({
   type: VERIFY_CLIENT,
-  id, userid, approvedDate, lastContactMethod
+  id,
+  userid,
+  approvedDate,
+  lastContactMethod,
 });
 
 export const suggestEditsToClientContactDetails = (
@@ -132,11 +152,15 @@ export const addToMyFavorites = (
   clientContactDetailsID,
 });
 
-export const removeFromMyFavorites = (id, clientContactDetailsID, clientID) => ({
-  type: REMOVE_FROM_MY_FAVORITES,
+export const removeFromMyFavorites = (
   id,
   clientContactDetailsID,
   clientID
+) => ({
+  type: REMOVE_FROM_MY_FAVORITES,
+  id,
+  clientContactDetailsID,
+  clientID,
 });
 
 export const deleteClient = (
@@ -354,9 +378,9 @@ export const deleteMeeting = (id) => ({
 });
 
 export const onDeleteMeeting = (id) => ({
-    type: ON_DELETE_MEETING,
-    id
-})
+  type: ON_DELETE_MEETING,
+  id,
+});
 
 //TODO for dashboard client suggestions
 export const fetchClientSuggestionsPending = () => ({

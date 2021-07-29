@@ -75,7 +75,7 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                       </span>
                     </Link>
                   ) : null}
-                  {client.clientContactDetailsSuggestions.length >
+                  {client.clientContactDetailsSuggestions && client.clientContactDetailsSuggestions.length >
                   0 ? (
                     <Link
                       to={`/client/${client.id}/true`}

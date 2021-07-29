@@ -19,6 +19,9 @@ export const alert_msg = {
   client_update_success: "Client updated.",
   client_verify_success: "Client verified.",
   client_create_success: "Client address added.",
+  client_upload_processing: "Processing client upload.",
+  client_upload_success: "Client upload success.",
+  client_upload_error: "Client upload error.",
   client_delete_success:
     "Client and client addresse(s) are deleted from the database.",
   client_delete_request_success:

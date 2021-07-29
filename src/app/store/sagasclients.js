@@ -8,6 +8,13 @@ export function createNewClient(client) {
     .catch((error) => ({ error }));
 }
 
+export function uploadClients(clientData, clientContactData) {
+  return axios
+    .post(url + `/clients/upload`, { clientData, clientContactData })
+    .then((response) => ({ response }))
+    .catch((error) => ({ error }));
+}
+
 export function updateClient(client) {
   return axios
     .post(url + `/clients/update`, { client })
@@ -17,7 +24,9 @@ export function updateClient(client) {
 
 export function verifyClient(id, userid, approvedDate, lastContactMethod) {
   return axios
-    .post(url + `/clients/verify`, { data: { id, userid, approvedDate, lastContactMethod } })
+    .post(url + `/clients/verify`, {
+      data: { id, userid, approvedDate, lastContactMethod },
+    })
     .then((response) => ({ response }))
     .catch((error) => ({ error }));
 }
@@ -61,7 +70,7 @@ export function deleteClientContactDetails(id) {
 
 export function deleteAllClientContactDetails(clientData) {
   return axios
-    .post(url + `/clientContactDetails/deleteAll`, {clientData})
+    .post(url + `/clientContactDetails/deleteAll`, { clientData })
     .then((response) => ({ response }))
     .catch((error) => ({ error }));
 }
