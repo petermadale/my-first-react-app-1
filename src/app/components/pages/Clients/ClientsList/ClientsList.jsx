@@ -263,7 +263,7 @@ const mapStateToProps = (state, ownProps) => {
             client.typesOfServices ? client.typesOfServices.toString() : "",
             client.specialties ? client.specialties.toString() : "",
             client.notes,
-            client.assignedLocations.toString(),
+            client.assignedLocations ? client.assignedLocations.toString() : "",
             
             //client.insuranceAccepted ? client.insuranceAccepted.toString() : ""
           ]);
@@ -290,7 +290,7 @@ const mapStateToProps = (state, ownProps) => {
           client.typesOfServices ? client.typesOfServices.toString() : "",
           client.specialties ? client.specialties.toString() : "",
           client.notes,
-          client.assignedLocations.toString(),
+          client.assignedLocations ? client.assignedLocations.toString() : "",
         ]);
       }
     });
