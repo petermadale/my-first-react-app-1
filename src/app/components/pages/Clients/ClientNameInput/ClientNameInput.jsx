@@ -3,6 +3,8 @@ import styles from "./ClientNameInput.module.css";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { ConnectedInputForm } from "../../../../scripts/inputForm";
+import { clientDataSets } from "../../../../../server/clientDataSets";
+import Select2 from "../../../../scripts/select2";
 
 class ClientNameInput extends Component {
   constructor(props) {
@@ -13,6 +15,7 @@ class ClientNameInput extends Component {
       isEmpty: true,
       isPristine: true,
       postNominalLetters: props.postNominalLetters,
+      credentials: props.credentials
     };
   }
 
@@ -53,7 +56,7 @@ class ClientNameInput extends Component {
     return (
       <>
         <div className="form-row mb-3">
-          <div className="col-sm-8">
+          <div className="col-sm-6">
             <label htmlFor="name">
               Client Name <span className="text-danger">*</span>
             </label>
@@ -82,7 +85,16 @@ class ClientNameInput extends Component {
               </p>
             ) : null}
           </div>
-          <div className="col-sm-4">
+          {/* <div className="col-sm-3">
+            <ConnectedInputForm
+              label="Credentials"
+              type="text"
+              placeholder="e.g. PhD"
+              nameid="postNominalLetters"
+              defaultValue={postNominalLetters}
+            />
+          </div> */}
+          <div className="col-sm-3">
             <ConnectedInputForm
               label="Post-nominal letters"
               type="text"
@@ -100,12 +112,14 @@ class ClientNameInput extends Component {
 const mapStatetoProps = (state, ownProps) => {
   let clients = state.clients;
   let { id, name, isEdit, postNominalLetters } = ownProps;
+  const { credentials } = clientDataSets;
   return {
     id,
     clients,
     name,
     isEdit,
     postNominalLetters,
+    credentials
   };
 };
 

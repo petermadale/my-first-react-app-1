@@ -549,4 +549,278 @@ export const clientDataSets = {
       name: "Hybrid Sessions – In-Person and Telehealth",
     },
   ],
+  credentials: [
+    {
+      id: "AADC",
+      name: "AADC",
+    },
+    {
+      id: "ACAS",
+      name: "ACAS",
+    },
+    {
+      id: "APN",
+      name: "APN",
+    },
+    {
+      id: "APRN",
+      name: "APRN",
+    },
+    {
+      id: "BCBA",
+      name: "BCBA",
+    },
+    {
+      id: "BCBA-D",
+      name: "BCBA-D",
+    },
+    {
+      id: "BCD",
+      name: "BCD",
+    },
+    {
+      id: "BCN",
+      name: "BCN",
+    },
+    {
+      id: "CART",
+      name: "CART",
+    },
+    {
+      id: "CBTC",
+      name: "CBTC",
+    },
+    {
+      id: "CCATP",
+      name: "CCATP",
+    },
+    {
+      id: "CCMHC",
+      name: "CCMHC",
+    },
+    {
+      id: "CCSOTS",
+      name: "CCSOTS",
+    },
+    {
+      id: "CEDS",
+      name: "CEDS",
+    },
+    {
+      id: "CGP",
+      name: "CGP",
+    },
+    {
+      id: "CGT",
+      name: "CGT",
+    },
+    {
+      id: "CCH",
+      name: "CCH",
+    },
+    {
+      id: "CHT",
+      name: "CHT",
+    },
+    {
+      id: "CRC",
+      name: "CRC",
+    },
+    {
+      id: "CSAT",
+      name: "CSAT",
+    },
+    {
+      id: "CSC",
+      name: "CSC",
+    },
+    {
+      id: "D.O.",
+      name: "D.O.",
+    },
+    {
+      id: "D.Min.",
+      name: "D.Min.",
+    },
+    {
+      id: "EAS-C",
+      name: "EAS-C",
+    },
+    {
+      id: "Ed.D.",
+      name: "Ed.D.",
+    },
+    {
+      id: "EFT",
+      name: "EFT",
+    },
+    {
+      id: "EMDR",
+      name: "EMDR",
+    },
+    {
+      id: "FACP",
+      name: "FACP",
+    },
+    {
+      id: "FNP-C",
+      name: "FNP-C",
+    },
+    {
+      id: "LBA",
+      name: "LBA",
+    },
+    {
+      id: "LCDC",
+      name: "LCDC",
+    },
+    {
+      id: "LCDC-S",
+      name: "LCDC-S",
+    },
+    {
+      id: "LCDC-A",
+      name: "LCDC-A",
+    },
+    {
+      id: "LCSW",
+      name: "LCSW",
+    },
+    {
+      id: "LCSW-S",
+      name: "LCSW-S",
+    },
+    {
+      id: "LCSW-A",
+      name: "LCSW-A",
+    },
+    {
+      id: "LMFT",
+      name: "LMFT",
+    },
+    {
+      id: "LMFT-S",
+      name: "LMFT-S",
+    },
+    {
+      id: "LMFT-A",
+      name: "LMFT-A",
+    },
+    {
+      id: "LMSW",
+      name: "LMSW",
+    },
+    {
+      id: "LPC",
+      name: "LPC",
+    },
+    {
+      id: "LPC-S",
+      name: "LPC-S",
+    },
+    {
+      id: "LPC-A",
+      name: "LPC-A",
+    },
+    {
+      id: "LSOPT",
+      name: "LSOPT",
+    },
+    {
+      id: "LSSP",
+      name: "LSSP",
+    },
+    {
+      id: "M.A.",
+      name: "M.A.",
+    },
+    {
+      id: "M.D.",
+      name: "M.D.",
+    },
+    {
+      id: "M.Div.",
+      name: "M.Div.",
+    },
+    {
+      id: "M.Ed.",
+      name: "M.Ed.",
+    },
+    {
+      id: "MHP",
+      name: "MHP",
+    },
+    {
+      id: "MPAS",
+      name: "MPAS",
+    },
+    {
+      id: "M.S.",
+      name: "M.S.",
+    },
+    {
+      id: "MSSW",
+      name: "MSSW",
+    },
+    {
+      id: "MSN",
+      name: "MSN",
+    },
+    {
+      id: "MSW",
+      name: "MSW",
+    },
+    {
+      id: "NBCC",
+      name: "NBCC",
+    },
+    {
+      id: "NCC",
+      name: "NCC",
+    },
+    {
+      id: "N.P.",
+      name: "N.P.",
+    },
+    {
+      id: "P.A.",
+      name: "P.A.",
+    },
+    {
+      id: "PA-C",
+      name: "PA-C",
+    },
+    {
+      id: "Ph.D.",
+      name: "Ph.D.",
+    },
+    {
+      id: "PMHNP-BC",
+      name: "PMHNP-BC",
+    },
+    {
+      id: "Psy.D.",
+      name: "Psy.D.",
+    },
+    {
+      id: "QCSW",
+      name: "QCSW",
+    },
+    {
+      id: "RN",
+      name: "RN",
+    },
+    {
+      id: "RPT",
+      name: "RPT",
+    },
+    {
+      id: "RPT-S",
+      name: "RPT-S",
+    },
+    {
+      id: "SAP",
+      name: "SAP",
+    },
+  ]
 };

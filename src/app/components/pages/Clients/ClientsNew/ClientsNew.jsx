@@ -50,7 +50,7 @@ export const ClientsNew = ({
         <div className="row">
           <div className="col-12">
             <form onSubmit={createNewClient} id="newClient">
-              <div className="card card-info card-client-info">
+              <div className="card card-info card-client-info collapsed-card">
                 <div className="card-header">
                     <button
                       type="button"
@@ -207,7 +207,7 @@ export const ClientsNew = ({
                 </div>
               </div>
 
-              <div className="card card-info card-additional-client-info">
+              <div className="card card-info card-additional-client-info collapsed-card">
                 <div className="card-header">
                     <button
                       type="button"
@@ -320,7 +320,7 @@ export const ClientsNew = ({
                 </div>
               </div>
 
-              <div className="card card-info card-client-address">
+              <div className="card card-info card-client-address collapsed-card">
                 <div className="card-header">
                     <button
                       type="button"
