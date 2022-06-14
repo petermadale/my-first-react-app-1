@@ -53,7 +53,7 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                   {client.contactNumber}
                 </a>
               </li> : null}
-            {client.clientAddressOption === 'Has Address' && client.clientContactDetails[0].address1 ? (
+            {client.clientAddressOption === 'Has Address' && client.clientContactDetails.length > 0 && client.clientContactDetails[0].address1 ? (
               <>
               <li className="list-group-item">
                 <b>
@@ -86,24 +86,25 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                     </Link>
                   ) : null}
                 </b>
-
-                <p className="text-muted">
-                  {client.clientContactDetails[0].address1 ? (
-                    <>{client.clientContactDetails[0].address1}, </>
-                  ) : null}{" "}
-                  {client.clientContactDetails[0].address2 ? (
-                    <>{client.clientContactDetails[0].address2}, </>
-                  ) : null}{" "}
-                  {client.clientContactDetails[0].city ? (
-                    <>{client.clientContactDetails[0].city}, </>
-                  ) : null}{" "}
-                  {client.clientContactDetails[0].state ? (
-                    <>{client.clientContactDetails[0].state}, </>
-                  ) : null}{" "}
-                  {client.clientContactDetails[0].zip ? (
-                    <>{client.clientContactDetails[0].zip}</>
-                  ) : null}
-                </p>
+                    {client.clientContactDetails.length > 0 ?
+                    <p className="text-muted">
+                      {client.clientContactDetails[0].address1 ? (
+                        <>{client.clientContactDetails[0].address1}, </>
+                      ) : null}{" "}
+                      {client.clientContactDetails[0].address2 ? (
+                        <>{client.clientContactDetails[0].address2}, </>
+                      ) : null}{" "}
+                      {client.clientContactDetails[0].city ? (
+                        <>{client.clientContactDetails[0].city}, </>
+                      ) : null}{" "}
+                      {client.clientContactDetails[0].state ? (
+                        <>{client.clientContactDetails[0].state}, </>
+                      ) : null}{" "}
+                      {client.clientContactDetails[0].zip ? (
+                        <>{client.clientContactDetails[0].zip}</>
+                      ) : null}
+                    </p>
+                    : null}
               </li>
               <li className="list-group-item">
                 <b>
@@ -138,7 +139,7 @@ export const Client = ({client, isAdmin, requestDeleteClient, owner}) => (
                 <p className="float-right mb-0"><span className="badge badge-warning">{client.clientAddressOption}</span></p>
               </li>
             }
-            {client.assignedLocations.length > 0 ? (
+            {client.assignedLocations != null && client.assignedLocations.length > 0 ? (
               <li className="list-group-item">
                 <b>
                   <i className="fas fa-location-arrow mr-1"></i>{" "}

@@ -75,7 +75,7 @@ class ClientsList extends PureComponent {
               <div className="container-fluid">
                 <div className="row mb-2">
                   <div className="col-sm-4">
-                    <h1>Clients</h1>
+                    <h1>Clients <small className="badge badge-secondary">10</small></h1>
                   </div>
                   <div className="col-sm-8">
                   <div className="row g-3 float-right"> 
@@ -87,6 +87,16 @@ class ClientsList extends PureComponent {
                                 Refresh
                             </button>
                         </div>  */}
+                        <div className="col-sm-auto">
+                        <div className="btn-group" role="group" aria-label="Basic example">
+                          <button type="button" className="btn btn-outline-dark active">
+                            <i className="fa fa-table mr-0"></i>
+                          </button>
+                          <button type="button" className="btn btn-outline-dark">
+                            <i className="fa fa-bars mr-0"></i>
+                            </button>
+                        </div>
+                        </div>
                         <div className="col-sm-auto">   
                             <div className="input-group mb-1">
                             <div className="input-group-prepend">
@@ -215,38 +225,40 @@ const mapStateToProps = (state, ownProps) => {
     $('[data-toggle="tooltip"]').tooltip();
     const csvHeading = [
       [
-        "Client Name", 
-        "License Number", 
-        "License Expiry Date", 
-        "Date the License was last verified", 
+        "Last Name",
+        "First Name", 
+        "Credentials", 
+        // "License Number", 
+        // "License Expiry Date", 
+        // "Date the License was last verified", 
         "Title", 
-        "Name of Organization",
-        "Type of Organization/Provider",
+        "Name of Orginization or Private Practice",
+        "Type of Organization",
         "Street Address",
         "City",
         "State",
         "Zip",
-        "Office Phone Number",
-        "Alt Phone Number",
-        "Fax Number",
+        "Phone",
+        "Alternative Phone Number",
+        "Fax",
         "Email", 
         "Website", 
-        "Population Served",
+        "Populations Served",
+        "Aged Served",
         "Types of Services",
         "Specialties",
+        "Dates",
         "Notes",
-        "Locations", 
+        "Assigned Locations",
+        "Assigned Users",
       ]
     ];
     var csvRow = [];
     clients.forEach(function(client) {
-      if (client.clientContactDetails.length > 0) {
+      if (client.clientContactDetails != null && client.clientContactDetails.length > 0) {
         client.clientContactDetails.forEach(function(contact) {
           csvRow.push([
             client.name, 
-            client.licenseNumber,
-            client.licenseExpiryDate,
-            client.licenseLastVerifiedDate,
             client.titleWithOrg,
             client.nameOfOrg,
             client.typeOfOrg,
@@ -259,13 +271,13 @@ const mapStateToProps = (state, ownProps) => {
             contact.faxNumber,
             client.email, 
             client.website,
-            client.populationsServed ? client.populationsServed.toString() : "",
-            client.typesOfServices ? client.typesOfServices.toString() : "",
-            client.specialties ? client.specialties.toString() : "",
+            client.populationsServed != null && client.populationsServed.length > 0 ? client.populationsServed.toString() : "",
+            client.typesOfServices != null && client.typesOfServices.length > 0 ? client.typesOfServices.toString() : "",
+            client.specialties != null && client.specialties.length > 0 ? client.specialties.toString() : "",
             client.notes,
-            client.assignedLocations ? client.assignedLocations.toString() : "",
-            
-            //client.insuranceAccepted ? client.insuranceAccepted.toString() : ""
+            client.dates,
+            client.assignedLocations != null && client.assignedLocations.length > 0 ? client.assignedLocations.toString() : "",
+            client.users != null && client.users.length > 0 ? client.users.toString() : "",
           ]);
         });
       } else {
@@ -286,11 +298,11 @@ const mapStateToProps = (state, ownProps) => {
           "",
           client.email, 
           client.website,
-          client.populationsServed ? client.populationsServed.toString() : "",
-          client.typesOfServices ? client.typesOfServices.toString() : "",
-          client.specialties ? client.specialties.toString() : "",
+          client.populationsServed != null && client.populationsServed.length > 0 ? client.populationsServed.toString() : "",
+          client.typesOfServices != null && client.typesOfServices.length > 0 ? client.typesOfServices.toString() : "",
+          client.specialties != null && client.specialties.length > 0 ? client.specialties.toString() : "",
           client.notes,
-          client.assignedLocations ? client.assignedLocations.toString() : "",
+          client.assignedLocations != null && client.assignedLocations.length > 0 ? client.assignedLocations.toString() : "",
         ]);
       }
     });
