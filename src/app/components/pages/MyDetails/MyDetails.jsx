@@ -214,11 +214,6 @@ const mapDispatchToprops = (dispatch, ownProps) => {
     updateMyDetails(e) {
       e.preventDefault();
       const form = e.target;
-      //const sel = form[`react-select-2-input`];
-      //   var selectedLocationArr = [].slice
-      //     .call(form[`location`].selectedOptions)
-      //     .map((a) => a.value);
-      //   console.log(selectedLocationArr);
       var locationArr = form[`location`].value;
       locationArr = locationArr.split(",");
       const user = {

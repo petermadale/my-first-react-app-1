@@ -91,7 +91,7 @@ export function* clientCreationSaga() {
 
 export function* clientUploadSaga() {
   while (true) {
-    const { clientData, clientContactData } = yield take(
+    const { clientData, clientContactData, isUploadingClients } = yield take(
       mutations.PROCESSING_UPLOAD_CLIENTS
     );
 
@@ -110,7 +110,13 @@ export function* clientUploadSaga() {
         title: alert_msg.client_upload_success,
       });
 
-      yield put(mutations.uploadClients(clientData, clientContactData));
+      yield put(
+        mutations.uploadClients(
+          clientData,
+          clientContactData,
+          isUploadingClients
+        )
+      );
       location.reload();
     } else {
       Toast.fire({

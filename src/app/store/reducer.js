@@ -15,6 +15,7 @@ let defaultState = {
   clientContactDetailsSuggestions: [],
   mymeetings: [],
   clientSuggestions: [],
+  isUploadingClients: false,
 };
 
 const persistConfig = {
@@ -30,6 +31,7 @@ const persistConfig = {
     "clientContactDetailsSuggestions",
     "mymeetings",
     "clientSuggestions",
+    "isUploadingClients",
   ],
 };
 
@@ -767,13 +769,7 @@ const rootReducer = combineReducers({
     }
     return personalnotes;
   },
-  //   clientContactDetails(clientContactDetails = {}, action) {
-  //     switch (action.type) {
-  //       case mutations.CLIENT_CONTACT_TOGGLE_EDIT:
-  //         return action.clientContactDetails;
-  //     }
-  //     return clientContactDetails;
-  //   },
+
   locations(locations = defaultState.locations, action) {
     switch (action.type) {
       case mutations.SET_STATE:
@@ -788,6 +784,7 @@ const rootReducer = combineReducers({
     }
     return locations;
   },
+
   clientContactDetailsSuggestions(
     clientContactDetailsSuggestions = defaultState.clientContactDetailsSuggestions,
     action
@@ -815,6 +812,7 @@ const rootReducer = combineReducers({
     }
     return clientContactDetailsSuggestions;
   },
+
   mymeetings(mymeetings = defaultState.mymeetings, action) {
     switch (action.type) {
       case mutations.SET_STATE:
@@ -863,6 +861,7 @@ const rootReducer = combineReducers({
     }
     return mymeetings;
   },
+
   clientSuggestions(
     clientSuggestions = defaultState.clientSuggestions,
     action
@@ -910,6 +909,21 @@ const rootReducer = combineReducers({
         }
     }
     return clientSuggestions;
+  },
+
+  isUploadingClients(
+    isUploadingClients = defaultState.isUploadingClients,
+    action
+  ) {
+    switch (action.type) {
+      case mutations.SET_STATE:
+        return defaultState.isUploadingClients; //fix this later
+      case mutations.PROCESSING_UPLOAD_CLIENTS:
+        return !action.isUploadingClients;
+      case mutations.UPLOAD_CLIENTS:
+        return action.isUploadingClients;
+    }
+    return isUploadingClients;
   },
 });
 

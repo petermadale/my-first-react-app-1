@@ -1,11 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styles from "./Login.module.css";
 import { connect } from "react-redux";
 import * as mutations from "../../../store/mutations";
 import "../../../styles/style.css";
 import logo from "../../../images/crm_app_logo.png";
-import { Link } from "react-router-dom";
 
 export const Login = ({ authenticateUser, authenticated }) => (
   <div className={styles.signin}>
@@ -113,9 +111,9 @@ export const Login = ({ authenticateUser, authenticated }) => (
   </div>
 );
 const mapStateToProps = ({ session }) => {
-  const authenticated = session.authenticated;
+  //const authenticated = session.authenticated;
   return {
-    authenticated,
+    session,
   };
 };
 

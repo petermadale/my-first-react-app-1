@@ -75,19 +75,26 @@ export const FETCH_CLIENT_SUGGESTIONS_PENDING = `FETCH_CLIENT_SUGGESTIONS_PENDIN
 export const FETCH_CLIENT_SUGGESTIONS_ERROR = `FETCH_CLIENT_SUGGESTIONS_ERROR`;
 export const FETCH_CLIENT_SUGGESTIONS_SUCCESS = `FETCH_CLIENT_SUGGESTIONS_SUCCESS`;
 
-export const uploadClients = (clientData = {}, clientContactData = {}) => ({
+export const uploadClients = (
+  clientData = {},
+  clientContactData = {},
+  isUploadingClients
+) => ({
   type: UPLOAD_CLIENTS,
   clientData,
   clientContactData,
+  isUploadingClients,
 });
 
 export const processingUploadClients = (
   clientData = {},
-  clientContactData = {}
+  clientContactData = {},
+  isUploadingClients
 ) => ({
   type: PROCESSING_UPLOAD_CLIENTS,
   clientData,
   clientContactData,
+  isUploadingClients,
 });
 
 export const createNewClient = (client = {}, clientContact = {}, isAdmin) => ({

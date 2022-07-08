@@ -34,6 +34,7 @@
         "mongodb": "^3.1.8",
         "react": "^16.4.2",
         "react-autosuggest": "^10.0.2",
+        "react-bar-loader": "^1.0.0",
         "react-csv": "^2.0.3",
         "react-csv-reader": "^3.3.0",
         "react-csv-uploader": "0.0.5",
