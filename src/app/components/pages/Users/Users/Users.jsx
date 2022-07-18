@@ -5,8 +5,6 @@ import { Toast, Swal_alert } from "../../../../scripts/sweetalert";
 import { deleteUserAccount } from "../../../../store/mutations";
 import { ConnectedNoAccess } from "../../NoAccess/NoAccess";
 
-const sampleConst = "";
-
 export const Users = ({ users, isAdmin, deleteUserAccount }) => (
   <>
     {isAdmin ? (

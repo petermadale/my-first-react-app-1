@@ -51,7 +51,7 @@ export const Main = () => (
       <div>
         <Switch>
           <PersistGate persistor={persistor}>
-            <Route exact path="/" component={ConnectedLogin} />
+            <Route path="/" render={() => <ConnectedLogin />} />
 
             <Route
               exact
