@@ -46,7 +46,7 @@ const ClientTable = ({ clients }) => (
                     client.email.map((e, index) => (
                       <span key={e}>
                         <a href={`mailto:${e}`}>{e}</a>
-                        {index + 1 === client.email.length ? null : "; "}
+                        {index + 1 === client.email.length ? null : <br />}
                       </span>
                     ))
                   ) : (
@@ -88,9 +88,10 @@ const ClientTable = ({ clients }) => (
                       {client.assignedLocations.map((loc, index) => (
                         <span key={loc}>
                           {loc === "Others" ? client.otherLocation : loc}
-                          {index + 1 === client.assignedLocations.length
-                            ? null
-                            : "; "}
+                          {index + 1 ===
+                          client.assignedLocations.length ? null : (
+                            <br />
+                          )}
                         </span>
                       ))}
                     </>
