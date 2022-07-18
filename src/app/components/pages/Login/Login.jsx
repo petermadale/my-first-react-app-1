@@ -111,8 +111,9 @@ export const Login = ({ authenticateUser, authenticated }) => (
   </div>
 );
 const mapStateToProps = ({ session }) => {
-  //const authenticated = session.authenticated;
+  const authenticated = session.authenticated;
   return {
+    authenticated,
     session,
   };
 };

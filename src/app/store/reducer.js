@@ -331,65 +331,6 @@ const rootReducer = combineReducers({
               }
             : client;
         });
-      // return {
-      //   ...client,
-      //   isFavorite: false,
-      //   myfave: client.myfave.filter((fave) => {
-      //     return action.id != fave.id;
-      //   }),
-      //   clientContactDetails: client.clientContactDetails.map((contact) => {
-      //     return contact.id === action.clientContactDetailsID
-      //       ? { ...contact, isFavorite: false }
-      //       : contact;
-      //   }),
-      //   isFavorite:
-      //     client.myfave.length === 0
-      //       ? false
-      //       : client.clientContactDetails.some((fave) => {
-      //           return fave.isFavorite;
-      //         }),
-      // };
-      // });
-
-      // return clients.map(function (client) {
-      //   return {
-      //     ...client,
-      //     myfave: client.myfave.filter((fave) => {
-      //       return action.id != fave.id;
-      //     }),
-      //     clientContactDetails: client.clientContactDetails.map((contact) => {
-      //       return contact.id === action.clientContactDetailsID
-      //         ? { ...contact, isFavorite: false }
-      //         : contact;
-      //     }),
-      //     isFavorite:
-      //       client.myfave.length === 0
-      //         ? false
-      //         : client.clientContactDetails.some((fave) => {
-      //             return fave.isFavorite;
-      //           }),
-      //   };
-      //   if (client.myfave) {
-      //     return action.id === client.myfave.id
-      //       ? {
-      //           ...client,
-      //           myfave: client.myfave.filter((fave) => {
-      //             action.id != fave.id
-      //           }),
-      //           clientContactDetails: client.clientContactDetails.map(
-      //             (contact) => {
-      //               return contact.id === action.clientContactDetailsID
-      //                 ? { ...contact, isFavorite: false }
-      //                 : contact;
-      //             }
-      //           ),
-      //           isFavorite: false,
-      //           myfave: null,
-      //         }
-      //       : client;
-      //   }
-      //return client;
-
       case mutations.CLIENT_CONTACT_TOGGLE_EDIT:
         return clients.map(function (client) {
           return action.clientID === client.id
@@ -456,7 +397,6 @@ const rootReducer = combineReducers({
             : client;
         });
       }
-
       case mutations.DELETE_ALL_CLIENT_CONTACT_DETAILS: {
         return clients.map((client) => {
           return client.id === action.clientData.id
@@ -468,7 +408,6 @@ const rootReducer = combineReducers({
             : client;
         });
       }
-
       case mutations.SUGGEST_EDITS_TO_CLIENT_CONTACT_DETAILS:
         return clients.map(function (client) {
           return action.clientContactDetailsSuggestions.client === client.id
@@ -541,7 +480,6 @@ const rootReducer = combineReducers({
               }
             : client;
         });
-
       case mutations.EDIT_PERSONAL_NOTE:
         return clients.map(function (client) {
           return action.personalnote.client === client.id
@@ -580,7 +518,6 @@ const rootReducer = combineReducers({
               }
             : client;
         });
-
       case mutations.DELETE_PERSONAL_NOTE:
         return clients.map(function (client) {
           return action.client === client.id
