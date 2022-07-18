@@ -44,9 +44,10 @@ class ClientsList extends Component {
   handleChange = (event) => {
     const { value } = event.target;
     const { clients } = this.state;
-    const newSortedClients = clients.filter((client) =>
-      client.assignedLocations.includes(value)
-    );
+    const newSortedClients = clients.filter((client) => {
+      if (client.assignedLocations !== null)
+        return client.assignedLocations.includes(value);
+    });
     this.setState({
       selectedLocation: value,
       isSort: true,

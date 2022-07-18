@@ -24,22 +24,24 @@ import { ConnectedMyMeetings } from "./pages/MyMeeting/MyMeetings/MyMeetings";
 import { ConnectedMeetingsNew } from "./pages/MyMeeting/MeetingsNew/MeetingsNew";
 import { ConnectedMeetingsEdit } from "./pages/MyMeeting/MeetingsEdit/MeetingsEdit";
 
-const RouteGuard = (Component) => ({ match }) =>
-  !store.getState().session.authenticated ? (
-    <Redirect to="/" />
-  ) : (
-    <div className="wrapper">
-      <ConnectedMainHeader />
-      <ConnectedMainSidebar />
+const RouteGuard =
+  (Component) =>
+  ({ match }) =>
+    !store.getState().session.authenticated ? (
+      <Redirect to="/" />
+    ) : (
+      <div className="wrapper">
+        <ConnectedMainHeader />
+        <ConnectedMainSidebar />
 
-      <div className="content-wrapper">
-        {/* Content here */}
-        <Component match={match} />
+        <div className="content-wrapper">
+          {/* Content here */}
+          <Component match={match} />
+        </div>
+
+        <ConnectedMainFooter />
       </div>
-
-      <ConnectedMainFooter />
-    </div>
-  );
+    );
 
 //   <Component match={match} />
 
