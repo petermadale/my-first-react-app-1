@@ -49,14 +49,15 @@ var blankUploadCSV = csvHeading.concat([]);
 class CSVImportExport extends Component {
   constructor(props) {
     super();
-
+    const { onUploadClients, isUploadingClients, onClose } = props;
     this.state = {
       clientData: [],
       clientContactData: [],
       hasClientData: false,
       hasError: false,
-      onUploadClients: props.onUploadClients,
-      isUploadingClients: props.isUploadingClients,
+      onUploadClients,
+      isUploadingClients,
+      onClose,
     };
   }
   onUploadClients = (clientData, clientContactData, isUploadingClients) => {
@@ -75,8 +76,8 @@ class CSVImportExport extends Component {
       if (
         !d.first_name ||
         !d.last_name ||
-        d.first_name == " " ||
-        d.last_name == " "
+        d.first_name === " " ||
+        d.last_name === " "
       ) {
         this.setState({ hasError: true });
       }
@@ -105,26 +106,35 @@ class CSVImportExport extends Component {
             // "lastName": d.last_name,
             //"credentials": d.credentials,
             titleWithOrg: d.title,
-            nameOfOrg: d.name_of_organization_or_private_practice,
-            typeOfOrg: d.type_of_organization,
+            nameOfOrg: d.name_of_organization_or_private_practice
+              ? d.name_of_organization_or_private_practice
+              : d.company_name,
+            typeOfOrg: d.type_of_organization
+              ? d.type_of_organization
+              : d.industry,
             clientAddressOption:
-              d.street_address != null ? "Has Address" : "Don't List Address",
+              d.street_address != null || d.street != null
+                ? "Has Address"
+                : "Don't List Address",
             clientContactDetails: [
               {
                 id: contactId,
                 client: clientId,
-                address1: d.street_address,
+                address1: d.street_address ? d.street_address : d.street,
                 city: d.city,
                 state: d.state,
                 zip: d.zip,
                 workEmail: d.email,
-                officePhoneNumber: d.phone,
+                officePhoneNumber: d.phone ? d.phone : d.office_phone_number,
+                officePhoneNumberExt: d.extension,
                 alternativePhoneNumber: d.alternative_phone_number,
-                faxNumber: d.fax_number,
+                cellPhoneNumber: d.mobile_phone,
+                faxNumber: d.fax_number ? d.fax_number : d.fax,
               },
             ],
             email: d.email ? d.email.split(";") : null,
             website: d.website,
+            contactNumber: d.phone ? d.phone : d.phone_number,
             populationsServed: d.population_served
               ? d.population_served.split(";")
               : null,
@@ -168,6 +178,7 @@ class CSVImportExport extends Component {
       onUploadClients,
       hasError,
       isUploadingClients,
+      onClose,
     } = this.state;
     return (
       <>
@@ -205,7 +216,8 @@ class CSVImportExport extends Component {
           <button
             type="button"
             className="btn bg-gradient-danger"
-            data-dismiss="modal"
+            // data-dismiss="modal"
+            onClick={onClose}
           >
             <i className="fas fa-times-circle"></i> Cancel
           </button>

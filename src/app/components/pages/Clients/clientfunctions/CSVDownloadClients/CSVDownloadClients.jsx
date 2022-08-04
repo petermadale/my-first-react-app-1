@@ -6,13 +6,14 @@ import { connect } from "react-redux";
 class CSVDownloadClients extends Component {
   constructor(props) {
     super();
-    const { clients, locations } = props;
+    const { clients, locations, onClose } = props;
     this.state = {
       clients,
       locations,
       selectedLocation: "",
       csvData: [],
       fileName: "",
+      onClose,
     };
   }
 
@@ -54,8 +55,10 @@ class CSVDownloadClients extends Component {
         "Assigned Users",
       ],
     ];
+
     const csvRow = [],
       dtoday = new Date();
+
     filteredClients.forEach(function (client) {
       if (
         client.clientContactDetails != null &&
@@ -136,13 +139,14 @@ class CSVDownloadClients extends Component {
         ]);
       }
     });
+
     this.setState({
       csvData: csvHeading.concat(csvRow),
       fileName: "ClientList-" + moment(dtoday).format("MM-DD-YYYY") + ".csv",
     });
   };
   render() {
-    const { clients, locations, selectedLocation, csvData, fileName } =
+    const { clients, locations, selectedLocation, csvData, fileName, onClose } =
       this.state;
     return (
       <>
@@ -180,7 +184,7 @@ class CSVDownloadClients extends Component {
           <button
             type="button"
             className="btn bg-gradient-danger"
-            data-dismiss="modal"
+            onClick={onClose}
           >
             <i className="fas fa-times-circle"></i> Cancel
           </button>

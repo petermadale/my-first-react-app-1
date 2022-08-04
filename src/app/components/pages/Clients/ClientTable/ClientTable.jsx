@@ -39,6 +39,11 @@ const ClientTable = ({ clients }) => (
                       <br />
                     </>
                   ) : null}
+                  {client.clientAddressOption === "Don't List Address" && (
+                    <span className="badge badge-warning mr-1">
+                      {client.clientAddressOption}
+                    </span>
+                  )}
                   {client.name}
                 </td>
                 <td>
@@ -75,11 +80,14 @@ const ClientTable = ({ clients }) => (
                   ) : null}
                 </td>
                 <td>
-                  <a
-                    href={`tel:+${client.clientContactDetails[0].officePhoneNumber}`}
-                  >
-                    {client.clientContactDetails[0].officePhoneNumber}
-                  </a>
+                  {client.clientContactDetails.length > 0 &&
+                    client.clientContactDetails[0].officePhoneNumber && (
+                      <a
+                        href={`tel:+${client.clientContactDetails[0].officePhoneNumber}`}
+                      >
+                        {client.clientContactDetails[0].officePhoneNumber}
+                      </a>
+                    )}
                 </td>
                 <td>
                   {client.assignedLocations != null &&

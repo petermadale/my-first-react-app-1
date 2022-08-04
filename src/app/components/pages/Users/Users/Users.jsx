@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Toast, Swal_alert } from "../../../../scripts/sweetalert";
+import { Swal_alert } from "../../../../scripts/sweetalert";
 import { deleteUserAccount } from "../../../../store/mutations";
 import { ConnectedNoAccess } from "../../NoAccess/NoAccess";
 
-export const Users = ({ users, isAdmin, deleteUserAccount }) => (
+const Users = ({ users, isAdmin, deleteUserAccount }) => (
   <>
     {isAdmin ? (
       <>
@@ -16,15 +16,13 @@ export const Users = ({ users, isAdmin, deleteUserAccount }) => (
                 <h1>Users</h1>
               </div>
               <div className="col-sm-6">
-                {isAdmin ? (
-                  <Link
-                    to="/user-new"
-                    className="btn bg-gradient-success float-right"
-                  >
-                    <i className="fas fa-file-alt"></i>
-                    Create New User
-                  </Link>
-                ) : null}
+                <Link
+                  to="/user-new"
+                  className="btn bg-gradient-success float-right"
+                >
+                  <i className="fas fa-file-alt"></i>
+                  Create New User
+                </Link>
               </div>
             </div>
           </div>
@@ -68,15 +66,6 @@ export const Users = ({ users, isAdmin, deleteUserAccount }) => (
                         )}
                       </td>
                       <td className="project-actions text-right">
-                        {/* <Link
-                            to={`/user/${user.id}/true`}
-                            id={user.id}
-                            className="btn bg-gradient-info btn-sm mr-1"
-                          >
-                            <i className="fas fa-pencil-alt"></i>
-                            Edit
-                          </Link> */}
-
                         <button
                           className="btn bg-gradient-danger btn-sm mr-1"
                           onClick={() => deleteUserAccount(user.id)}
@@ -110,30 +99,31 @@ export const Users = ({ users, isAdmin, deleteUserAccount }) => (
   </>
 );
 
-const mapStateToProps = (state, ownProps) => {
-  const users = state.users;
+const mapStateToProps = (state) => {
+  const { users } = state;
   const isAdmin = state.session.isAdmin;
   return { users, isAdmin };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     deleteUserAccount(id) {
-      Swal_alert.fire({
+      const swalAlert = {
         title: "Are you sure?",
-        html: "<b><i>All user's favorite list will also be removed from the database.</i></b>",
+        html: "All user's favorite list will also be removed from the database.",
+        confirmButtonText: "Yes, delete it!",
+      };
+      Swal_alert.fire({
+        title: swalAlert.title,
+        html: `<b><i>${swalAlert.html}</i></b>`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: swalAlert.confirmButtonText,
       }).then((result) => {
         if (result.value) {
           dispatch(deleteUserAccount(id));
-          Toast.fire({
-            icon: "success",
-            title: "Client deleted.",
-          });
         }
       });
     },

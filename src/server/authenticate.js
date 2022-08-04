@@ -1,10 +1,17 @@
 import uuid from "uuid";
 import md5 from "md5";
-// import { connectDB } from "./connect-db";
 import { connectDB } from "./connect";
 import { assembleUserState } from "./utility";
 
 const authenticationTokens = [];
+const err_msg = {
+  not_found: "User not found.",
+  not_approved: "Account not yet approved by Admin.  Please try again later.",
+  password_incorrect: "Password incorrect",
+  name_exists:
+    "A user with that account first name and last name already exists.",
+  username_exists: "A user with that username already exists.",
+};
 
 export const authenticationRoute = (app) => {
   app.post("/authenticate", async (req, res) => {
@@ -15,12 +22,11 @@ export const authenticationRoute = (app) => {
       let user = await collection.findOne({ username });
 
       if (!user) {
-        return res.status(500).send({ message: "User not found." });
+        return res.status(500).send({ message: err_msg.not_found });
       }
       if (user && !user.isApproved) {
         return res.status(500).send({
-          message:
-            "Account not yet approved by Admin.  Please try again later.",
+          message: err_msg.not_approved,
           isApproved: false,
         });
       }
@@ -29,9 +35,10 @@ export const authenticationRoute = (app) => {
       let passwordCorrect = hash === user.passwordHash;
 
       if (user && !passwordCorrect) {
-        return res
-          .status(500)
-          .send({ message: "Password incorrect", passwordCorrect: false });
+        return res.status(500).send({
+          message: err_msg.password_incorrect,
+          passwordCorrect: false,
+        });
       }
 
       let token = uuid();
@@ -71,15 +78,14 @@ export const authenticationRoute = (app) => {
     let users_username = await collection.findOne({ username });
     if (users_fullname) {
       res.status(500).send({
-        message:
-          "A user with that account first name and last name already exists.",
+        message: err_msg.name_exists,
         nameReserved: true,
       });
       return;
     }
     if (users_username) {
       res.status(500).send({
-        message: "A user with that username already exists.",
+        message: err_msg.username_exists,
         usernameReserved: true,
       });
       return;
@@ -104,12 +110,6 @@ export const authenticationRoute = (app) => {
       //dateAprroved: null,
     };
     await collection.insertOne(userdata);
-
-    // let state = await assembleUserState({
-    //   id: userID,
-    //   name: name,
-    //   username: username,
-    // });
 
     res.status(200).send({ user: userdata });
   });

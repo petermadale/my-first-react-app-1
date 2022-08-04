@@ -3,15 +3,10 @@ import * as mutations from "./mutations";
 import { history } from "./history";
 import uuid from "uuid";
 import axios from "axios";
-import { Toast, alert_msg } from "../scripts/sweetalert";
+import { Toast, alert_msg, users_alert_msg } from "../scripts/sweetalert";
 import $ from "jquery";
 import { url } from "./site-url";
-import {
-  authenticateUser,
-  createUser,
-  updateUser,
-  deleteUser,
-} from "./sagasusers";
+import * as userSaga from "./sagasusers";
 import {
   createNewClient,
   updateClient,
@@ -898,7 +893,7 @@ export function* userAuthenticationSaga() {
       mutations.REQUEST_AUTHENTICATE_USER
     );
     const { response, error } = yield call(
-      authenticateUser,
+      userSaga.authenticateUser,
       username,
       password
     );
@@ -911,7 +906,7 @@ export function* userAuthenticationSaga() {
 
           Toast.fire({
             icon: "success",
-            title: alert_msg.user_authenticated,
+            title: users_alert_msg.authenticated,
           });
           const search = window.location.search;
           const params = new URLSearchParams(search);
@@ -967,14 +962,14 @@ export function* userAccountCreationSaga() {
     //         mutations.processAuthenticateUser(mutations.PASSWORD_MISMATCH)
     //       );
     //if (authenticated === mutations.PASSWORD_MATCH) {
-    const { response, error } = yield call(createUser, userdata);
+    const { response, error } = yield call(userSaga.createUser, userdata);
     try {
       if (response) {
         var data = response.data;
         if (response.status === 200) {
           Toast.fire({
             icon: "success",
-            title: alert_msg.user_create_success,
+            title: users_alert_msg.create_success,
           });
           history.push("/users");
           yield put(mutations.createUserAccount(data.user));
@@ -990,7 +985,7 @@ export function* userAccountCreationSaga() {
         var data = error.response.data;
         var err_msg = data.message ? data.message : error.message;
         // if (data.nameReserved)
-        //   err_msg = alert_msg.name_reserved
+        //   err_msg = users_alert_msg.name_reserved
         //   if (data.usernameReserved)
         Toast.fire({
           icon: "error",
@@ -1046,13 +1041,13 @@ export function* userAccountDeletionSaga() {
   while (true) {
     const { id } = yield take(mutations.DELETE_USER_ACCOUNT);
 
-    const { response, error } = yield call(deleteUser, id);
+    const { response, error } = yield call(userSaga.deleteUser, id);
     try {
       if (response) {
         if (response.status === 200) {
           Toast.fire({
             icon: "success",
-            title: alert_msg.user_delete_success,
+            title: users_alert_msg.delete_success,
           });
           history.push("/users");
         } else {
@@ -1094,14 +1089,14 @@ export function* userAccountModificationSaga() {
       username: userdata.username,
       //   password: userdata.password,
     };
-    const { response, error } = yield call(updateUser, user);
+    const { response, error } = yield call(userSaga.updateUser, user);
     try {
       if (response) {
         var data = response.data;
         if (response.status === 200) {
           Toast.fire({
             icon: "success",
-            title: alert_msg.user_update_success,
+            title: users_alert_msg.update_success,
           });
           var fullName = firstName + " " + lastName;
           sendFeedback(fullName, userdata.id);
@@ -1119,7 +1114,7 @@ export function* userAccountModificationSaga() {
         var data = error.response.data;
         var err_msg = data.message ? data.message : error.message;
         // if (data.nameReserved)
-        //   err_msg = alert_msg.name_reserved
+        //   err_msg = users_alert_msg.name_reserved
         //   if (data.usernameReserved)
         Toast.fire({
           icon: "error",
@@ -1150,14 +1145,14 @@ export function* myDetailsModificationSaga() {
       username: userdata.username,
       //   password: userdata.password,
     };
-    const { response, error } = yield call(updateUser, user);
+    const { response, error } = yield call(userSaga.updateUser, user);
     try {
       if (response) {
         var data = response.data;
         if (response.status === 200) {
           Toast.fire({
             icon: "success",
-            title: alert_msg.user_update_success,
+            title: users_alert_msg.update_success,
           });
           console.log(history);
           const fullName = user.firstName + " " + user.lastName;
@@ -1175,7 +1170,7 @@ export function* myDetailsModificationSaga() {
         var data = error.response.data;
         var err_msg = data.message ? data.message : error.message;
         // if (data.nameReserved)
-        //   err_msg = alert_msg.name_reserved
+        //   err_msg = users_alert_msg.name_reserved
         //   if (data.usernameReserved)
         Toast.fire({
           icon: "error",
@@ -1353,7 +1348,7 @@ export function* logoutUser() {
     history.push("/");
     Toast.fire({
       icon: "success",
-      title: alert_msg.user_logout,
+      title: users_alert_msg.logout,
     });
   }
 }

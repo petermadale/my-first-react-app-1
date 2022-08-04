@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { ConnectedCSVDownloadClients } from "../CSVDownloadClients/CSVDownloadClients";
-import { ConnectedCSVImportExport } from "../CSVImportExport/CSVImportExport";
+import DownloadClientsModal from "./DownloadClientsModal/DownloadClientsModal";
+import UploadClientsModal from "./UploadClientsModal/UploadClientsModal";
 
 class UploadDownloadClients extends Component {
   constructor(props) {
@@ -10,9 +10,11 @@ class UploadDownloadClients extends Component {
       locations,
       clients,
       showUploadModal: false,
+      showDownloadModal: false,
     };
 
     this.toggleUploadModal = this.toggleUploadModal.bind(this);
+    this.toggleDownloadModal = this.toggleDownloadModal.bind(this);
   }
 
   toggleUploadModal = (e) => {
@@ -21,8 +23,15 @@ class UploadDownloadClients extends Component {
     });
   };
 
+  toggleDownloadModal = (e) => {
+    this.setState({
+      showDownloadModal: !this.state.showDownloadModal,
+    });
+  };
+
   render() {
-    const { locations, clients, showUploadModal } = this.state;
+    const { locations, clients, showUploadModal, showDownloadModal } =
+      this.state;
     return (
       <>
         <div className="dropdown float-right">
@@ -49,62 +58,31 @@ class UploadDownloadClients extends Component {
             <button
               type="button"
               className="dropdown-item btn btn-link text-dark"
-              data-toggle="modal"
-              data-target="#modal-upload-client"
+              onClick={this.toggleUploadModal}
+              // data-toggle="modal"
+              // data-target="#modal-upload-client"
             >
               <i className="fas fa-upload"></i> Upload Clients
             </button>
             <button
               type="button"
               className="dropdown-item btn btn-link text-dark"
-              data-toggle="modal"
-              data-target="#modal-download-client"
+              onClick={this.toggleDownloadModal}
             >
               <i className="fas fa-download"></i> Download Clients
             </button>
           </div>
         </div>
-
-        <div className="modal fade" id="modal-upload-client">
-          <div className="modal-dialog modal-md">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title">Upload Clients</h4>
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <ConnectedCSVImportExport />
-            </div>
-          </div>
-        </div>
-
-        <div className="modal fade" id="modal-download-client">
-          <div className="modal-dialog modal-md">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title">Download Clients</h4>
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <ConnectedCSVDownloadClients
-                locations={locations}
-                clients={clients}
-              />
-            </div>
-          </div>
-        </div>
+        <UploadClientsModal
+          showUploadModal={showUploadModal}
+          onClose={this.toggleUploadModal}
+        />
+        <DownloadClientsModal
+          showDownloadModal={showDownloadModal}
+          onClose={this.toggleDownloadModal}
+          locations={locations}
+          clients={clients}
+        />
       </>
     );
   }

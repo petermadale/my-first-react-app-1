@@ -135,6 +135,10 @@ body {
     content: none;
 }
 
+.basic-multi-select.is-invalid .select__control {
+    border-color: #dc3545;
+}
+
 @media (max-width: 900px) {
     .login-logo img {
         width: 100px;

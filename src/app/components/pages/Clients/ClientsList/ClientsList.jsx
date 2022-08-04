@@ -13,6 +13,7 @@ import ClientToggleView from "../clientfunctions/ClientToggleView/ClientToggleVi
 import UploadDownloadClients from "../clientfunctions/UploadDownloadClients/UploadDownloadClients";
 import AlertComponent from "../../../reusableComponents/AlertComponent/AlertComponent";
 import ClientTable from "../ClientTable/ClientTable";
+import { trimFilterFunc } from "../../../../scripts/trimFilterFunc";
 
 class ClientsList extends Component {
   constructor(props) {
@@ -29,14 +30,12 @@ class ClientsList extends Component {
     this.state = {
       clients,
       locations,
-      selectedLocation: "",
       sortedClients,
       isAdmin,
       requestDeleteClient,
       getClients,
       owner,
       fileName: filename ? filename : null,
-      isSort: false,
       toggleView: "detail",
     };
   }
@@ -45,14 +44,14 @@ class ClientsList extends Component {
     const { value } = event.target;
     const { clients } = this.state;
     const newSortedClients = clients.filter((client) => {
-      if (client.assignedLocations !== null)
-        return client.assignedLocations.includes(value);
+      if (client.assignedLocations.length > 0)
+        return trimFilterFunc(client.assignedLocations, value)
+          ? { ...client }
+          : null;
     });
     this.setState({
-      selectedLocation: value,
-      isSort: true,
+      sortedClients: value === "" ? clients : newSortedClients,
     });
-    this.setState({ sortedClients: value === "" ? clients : newSortedClients });
   };
 
   handleToggleView = (toggleView) => {
@@ -62,12 +61,10 @@ class ClientsList extends Component {
   render() {
     const {
       locations,
-      selectedLocation,
       sortedClients,
       isAdmin,
       requestDeleteClient,
       owner,
-      isSort,
       toggleView,
     } = this.state;
     const { clients, isUploadingClients } = this.props;
@@ -115,9 +112,9 @@ class ClientsList extends Component {
 
         <section className="content">
           {sortedClients.length > 0 ? (
-            <div className="row d-flex align-items-stretch">
+            <>
               {toggleView === "detail" ? (
-                <>
+                <div className="row d-flex align-items-stretch">
                   {sortedClients.map((client) => (
                     <ConnectedClient
                       client={client}
@@ -127,13 +124,13 @@ class ClientsList extends Component {
                       owner={owner}
                     />
                   ))}
-                </>
+                </div>
               ) : (
                 <>
                   <ClientTable clients={sortedClients} />
                 </>
               )}
-            </div>
+            </>
           ) : (
             <AlertComponent type="warning" text="clients" />
           )}

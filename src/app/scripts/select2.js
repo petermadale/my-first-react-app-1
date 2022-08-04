@@ -15,7 +15,7 @@ class Select2 extends Component {
         ? props.isMulti
           ? props.selected.map((s) => s.value)
           : props.selected
-        : null,
+        : "",
       required: props.required ? true : false,
       label: props.label,
       isEmpty: true,
@@ -32,44 +32,56 @@ class Select2 extends Component {
   }
 
   handleChange = (newValue, actionMeta) => {
-    if (newValue && newValue.length > this.props.maximumSelectionLength) {
-      toastjs.error("Can only select up to 5 " + this.props.label + ".");
+    const { maximumSelectionLength, isMulti, options, label } = this.props;
+
+    if (newValue && newValue.length > maximumSelectionLength) {
+      toastjs.error("Can only select up to 5 " + label + ".");
     } else {
-      var hasValue = false;
-      if (newValue && newValue.length > 0) {
-        hasValue = newValue.some((v) => v.value === "Others");
-      } else {
-        if (newValue && newValue.value === "Others") hasValue = true;
-      }
-      const selectedValues = this.props.isMulti
-        ? newValue
+      const showOtherLocation =
+        (isMulti && newValue && newValue.some((v) => v.value === "Others")) ||
+        (!isMulti && newValue && newValue.value === "Others")
+          ? true
+          : false;
+      // if (newValue && newValue.length > 0) {
+      //   showOtherLocation = newValue.some((v) => v.value === "Others");
+      // } else {
+      //   if (newValue && newValue.value === "Others") showOtherLocation = true;
+      // }
+      const selectedValues = isMulti
+        ? newValue && newValue.length > 0
           ? newValue.map((s) => s.value)
-          : null
+          : ""
         : newValue.name || newValue.value;
+
+      const allregions =
+        newValue && newValue.length < options.length
+          ? false
+          : !newValue
+          ? false
+          : true;
+
       this.setState({
         selected: newValue,
         selectedValues,
-        isEmpty: selectedValues ? false : true,
+        isEmpty: selectedValues === "" ? true : false,
         isPristine: false,
-        allregions:
-          newValue && newValue.length < this.props.options.length
-            ? false
-            : true,
-        showOtherLocation: hasValue, //newValue && (newValue.find((v) => v.value === "Others") || newValue.value === "Others") ? true : false
+        allregions,
+        showOtherLocation,
       });
     }
   };
+
   onBlur = (event) => {
     this.state.required
       ? this.setState({
-          isEmpty: this.state.selectedValues ? false : true,
+          isEmpty: this.state.selectedValues === "" ? true : false,
           isPristine: false,
         })
       : null;
   };
 
   onAllRegionsChange = (event) => {
-    const checked = event.target.checked;
+    const { checked } = event.target;
     checked
       ? this.setState({
           selectedValues: this.props.options.map((prop) => {
@@ -79,16 +91,20 @@ class Select2 extends Component {
             return prop;
           }),
           allregions: true,
+          isPristine: true,
+          isEmpty: true,
         })
       : this.setState({
-          selectedValues: null,
+          selectedValues: "",
           selected: null,
           allregions: false,
+          isPristine: false,
+          isEmpty: false,
         });
   };
 
   render() {
-    const { options, name, isMulti, label, onChange } = this.props;
+    const { options, name, isMulti, label } = this.props;
     const {
       selected,
       selectedValues,
@@ -99,21 +115,27 @@ class Select2 extends Component {
       isDisabled,
       showOtherLocation,
       otherLocation,
+      onChange,
     } = this.state;
+
+    const isInvalid =
+      required && selectedValues === "" && !isPristine ? true : false;
+
+    var selectClassNames = isMulti ? "basic-multi-select" : "basic-single";
+    selectClassNames += isInvalid ? " is-invalid" : "";
+
     return (
       <>
-        {label ? (
+        {label && (
           <label htmlFor={name}>
-            {label} {required ? <span className="text-danger">*</span> : null}
+            {label} {required && <span className="text-danger">*</span>}
           </label>
-        ) : null}
+        )}
         <Select
-          isMulti={isMulti ? true : null}
+          isMulti={isMulti && true}
           options={options}
-          onChange={this.handleChange}
-          className={`${isMulti ? "basic-multi-select" : "basic-single"}${
-            isEmpty && !isPristine ? " is-invalid" : ""
-          }`}
+          onChange={onChange}
+          className={selectClassNames}
           classNamePrefix="select"
           value={selected}
           required={required}
@@ -121,7 +143,7 @@ class Select2 extends Component {
           isDisabled={isDisabled}
           maximumSelectionLength
         />
-        {label === "Location" ? (
+        {label === "Location" && (
           <small className="font-italic">
             <label className="form-check">
               <input
@@ -135,8 +157,8 @@ class Select2 extends Component {
               All Regions
             </label>
           </small>
-        ) : null}
-        {showOtherLocation ? (
+        )}
+        {showOtherLocation && (
           <>
             <label htmlFor="otherLocation">Other Location</label>
             <input
@@ -149,7 +171,7 @@ class Select2 extends Component {
               disabled={isDisabled}
             />
           </>
-        ) : null}
+        )}
         <input
           type="hidden"
           id={name}
@@ -158,11 +180,11 @@ class Select2 extends Component {
           required={required}
           placeholder={label}
         />
-        {isEmpty && !isPristine && required ? (
+        {isInvalid && (
           <p className="text-danger text-bold mb-0">
             <i>{label} is required.</i>
           </p>
-        ) : null}
+        )}
       </>
     );
   }

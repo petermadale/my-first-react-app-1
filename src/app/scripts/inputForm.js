@@ -18,13 +18,12 @@ class InputForm extends Component {
     };
   }
 
-  onBlur = (event) => {
-    this.state.required
-      ? this.setState({
-          isEmpty: event.target.value === "" ? true : false,
-          isPristine: false,
-        })
-      : null;
+  onInput = (event) => {
+    this.state.required &&
+      this.setState({
+        isEmpty: event.target.value === "" ? true : false,
+        isPristine: false,
+      });
   };
 
   render() {
@@ -43,7 +42,7 @@ class InputForm extends Component {
     return (
       <>
         <label htmlFor={nameid}>
-          {label} {required ? <span className="text-danger">*</span> : null}
+          {label} {required && <span className="text-danger">*</span>}
         </label>
         <input
           type={type}
@@ -53,17 +52,18 @@ class InputForm extends Component {
           className={`form-control${
             isEmpty && !isPristine ? " is-invalid" : ""
           }`}
-          onBlur={this.onBlur}
+          onBlur={this.onInput}
+          onChange={this.onInput}
           defaultValue={defaultValue}
           required={required}
           pattern={pattern}
           disabled={isDisabled}
         />
-        {isEmpty && !isPristine ? (
+        {isEmpty && !isPristine && (
           <p className="text-danger text-bold mb-0">
             <i>{label} is required.</i>
           </p>
-        ) : null}
+        )}
       </>
     );
   }

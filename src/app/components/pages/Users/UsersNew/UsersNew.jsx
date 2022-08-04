@@ -172,25 +172,10 @@ const mapDispatchStateToProps = (dispatch, ownProps) => ({
     const password = form[`password`];
     var error_msg = [];
 
-    if (firstName.required && firstName.value === "") {
-      var err = firstName.placeholder + " is required.";
-      error_msg.push(err);
-    }
-    if (lastName.required && lastName.value === "") {
-      var err = lastName.placeholder + " is required.";
-      error_msg.push(err);
-    }
-    if (location.required && location.value === "") {
-      var err = location.placeholder + " is required.";
-      error_msg.push(err);
-    }
-    if (username.required && username.value === "") {
-      var err = password.placeholder + " is required.";
-      error_msg.push(err);
-    }
-    if (password.required && password.value === "") {
-      var err = password.placeholder + " is required.";
-      error_msg.push(err);
+    for (let inputField = 0; inputField < form.length; inputField++) {
+      const element = form[inputField];
+      var err = validateInput(element);
+      if (err) error_msg.push(err);
     }
 
     if (error_msg.length > 0) {
@@ -215,6 +200,13 @@ const mapDispatchStateToProps = (dispatch, ownProps) => ({
         password: password.value,
       };
       dispatch(processCreateUser(userdata));
+    }
+
+    function validateInput(element) {
+      if (element.required && element.value === "") {
+        var err = element.placeholder + " is required.";
+      }
+      return err;
     }
   },
 });
